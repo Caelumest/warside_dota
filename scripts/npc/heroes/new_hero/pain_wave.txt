@@ -1,0 +1,156 @@
+"DOTAAbilities"
+{
+    "pain_wave"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityTextureName"            "pain_wave"
+        "ScriptFile"                    ""
+        "MaxLevel"                      "4"
+        "AbilityType"                   ""
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE" 
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+        "AnimationPlaybackRate"         ""
+        "AbilityCastRange"              "300"
+        "AbilityCastPoint"              "0"
+        "AbilityCooldown"               "12 11 10 9"
+        "AbilityManaCost"               "100 95 80 75"
+        "AbilityDamage"                 "100 160 220 280"
+        "AbilityCastAnimation"          "ACT_DOTA_ATTACK_EVENT"
+        "precache"
+        {
+            "soundfile"         "soundevents/game_sounds_heroes/game_sounds_earth_spirit.vsndevts"
+            "soundfile"         "soundevents/game_sounds_heroes/game_sounds_centaur.vsndevts"
+            "particle"          "particles\econ\items\centaur\centaur_ti6\centaur_ti6_warstomp.vpcf"
+            "particle"          "particles\econ\items\centaur\centaur_ti6\centaur_ti6_warstomp_ring_progressive.vpcf"
+            "particle"          "particles\econ\items\centaur\centaur_ti6\centaur_ti6_warstomp_shockwave.vpcf"
+        }
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "stun_duration"         "1 1.25 1.5 1.75"
+            }
+            "02"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "delay"                 "2"
+            }
+            "03"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "radius"                "300"
+            }
+        }
+        "OnSpellStart"
+        {
+            "FireEffect"
+            {
+                "EffectName"        "particles\econ\items\centaur\centaur_ti6\centaur_ti6_warstomp_shockwave.vpcf"
+                "EffectAttachType"  "follow_origin"
+                "EffectRadius"      "%radius"
+                "Target"            "CASTER"
+                "ControlPoints"
+                {
+                    "01"    "%radius 0 %radius"
+                }
+            }
+            "FireSound"
+            {
+                "EffectName"    "Hero_EarthSpirit.StoneRemnant.Destroy"
+                "Target"        "CASTER"
+            }
+            "ApplyModifier"
+            {
+                "ModifierName"  "modifier_item_lotus_orb_active"
+                "Target"        "CASTER"
+                "Duration"      "1"
+            }
+            "DelayedAction"
+            {
+                "Delay"     "1"
+                "Action"    
+                {
+                    "FireEffect"
+                    {
+                        "EffectName"        "particles\econ\items\centaur\centaur_ti6\centaur_ti6_warstomp_ring_progressive.vpcf"
+                        "EffectAttachType"  "follow_origin"
+                        "EffectRadius"      "%radius"
+                        "Target"            "CASTER"
+                    }
+                    "FireSound"
+                    {
+                        "EffectName"    "Hero_EarthSpirit.StoneRemnant.Destroy"
+                        "Target"        "CASTER"
+                    }
+                }
+            }
+            "DelayedAction"
+            {
+                "Delay"     "%delay"
+                "Action"    
+                {
+                    "ActOnTargets"
+                    {
+                        "Target"
+                        {
+                            "Center"    "CASTER"
+                            "Radius"    "%radius"
+                            "Teams"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
+                            "Types"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+                        }
+                        "Action"    
+                        {
+                            "Damage"
+                            {
+                                "Target"    "TARGET"
+                                "Type"      "DAMAGE_TYPE_MAGICAL"
+                                "Damage"    "%AbilityDamage"
+                            }
+                            "Stun"
+                            {
+                                "Duration"  "%stun_duration"
+                                "Target"    "TARGET"
+                            }
+                        }
+                    }
+                    "FireEffect"
+                    {
+                        "EffectName"        "particles\econ\items\centaur\centaur_ti6\centaur_ti6_warstomp.vpcf"
+                        "EffectAttachType"  "world_origin"
+                        "EffectRadius"      "%radius"
+                        "Target"            "CASTER"
+                        "ControlPoints"
+                        {
+                            "01"    "%radius 0 %radius"
+                        }
+                    }
+                    "FireSound"
+                    {
+                        "EffectName"    "Hero_Centaur.HoofStomp"
+                        "Target"        "CASTER"
+                    }
+                }
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_reflect"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "EffectName"        "particle_name"
+                "EffectAttachType"  "follow_origin"
+        
+                "Properties"
+                {
+                    "MODIFIER_PROPERTY_REFLECT_SPELL" "1"
+                }
+            }
+        }
+    }
+}

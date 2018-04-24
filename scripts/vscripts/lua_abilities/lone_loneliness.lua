@@ -3,8 +3,9 @@ function OnCreated( keys )
     local ability = keys.ability
     local radius = ability:GetLevelSpecialValueFor( "radius", ( ability:GetLevel() - 1 ) )
     local modifierName = "modifier_lone_loneliness2"
+
     local units = FindUnitsInRadius( caster:GetTeamNumber(), caster:GetAbsOrigin(), caster, radius,
-            DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_HERO, 0, 0, false )
+            DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_NOT_ILLUSIONS, 0, false )
     local count = 0
     for k, v in pairs(units) do
         count = count + 1

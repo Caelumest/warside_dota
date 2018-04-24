@@ -1,3 +1,8 @@
+#base "heroes/new_hero/wave_blink.txt"
+#base "heroes/new_hero/insatiable_anger.txt"
+#base "heroes/new_hero/release_anger.txt"
+#base "heroes/new_hero/pain_wave.txt"
+#base "heroes/new_hero/talents.txt"
 "DOTAAbilities"
 {
     "Version"       "1"
@@ -13,7 +18,7 @@
         "01"
         {
             "var_type"          "FIELD_INTEGER"
-            "bonus_damage"      "7 14 21 28"
+            "bonus_damage"      "8 16 24 32"
         }
         "02"
         {
@@ -35,22 +40,12 @@
             "Passive" "1"
             "IsPurgable"    "0"
             "IsHidden"      "0"
-            "ThinkInterval"  "0.1"
+            "EffectName"        "particles\econ\items\legion\legion_overwhelming_odds_ti7\legion_commander_odds_ti7_ambient_mist.vpcf"
+            "EffectAttachType"  "attach_origin"
             "Properties"
             {
                 "MODIFIER_PROPERTY_BASEDAMAGEOUTGOING_PERCENTAGE" "%bonus_damage"
                 "MODIFIER_PROPERTY_STATS_AGILITY_BONUS" "%bonus_agi" 
-            }
-            "OnCreated"
-            {
-                "AttachEffect"
-                {
-                    "Target" "CASTER"
-                    "EffectName" "particles\econ\items\legion\legion_overwhelming_odds_ti7\legion_commander_odds_ti7_ambient_mist.vpcf"
-                    "EffectAttachType" "attach_attack1"
-                    "EffectLifeDurationScale" "1"
-                    "EffectColorA" "255 20 20"
-                }
             }
         }
     }
@@ -89,6 +84,8 @@
                 "Passive"       "1"
                 "IsHidden"      "1"
                 "IsPurgable"    "0"
+                "EffectName"    "particles/units/heroes/hero_legion_commander/legion_commander_press_hands.vpcf"
+                "EffectAttachType"  "attach_origin"
                 "OnAttackStart"
                 {
                 // Remove the modifier on each attach start to disable people 
@@ -194,7 +191,7 @@
  
     // Modifiers
     //-------------------------------------------------------------------------------------------------------------
-    "OnSpellStart"
+    "OnSpelStart"
     {
         "ApplyModifier"
         {
@@ -220,7 +217,7 @@
                 {
                     "ModifierName"  "modifier_expose_reveal"
                     "Target"        "TARGET"
-                    "Duration"      "0.5"
+                    "Duration"      "1"
                 }
             }
             "OnCreated"
@@ -351,8 +348,8 @@
     "AbilityType"                   "DOTA_ABILITY_TYPE_ULTIMATE"
     "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET" 
     "AbilityCooldown"               "8"
-    "AbilityCastPoint"              "1"
-    "AnimationPlaybackRate"         "0.5"
+    "AbilityCastPoint"              "0.6"
+    "AnimationPlaybackRate"         "0.7"
     "ScriptFile"                    "lua_abilities/legion_demon_form"
     "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_2"
 
@@ -361,14 +358,7 @@
         "soundfile" "soundevents/game_sounds_heroes/game_sounds_dragon_knight.vsndevts"
         "particle"  "particles/units/heroes/hero_dragon_knight/dragon_knight_transform_green.vpcf"
         "soundfile" "soundevents/game_sounds_heroes/game_sounds_terrorblade.vsndevts"
-        "soundfile" "soundevents/game_sounds_heroes/game_sounds_lycan.vsndevts"
-        "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis.vpcf"
-        "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_transform.vpcf"
-        "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_base_attack.vpcf"
         "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_ambient.vpcf"
-        "script"    "lua_abilities/legion_demon_form"
-        "script"    "modifier_legion_demon_form"
-        "particle" "particles/units/heroes/hero_legion_commander/legion_duel.vpcf"
         "particle"  "particles/econ/items/legion/legion_weapon_voth_domosh/legion_ambient_arcana.vpcf"
     }
     "OnSpellStart"
@@ -442,8 +432,8 @@
     "AbilityType"                   "DOTA_ABILITY_TYPE_ULTIMATE"
     "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_HIDDEN" 
     "AbilityCooldown"               "8"
-    "AbilityCastPoint"              "1"
-    "AnimationPlaybackRate"         "0.5"
+    "AbilityCastPoint"              "0.6"
+    "AnimationPlaybackRate"         "0.7"
     "ScriptFile"                    "lua_abilities/remove_legion_demon_form"
     "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1"
         "OnSpellStart"
@@ -485,16 +475,10 @@
     "precache"
     {
         "soundfile" "soundevents/game_sounds_heroes/game_sounds_terrorblade.vsndevts"
-        "soundfile" "soundevents/game_sounds_heroes/game_sounds_lycan.vsndevts"
-        "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis.vpcf"
         "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_transform.vpcf"
-        "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_base_attack.vpcf"
-        "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_ambient.vpcf"
-        "model"     "models/heroes/terrorblade/demon.vmdl"
-        "script"    "lua_abilities/legion_demon_form"
-        "script"    "modifier_legion_demon_form"
     }
-    }
+}
+
 "legion_desintegrate"
 {
     "BaseClass"                 "ability_datadriven"
@@ -511,7 +495,7 @@
     "AbilityCastRange"              "500"
     "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1"
     "AbilityCastPoint"              "0.7"
-    "AnimationPlaybackRate"         "0.6"
+    "AnimationPlaybackRate"         "0.5"
     "Radius"                        "300"
     "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
     "AOERadius"                     "%radius"
@@ -557,7 +541,7 @@
             "IsHidden"          "1"
             "IsDebuff"          "0"
             "IsPurgable"        "0"
-            "ThinkInterval"     "0.1"
+            "ThinkInterval"     "0.5"
             "OnIntervalThink"
             {
                 "RunScript"
@@ -631,7 +615,7 @@
     "AbilityCastRange"              "1100"
     "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1"
     "AbilityCastPoint"              "0.7"
-    "AnimationPlaybackRate"         "0.6"
+    "AnimationPlaybackRate"         "0.5"
     "Radius"                        "300"
     "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
     "AOERadius"                     "%radius"
@@ -778,12 +762,12 @@
         "01"
         {
             "var_type"                      "FIELD_INTEGER"
-            "duration"                      "10"
+            "duration"                      "6"
         }
         "02"
         {
             "var_type"                      "FIELD_INTEGER"
-            "bonus_damage_taken"            "8 16 22 28"
+            "bonus_damage_taken"            "10 18 24 32"
         }
     }
     "OnSpellStart"
@@ -913,7 +897,6 @@
         "soundfile"     "soundevents/game_sounds_heroes/game_sounds_dragon_knight.vsndevts"
         "particle"      "particles/units/heroes/hero_dragon_knight/dragon_knight_breathe_fire.vpcf"
         "particle"      "particles\neutral_fx\neutral_prowler_shaman_stomp_debuff.vpcf"
-        "particle"      "particles\econ\items\keeper_of_the_light\kotl_ti7_illuminate\kotl_ti7_illuminate.vpcf"
     }
     "AbilitySpecial"
     {
@@ -1077,13 +1060,6 @@
 // Date: February 14, 2016
 // Version: 6.85
 // Type: Datadriven/Lua
-// NOTES: Particles and Effects do not work at all
-//       Model size increase is probably inaccurate and also not very smooth
-//
-// ----- FILE REQUIREMENTS -----
-// Script files:
-// scripts/vscripts/heroes/hero_huskar/berserkers_blood.lua
-// scripts/vscripts/heroes/hero_huskar/modifiers/modifier_berserkers_blood_lua.lua
 "dk_dragon_blood"
 {
     // General
@@ -1099,7 +1075,7 @@
         "01"
         {
             "var_type"                      "FIELD_FLOAT"
-            "spell_amp_per_stack"           "2.5 3 3.5 5"
+            "spell_amp_per_stack"           "2.5 3 3.5 4"
             "LinkedSpecialBonus"            "special_bonus_unique_dk_2"
         }
         "02"
@@ -1146,6 +1122,12 @@
             "ScriptFile"    "lua_abilities/dragon_blood_talent.lua"
             "Function"      "ApplyLuaModifier"
         }
+        "RunScript"
+        {
+            "ModifierName"  "modifier_dragon_blood"
+            "ScriptFile"    "lua_abilities/dragon_blood.lua"
+            "Function"      "ApplyLuaModifier"
+        }
     }
     "Modifiers"
     {
@@ -1155,7 +1137,7 @@
             "IsHidden"          "1"
             "IsDebuff"          "0"
             "IsPurgable"        "0"
-            "ThinkInterval"     "0.1"
+            "ThinkInterval"     "0.5"
             "OnIntervalThink"
             {
                 "RunScript"
@@ -1307,28 +1289,13 @@
     {
         "soundfile"                 "soundevents/game_sounds_heroes/game_sounds_jakiro.vsndevts"
         "particle"                  "particles/units/heroes/hero_jakiro/jakiro_base_attack_fire.vpcf"
-        "particle"                  "particles/units/heroes/hero_jakiro/jakiro_liquid_fire_ready.vpcf"
         "particle"                  "particles/units/heroes/hero_jakiro/jakiro_liquid_fire_explosion.vpcf"
         "particle"                  "particles/units/heroes/hero_jakiro/jakiro_liquid_fire_debuff.vpcf"
         "particle"                  "particles\econ\items\dragon_knight\dk_aurora_warrior\dk_aurora_warrior_weapon_ambient.vpcf"
     }
     "Modifiers"
     {
-        "modifier_remove_fire_sword_modifier"
-        {
-            "Passive"           "1"
-            "IsHidden"          "1"
-            "IsPurgable"        "0"
-            "ThinkInterval"  "0.1"
-            "OnIntervalThink"
-            {
-                "RunScript"
-                {
-                    "ScriptFile"    "lua_abilities/remove_fire_sword_buff.lua"
-                    "Function"      "OnCreated"
-                }
-            }
-        }
+
         "modifier_dk_fire_sword_orb"
         {
             "Passive"   "1"
@@ -1535,16 +1502,13 @@
         "AbilityCastRange"              "900"
         "AbilityCastPoint"              "0.2"
         "AbilityCooldown"               "20 18 16 14"
-        "AbilityManaCost"               "180 220 260 300"
+        "AbilityManaCost"               "180 200 220 240"
         "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1"
         "precache"
         {
             "soundfile"                 "soundevents/game_sounds_heroes/game_sounds_jakiro.vsndevts"
             "soundfile"         "soundevents/game_sounds_heroes/game_sounds_dragon_knight.vsndevts"
             "particle"      "particles/units/heroes/hero_dragon_knight/dragon_knight_dragon_tail.vpcf"
-            "soundfile"                 "soundevents/game_sounds_heroes/game_sounds_sniper.vsndevts"
-            "particle"                  "particles/units/heroes/hero_sniper/sniper_assassinate.vpcf"
-            "particle" "particles/units/heroes/hero_dragon_knight/dragon_knight_dragon_tail_dragonform_proj.vpcf"
             "particle"  "particles/units/heroes/hero_dragon_knight/dragon_knight_breathe_fire_explosion.vpcf"
             "particle"                  "particles/units/heroes/hero_jakiro/jakiro_liquid_fire_debuff.vpcf"
         }
@@ -1563,12 +1527,12 @@
             "05"
             {
                 "var_type"              "FIELD_INTEGER"
-                "damage_min"            "50 75 115 140"
+                "damage_min"            "50 80 110 140"
             }
             "08"
             {
                 "var_type"              "FIELD_INTEGER"
-                "damage_max"            "150 250 400 550"
+                "damage_max"            "200 325 450 600"
                 "LinkedSpecialBonus"    "special_bonus_unique_dk_1"
             }
             "09"
@@ -1642,14 +1606,13 @@
     "AbilityType"                   "DOTA_ABILITY_TYPE_ULTIMATE"
     "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET" 
     "AbilityCooldown"               "8"
-    "AbilityCastPoint"              "1"
-    "AnimationPlaybackRate"         "0.5"
+    "AbilityCastPoint"              "0.5"
+    "AnimationPlaybackRate"         "1"
     "ScriptFile"                    "lua_abilities/dk_dragon_form"
     "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1"
 
     "precache"
     {
-        "model"         "models\items\monkey_king\monkey_king_arcana_head\mesh\monkey_king_arcana.vmdl"
         "soundfile"     "soundevents/game_sounds_heroes/game_sounds_dragon_knight.vsndevts"
         "soundfile"     "soundevents/game_sounds_heroes/game_sounds_terrorblade.vsndevts"
         "particle"      "particles/units/heroes/hero_dragon_knight/dragon_knight_transform_green.vpcf"
@@ -1774,8 +1737,8 @@
     "AbilityTextureName"            "monkey_king_boundless_strike"
     "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_2"
     "AbilityCastRange"              "300"
-    "AbilityCastPoint"              "0.5"
-    "AbilityCooldown"               "20 16 14 12"
+    "AbilityCastPoint"              "0.0"
+    "AbilityCooldown"               "20 16 13 10"
     "AbilityManaCost"               "100 120 140 160"
     "AbilityDamage"                 "75 100 125 150"
     "AbilitySpecial"
@@ -1788,7 +1751,7 @@
         "02"
         {
             "var_type"                          "FIELD_INTEGER"
-            "slow"                              "-10 -20 -30 -40"
+            "slow"                              "-10 -15 -20 -25"
         }
         "03"
         {
@@ -1804,12 +1767,12 @@
         "05"
         {
             "var_type"                          "FIELD_FLOAT"
-            "illusion_outgoing_damage"          "-50.0"     
+            "illusion_outgoing_damage"          "-70.0"     
         }
         "06"
         {
             "var_type"                          "FIELD_FLOAT"
-            "illusion_outgoing_tooltip"         "20.0"
+            "illusion_outgoing_tooltip"         "30.0"
         }
         "07"
         {
@@ -1850,21 +1813,6 @@
     }
     "Modifiers"
     {
-        "modifier_remove_staff_modifier"
-        {
-            "Passive"           "1"
-            "IsHidden"          "1"
-            "IsPurgable"        "0"
-            "ThinkInterval"  "0.1"
-            "OnIntervalThink"
-            {
-                "RunScript"
-                {
-                    "ScriptFile"    "lua_abilities/remove_staff_buff.lua"
-                    "Function"      "OnCreated"
-                }
-            }
-        }
         "modifier_mk_staff_orb"
         {
             "Passive"   "1"
@@ -2025,8 +1973,8 @@
     //-------------------------------------------------------------------------------------------------------------
     "AbilityCastPoint"              "0"
     "AoERadius"                     "325"
-    "AbilityCooldown"               "25 20 15 10"
-    "AbilityManaCost"               "50"
+    "AbilityCooldown"               "25 22 19 16"
+    "AbilityManaCost"               "130 120 110 100"
     "AbilityChannelTime"            "4.2"
         
     // Special
@@ -2056,7 +2004,7 @@
         "05"
         {
             "var_type"              "FIELD_FLOAT"
-            "illusion_outgoing_damage"   "-90 -80 -70 -60"
+            "illusion_outgoing_damage"   "-90 -90 -90 -85"
         }
         "06"
         {
@@ -2071,7 +2019,7 @@
         "08"
         {
             "var_type"              "FIELD_FLOAT"
-            "ilu_damage_tooltip"   "10 20 30 40"
+            "ilu_damage_tooltip"   "10 10 10 15"
         }
     }
     "OnAbilityPhaseStart"
@@ -2200,6 +2148,7 @@
                     "Target"
                     {
                         "Center"    "TARGET"
+                        "Teams"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
                         "Flags"     "DOTA_UNIT_TARGET_FLAG_MANA_ONLY"
                     }
                 }
@@ -2211,6 +2160,7 @@
                     "Target"
                     {
                         "Center"    "TARGET"
+                        "Teams"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
                         "Flags"     "DOTA_UNIT_TARGET_FLAG_MANA_ONLY"
                     }
                 }
@@ -2222,6 +2172,7 @@
                     "Target"
                     {
                         "Center"    "TARGET"
+                        "Teams"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
                         "Flags"     "DOTA_UNIT_TARGET_FLAG_MANA_ONLY"
                     }
                 }               
@@ -2256,7 +2207,7 @@
     
     // Cost
     //-------------------------------------------------------------------------------------------------------------
-    "AbilityManaCost"               "50 50 50 50"
+    "AbilityManaCost"               "75 80 85 90"
     
     // Special
     //-------------------------------------------------------------------------------------------------------------
@@ -2265,7 +2216,7 @@
         "01"
         {
             "var_type"                  "FIELD_FLOAT"
-            "duration"                  "5.0 8.0 12.0 15.0"
+            "duration"                  "5.0 6.0 7.0 8.0"
         }
         "02"
         {
@@ -2285,12 +2236,12 @@
         "05"
         {
             "var_type"                          "FIELD_FLOAT"
-            "illusion_outgoing_damage"          "-50.0"     
+            "illusion_outgoing_damage"          "-80.0"     
         }
         "06"
         {
             "var_type"                          "FIELD_FLOAT"
-            "illusion_outgoing_tooltip"         "50.0"
+            "illusion_outgoing_tooltip"         "20.0"
         }
         "07"
         {
@@ -2301,7 +2252,8 @@
         {
             "var_type"                          "FIELD_FLOAT"
             "illusion_incoming_damage_total_tooltip"            "200.0"
-        }  
+        }
+
     }
     "OnSpellStart"
     {
@@ -2453,7 +2405,7 @@
         "01"
         {
             "var_type"          "FIELD_FLOAT"
-            "air_time"             "0.8"
+            "air_time"             "0.5"
         }
         "02"
         {
@@ -2837,12 +2789,7 @@
     "precache"
     {
         "soundfile" "soundevents/game_sounds_heroes/game_sounds_terrorblade.vsndevts"
-        "soundfile" "soundevents/game_sounds_heroes/game_sounds_lycan.vsndevts"
-        "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis.vpcf"
         "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_transform.vpcf"
-        "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_base_attack.vpcf"
-        "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_ambient.vpcf"
-        "model"     "models/heroes/terrorblade/demon.vmdl"
     }
 }
 
@@ -2954,10 +2901,6 @@
     {
         "soundfile"             "soundevents\game_sounds_heroes\game_sounds_keeper_of_the_light.vsndevts"
         "particle"             "particles\econ\items\keeper_of_the_light\kotl_ti7_illuminate\kotl_ti7_immortal_mist.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press_halo_body.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press_ribbon.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press_sphere.vpcf"
         "particle"              "particles\units\heroes\hero_keeper_of_the_light\kotl_illuminate_impact_creep.vpcf"
         "particle"              "particles\units\heroes\hero_keeper_of_the_light\keeper_spirit_form_ambient_fogring.vpcf"
         "particle"              "particles\econ\generic\generic_projectile_linear_1\generic_projectile_linear_1_trail.vpcf"
@@ -3050,12 +2993,6 @@
     "Precache"
     {
         "soundfile"             "soundevents\game_sounds_heroes\game_sounds_keeper_of_the_light.vsndevts"
-        "particle"             "particles\econ\items\keeper_of_the_light\kotl_ti7_illuminate\kotl_ti7_immortal_mist.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press_halo_body.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press_ribbon.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press_sphere.vpcf"
-        "particle"              "particles\units\heroes\hero_keeper_of_the_light\kotl_illuminate_impact_creep.vpcf"
         "particle"              "particles\units\heroes\hero_keeper_of_the_light\keeper_spirit_form_ambient_fogring.vpcf"
         "particle"              "particles/units/heroes/hero_keeper_of_the_light/keeper_chakra_magic.vpcf"
         "particle"              "particles\units\heroes\hero_skywrath_mage\skywrath_mage_ancient_seal_debuff_rune.vpcf"
@@ -3133,7 +3070,7 @@
     "BaseClass"                     "ability_datadriven"
     "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_CHANNELLED | DOTA_ABILITY_BEHAVIOR_HIDDEN"
     "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
-    "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_MECHANICAL"
+    "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
     "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"   
     "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
     "FightRecapLevel"               "1"
@@ -3148,7 +3085,6 @@
         "particle"          "particles\econ\items\keeper_of_the_light\kotl_ti7_illuminate\kotl_ti7_illuminate.vpcf"
         "particle"          "particles/units/heroes/hero_keeper_of_the_light/keeper_of_the_light_illuminate_charge.vpcf"
         "particle"          "particles/units/heroes/hero_keeper_of_the_light/keeper_of_the_light_illuminate_impact.vpcf"
-        "particle"          "particles/units/heroes/hero_dragon_knight/dragon_knight_breathe_fire.vpcf"
         "particle"          "particles\econ\items\puck\puck_alliance_set\puck_illusory_orb_aproset.vpcf"
     }
 
@@ -3173,7 +3109,7 @@
         "01"
         {
             "var_type"              "FIELD_FLOAT"
-            "damage_per_second"     "133"
+            "damage_per_second"     "150"
         }
         "02"
         {
@@ -3412,14 +3348,6 @@
     {
         "soundfile"             "soundevents\game_sounds_heroes\game_sounds_keeper_of_the_light.vsndevts"
         "soundfile"             "soundevents\game_sounds_heroes\game_sounds_chen.vsndevts"
-        "particle"             "particles\econ\items\keeper_of_the_light\kotl_ti7_illuminate\kotl_ti7_immortal_mist.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press_halo_body.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press_ribbon.vpcf"
-        "particle"              "particles\units\heroes\hero_legion_commander\legion_commander_press_sphere.vpcf"
-        "particle"              "particles\units\heroes\hero_keeper_of_the_light\kotl_illuminate_impact_creep.vpcf"
-        "particle"              "particles\units\heroes\hero_keeper_of_the_light\keeper_spirit_form_ambient_fogring.vpcf"
-        "particle"              "particles/units/heroes/hero_keeper_of_the_light/keeper_chakra_magic.vpcf"
         "particle"              "particles/units/heroes/hero_keeper_of_the_light/keeper_of_the_light_blinding_light_debuff.vpcf"
         "particle"              "particles\units\heroes\hero_chen\chen_test_of_faith.vpcf"
     }
@@ -3635,7 +3563,6 @@
         "soundfile" "soundevents/game_sounds_heroes/game_sounds_terrorblade.vsndevts"
         "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis.vpcf"
         "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_transform.vpcf"
-        "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_base_attack.vpcf"
         "particle"  "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis_ambient.vpcf"
     }
 }
@@ -3843,7 +3770,7 @@
         "05"
         {
             "var_type"                  "FIELD_INTEGER"
-            "duration_armor"            "4 5 6 7"
+            "duration_armor"            "6 7 8 9"
         }
     }
 
@@ -3966,9 +3893,7 @@
 
             "StatusEffectName"      "particles/status_fx/status_effect_beserkers_call.vpcf"        
             "StatusEffectPriority"  "10"
-
-            "ThinkInterval"  "0.1"
-            "OnIntervalThink"
+            "Oncreated"
             {
                 "RunScript"
                 {
@@ -4151,7 +4076,7 @@
             "IsHidden"          "1"
             "IsDebuff"          "0"
             "IsPurgable"                    "0"
-            "ThinkInterval"  "0.1"
+            "ThinkInterval"  "0.5"
             "OnIntervalThink"
             {
                 "RunScript"
@@ -4202,64 +4127,6 @@
             {
                 "MODIFIER_PROPERTY_ATTACKSPEED_BONUS_CONSTANT" "%bonus_atkspeed2"
                 "MODIFIER_PROPERTY_STATS_STRENGTH_BONUS" "%bonus_str2" 
-            }
-        }
-    }
-}
-
-"luna_moon_glaive_datadriven"
-{
-    // General
-    //-------------------------------------------------------------------------------------------------------------
-    "BaseClass"                     "ability_datadriven"
-    "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"
-    "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_YES"
-    "AbilityUnitDamageType"         "DAMAGE_TYPE_PHYSICAL"
-    "AbilityTextureName"            "luna_moon_glaive"
-    "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
-    "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_BUILDING"
-
-    "precache"
-    {
-        "soundfile"         "soundevents/game_sounds_heroes/game_sounds_luna.vsndevts"
-        "particle"          "particles/units/heroes/hero_luna/luna_base_attack.vpcf"
-    }
-
-    // Special
-    //-------------------------------------------------------------------------------------------------------------
-    "AbilitySpecial"
-    {
-        "01"
-        {
-            "var_type"                  "FIELD_INTEGER"
-            "range"                     "500 500 500 500"
-        }
-        "02"
-        {
-            "var_type"                  "FIELD_INTEGER"
-            "bounces"                   "1 2 3 5"
-        }
-        "03"
-        {
-            "var_type"                  "FIELD_INTEGER"
-            "damage_reduction_percent"  "35 30 25 20"
-        }
-    }
-
-    "Modifiers"
-    {
-        "modifier_moon_glaive"
-        {
-            "Passive"   "1"
-            "IsHidden"  "1"
-
-            "OnAttackLanded"
-            {
-                "RunScript"
-                {
-                    "ScriptFile"    "lua_abilities/glaive.lua"
-                    "Function"      "SpawnGlaive"
-                }
             }
         }
     }

@@ -69,7 +69,18 @@ end
 function StartCooldown( event )
 	local caster = event.caster
 	local ability = event.ability
-	local cooldown = ability:GetCooldown( ability:GetLevel() - 1 )
+	cooldown = ability:GetCooldown( ability:GetLevel() - 1 )
+	local cdOctarine = 25/100
+	
+	if caster:HasModifier("modifier_item_octarine_core") then
+		cooldown = ability:GetCooldown( ability:GetLevel() - 1 ) - ability:GetCooldown( ability:GetLevel() - 1 )*cdOctarine	
+	elseif caster:FindAbilityByName("special_bonus_cooldown_reduction_20"):GetLevel() > 0 then
+		cooldown = ability:GetCooldown( ability:GetLevel() - 1 ) - ability:GetCooldown( ability:GetLevel() - 1 )*20/100
+	end
+
+	if caster:HasModifier("modifier_item_octarine_core") and caster:FindAbilityByName("special_bonus_cooldown_reduction_20"):GetLevel() > 0  then
+		cooldown = ability:GetCooldown( ability:GetLevel() - 1 ) - ability:GetCooldown( ability:GetLevel() - 1 )*40/100
+	end
 	local modifierName = "modifier_mk_staff_orb"
 
 	-- Start cooldown
@@ -86,7 +97,11 @@ function StartCooldown( event )
 	ability:SetContextThink( DoUniqueString("activateMkStaff"), function ()
 		-- Here's a magic
 		-- Reset the ability level in order to restore a passive modifier
+	if ability:IsHidden() then
+        caster:RemoveModifierByName("modifier_mk_staff_orb")
+    else
 		ability.mk_staff_forceEnableOrb = true
 		ability:SetLevel( ability:GetLevel() )	
+	end
 	end, cooldown + 0.05)
 end

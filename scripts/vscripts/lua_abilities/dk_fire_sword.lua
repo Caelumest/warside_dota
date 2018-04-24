@@ -6,7 +6,10 @@
 function StartCooldown( event )
 	local caster = event.caster
 	local ability = event.ability
-	local cooldown = ability:GetCooldown( ability:GetLevel() - 1 )
+	cooldown = ability:GetCooldown( ability:GetLevel() - 1 )
+	if caster:HasModifier("modifier_octarine_core") or caster:HasModifier("modifier_item_octarine_core") then
+		cooldown = ability:GetCooldown( ability:GetLevel() - 1 ) - ability:GetCooldown( ability:GetLevel() - 1 )*25/100
+	end
 	local modifierName = "modifier_dk_fire_sword_orb"
 
 	-- Start cooldown
@@ -21,8 +24,12 @@ function StartCooldown( event )
 	ability:SetContextThink( DoUniqueString("activateFireSword"), function ()
 		-- Here's a magic
 		-- Reset the ability level in order to restore a passive modifier
+	if caster:HasModifier("modifier_dk_dragon_form") then
+        caster:RemoveModifierByName("modifier_dk_fire_sword_orb")
+    else
 		ability.dk_fire_sword_forceEnableOrb = true
 		ability:SetLevel( ability:GetLevel() )	
+	end
 	end, cooldown + 0.05 )
 end
 

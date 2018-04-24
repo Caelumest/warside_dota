@@ -1,6 +1,3 @@
-require("lib.timers")
-require("lib.responses")
-
 if CommunityCustomHeroesGameMode == nil then
 	CommunityCustomHeroesGameMode = class({})
 end
@@ -16,7 +13,8 @@ function Precache(context)
 	--Items
 	PrecacheItemByNameSync("item_aether_core", context)
   	PrecacheItemByNameSync("item_stout_mail", context)
-	-- Sobek precache
+
+	--[[ Sobek precache
 	PrecacheResource( "particle", "particles/econ/generic/generic_buff_1/generic_buff_1.vpcf", context )
 	PrecacheResource( "particle", "particles/items2_fx/medallion_of_courage_friend.vpcf", context )
 	PrecacheResource( "particle", "particles/ui_mouseactions/range_finder_ward_aoe_ring.vpcf", context )
@@ -45,7 +43,7 @@ function Precache(context)
 	PrecacheUnitByNameSync("npc_dota_hero_venomancer",context)
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_viscous_ooze.vsndevts", context )
 	PrecacheModel("models/heroes/viscous_ooze/viscous_ooze.vmdl", context)
-	PrecacheModel("models/heroes/viscous_ooze/oozeling.vmdl", context)
+	PrecacheModel("models/heroes/viscous_ooze/oozeling.vmdl", context)]]
 
 
 
@@ -68,19 +66,120 @@ function Activate()
 	
 	GameRules.GameMode = CommunityCustomHeroesGameMode()
 	GameRules.GameMode:InitGameMode()
-
+	isBotActive = 0
 	local mode = GameRules:GetGameModeEntity()
   	mode:SetBotThinkingEnabled( true )
+  	CustomGameEventManager:RegisterListener("set_bots_difficulty", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'OnBotDifficulty'))
+  	CustomGameEventManager:RegisterListener("player_toggle_bots", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleBots'))
   	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( CommunityCustomHeroesGameMode, 'OnGameStateChanged' ), self )
+end
+
+function CommunityCustomHeroesGameMode:ToggleBots( event )
+	local botsOn = event.botsOn
+	if botsOn == 0 then
+		isBotActive = 0
+		print("Bots OFF")
+	elseif botsOn == 1 then
+		isBotActive = 1
+		print("Bots ON")
+	end
+end
+
+function CommunityCustomHeroesGameMode:OnBotDifficulty( args )
+
+	local botsdifficulty = args.bots_difficulty
+
+	-- If the player who sent the game options is not the host, do nothing
+	if tostring(botsdifficulty) == 'BotsOption1' then
+		bot_difficulty = 0
+		print("BOT DIFFICULTY:", bot_difficulty)
+	elseif tostring(botsdifficulty) == "BotsOption2" then
+		bot_difficulty = 1
+		print("BOT DIFFICULTY:", bot_difficulty)
+	elseif tostring(botsdifficulty) == "BotsOption3" then
+		bot_difficulty = 2
+		print("BOT DIFFICULTY:", bot_difficulty)
+	elseif tostring(botsdifficulty) == "BotsOption4" then
+		bot_difficulty = 3
+		print("BOT DIFFICULTY:", bot_difficulty)
+	elseif tostring(botsdifficulty) == "BotsOption5" then
+		bot_difficulty = 4
+		print("BOT DIFFICULTY:", bot_difficulty)
+	end
+	GAME_OPTIONS_SET = true
+	if isBotActive == 1 then
+		if bot_difficulty == 0 then
+			GameRules:SendCustomMessage("Bots = <font color='#0F0'>ON</font>", 2, 1)
+			GameRules:SendCustomMessage("Difficulty = <font color='#00CCCC'>Passive</font>", 2, 1)
+		elseif bot_difficulty == 1 then
+			GameRules:SendCustomMessage("Bots = <font color='#0F0'>ON</font>", 2, 1)
+			GameRules:SendCustomMessage("Difficulty = <font color='#FF9933'>Easy</font>", 2, 1)
+		elseif bot_difficulty == 2 then
+			GameRules:SendCustomMessage("Bots = <font color='#0F0'>ON</font>", 2, 1)
+			GameRules:SendCustomMessage("Difficulty = <font color='#FFFF33'>Medium</font>", 2, 1)
+		elseif bot_difficulty == 3 then
+			GameRules:SendCustomMessage("Bots = <font color='#0F0'>ON</font>", 2, 1)
+			GameRules:SendCustomMessage("Difficulty = <font color='#99FF99'>Hard</font>", 2, 1)
+		elseif bot_difficulty == 4 then
+			GameRules:SendCustomMessage("Bots = <font color='#0F0'>ON</font>", DOTA_TEAM_GOODGUYS, 1)
+			GameRules:SendCustomMessage("Difficulty = <font color='#FF3333'>Unfair</font>", DOTA_TEAM_GOODGUYS, 1)
+		end
+	elseif isBotActive == 0 then
+		GameRules:SendCustomMessage("Bots = <font color='#F00'>OFF</font>", 2, 1)
+	end
 end
 
 function CommunityCustomHeroesGameMode:OnGameStateChanged( keys )
     local state = GameRules:State_Get()
-
     if state == DOTA_GAMERULES_STATE_STRATEGY_TIME then
         local num = 0
         local used_hero_name = "npc_dota_hero_luna"
-        
+        local brokenBots = {
+            "npc_dota_hero_tidehunter",
+            "npc_dota_hero_razor",
+            "npc_dota_hero_legion_commander",
+            "npc_dota_hero_dragon_knight",
+            "npc_dota_hero_lone_druid",
+            "npc_dota_hero_keeper_of_the_light",
+            "npc_dota_hero_monkey_king"}
+
+        local workingBots = {
+        	"npc_dota_hero_axe",
+            "npc_dota_hero_skywrath_mage",
+            "npc_dota_hero_nevermore",
+            "npc_dota_hero_pudge",
+            "npc_dota_hero_phantom_assassin",
+            "npc_dota_hero_skeleton_king",
+            "npc_dota_hero_lina",
+            "npc_dota_hero_luna",
+            "npc_dota_hero_bloodseeker",
+            "npc_dota_hero_lion",
+            "npc_dota_hero_tiny",
+            "npc_dota_hero_oracle",
+            "npc_dota_hero_bane",
+            "npc_dota_hero_bristleback",
+            "npc_dota_hero_chaos_knight",
+            "npc_dota_hero_crystal_maiden",
+            "npc_dota_hero_dazzle",
+            "npc_dota_hero_death_prophet",
+            "npc_dota_hero_drow_ranger",
+            "npc_dota_hero_earthshaker",
+            "npc_dota_hero_jakiro",
+            "npc_dota_hero_juggernaut",
+            "npc_dota_hero_kunkka",
+            "npc_dota_hero_necrolyte",
+            "npc_dota_hero_sven",
+        	"npc_dota_hero_lich",
+            "npc_dota_hero_omniknight",
+            "npc_dota_hero_sand_king",
+            "npc_dota_hero_sniper",
+            "npc_dota_hero_vengefulspirit",
+            "npc_dota_hero_viper",
+            "npc_dota_hero_warlock",
+            "npc_dota_hero_witch_doctor",
+            "npc_dota_hero_zuus"
+        }
+
         for i=0, DOTA_MAX_TEAM_PLAYERS do
             if PlayerResource:IsValidPlayer(i) then
                 print(i)
@@ -104,30 +203,78 @@ function CommunityCustomHeroesGameMode:OnGameStateChanged( keys )
         
         self.numPlayers = num
         print("Number of players:", num)
+        for j=1,#brokenBots do
+            print("Broken:", brokenBots[j])
+        end
+        totalplayers = self.numPlayers
+        print("TOTAL", totalplayers)
+        totalradiant=0
+        totaldire=0
+        for hel=0,9 do
+        	local teamss = PlayerResource:GetTeam(hel)
+        	if teamss == 2 then
+        		totalradiant = totalradiant + 1
+    		elseif teamss == 3 then
+    			totaldire = totaldire + 1
+    		end
+        	print("TEAMMMM", teamss)
+        end
+    	print("TOTAL RADIANT", totalradiant)
+    	print("TOTAL DIRE", totaldire)
 
-        -- Eanble bots and fill empty slots
-        if IsServer() == true and 10 - self.numPlayers > 0 then
+    	if isBotActive == nil then
+    		isBotActive = 1
+    	end
+    	print("ValorFinal",isBotActive)
+        if IsServer() == true and 10 - self.numPlayers > 0 and isBotActive == 1 then
             print("Adding bots in empty slots")
-            
             for i=1, 5 do
-                Tutorial:AddBot(used_hero_name, "", "", true)
-                Tutorial:AddBot(used_hero_name, "", "", false)
+            	local botsToRadiant = 5 - totalradiant
+            	local botsToDire = 5 - totaldire
+            	if botsToRadiant > 0 then
+            		print("TOTAL IF", totalplayers)
+	            	while nomebot == nil or nomebot==PlayerResource:GetSelectedHeroName(0) or nomebot==PlayerResource:GetSelectedHeroName(1) or nomebot==PlayerResource:GetSelectedHeroName(2) or nomebot==PlayerResource:GetSelectedHeroName(3) or nomebot==PlayerResource:GetSelectedHeroName(4) or nomebot==PlayerResource:GetSelectedHeroName(5) or nomebot==PlayerResource:GetSelectedHeroName(6) or nomebot==PlayerResource:GetSelectedHeroName(7) or nomebot==PlayerResource:GetSelectedHeroName(8) or nomebot==PlayerResource:GetSelectedHeroName(9) do
+	            		randomNum = RandomInt(0,#workingBots)
+	            		print("Random Number:",randomNum)
+	            		print("Nomebot inside while",nomebot)
+	            		nomebot = workingBots[randomNum]
+	            	end
+	            	print("Nomebot outside while",nomebot)
+            		Tutorial:AddBot(nomebot, "","", true)
+            		totalradiant = totalradiant + 1
+            		print("Total radiant:", totalradiant)
+	            end
+            	if botsToDire > 0 then
+            		print("TOTAL IF", totalplayers)
+	            	while nomebot == nil or nomebot==PlayerResource:GetSelectedHeroName(0) or nomebot==PlayerResource:GetSelectedHeroName(1) or nomebot==PlayerResource:GetSelectedHeroName(2) or nomebot==PlayerResource:GetSelectedHeroName(3) or nomebot==PlayerResource:GetSelectedHeroName(4) or nomebot==PlayerResource:GetSelectedHeroName(5) or nomebot==PlayerResource:GetSelectedHeroName(6) or nomebot==PlayerResource:GetSelectedHeroName(7) or nomebot==PlayerResource:GetSelectedHeroName(8) or nomebot==PlayerResource:GetSelectedHeroName(9) do
+	            		randomNum = RandomInt(0,#workingBots)
+	            		print("Random Number:",randomNum)
+	            		print("Nomebot inside while",nomebot)
+	            		nomebot = workingBots[randomNum]
+	            	end
+	     
+	            	print("Nomebot outside while",nomebot)
+            		Tutorial:AddBot(nomebot, "","", false)
+            		totaldire = totaldire + 1
+            		print("Total dire:", totaldire)
+	            end
             end
-            
-            GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
-            --SendToServerConsole("dota_bot_set_difficulty 2")
+            print("Players total",totalplayers)
+            for helper=0,9 do
+            	print(helper,"<< Num  Hero>>",PlayerResource:GetSelectedHeroName(helper))
+            end
+            --GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
             --SendToServerConsole("dota_bot_populate")
             --SendToServerConsole("dota_bot_set_difficulty 2")
         end
     elseif state == DOTA_GAMERULES_STATE_PRE_GAME then
-        --for i=0, DOTA_MAX_TEAM_PLAYERS do
-            --print(i)
-            --if PlayerResource:IsFakeClient(i) then
-                --print(i)
-                --PlayerResource:GetPlayer(i):GetAssignedHero():SetBotDifficulty(4)
-            --end
-        --end
-        Tutorial:StartTutorialMode()
+    	Tutorial:StartTutorialMode()
+        for i=0, DOTA_MAX_TEAM_PLAYERS do
+        	if PlayerResource:IsFakeClient(i) == true then
+                PlayerResource:GetPlayer(i):GetAssignedHero():SetBotDifficulty(bot_difficulty)
+                print("Bot",i,"difficulty setted to:",bot_difficulty)
+            end
+        end
     end
 end
 
@@ -140,25 +287,27 @@ function CommunityCustomHeroesGameMode:InitGameMode()
 	--VoiceResponses:Start()
 	--VoiceResponses:RegisterUnit("npc_dota_hero_windrunner", "scripts/responses/sobek_responses.txt")
 	--VoiceResponses:RegisterUnit("npc_dota_hero_treant", "scripts/responses/parasight_responses.txt")
-
+	--CustomGameEventManager:RegisterListener("player_toggle_camera_lock", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleCameraLock'))
 	-- Link modifiers
-	LinkLuaModifier("modifier_activatable", "scripts/vscripts/modifiers/modifier_activatable.lua", LUA_MODIFIER_MOTION_NONE)
+	--LinkLuaModifier("modifier_activatable", "scripts/vscripts/modifiers/modifier_activatable.lua", LUA_MODIFIER_MOTION_NONE)
 
 	-- Listen to game events
+	--ListenToGameEvent( "player_toggle_camera_lock", Dynamic_Wrap( CommunityCustomHeroesGameMode, 'ToggleCameraLock' ), self )
+	GameRules:SetCustomGameSetupTimeout(60)
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( CommunityCustomHeroesGameMode, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "entity_killed", Dynamic_Wrap( CommunityCustomHeroesGameMode, "OnEntityKilled" ), self )
 	GameRules:GetGameModeEntity():SetUseCustomHeroLevels ( true )
 	GameRules:GetGameModeEntity():SetCustomHeroMaxLevel(35)
-	GameRules:SetStartingGold(1400)
-	GameRules:SetGoldPerTick(1)
-	GameRules:SetGoldTickTime(0.22)
+	--GameRules:SetStartingGold(1400)
+	--GameRules:SetGoldPerTick(1)
+	--GameRules:SetGoldTickTime(0.22)
 	-- Set order filter
-	GameRules:GetGameModeEntity():SetExecuteOrderFilter(Dynamic_Wrap(CommunityCustomHeroesGameMode, 'OrderFilter'), self)
+	--GameRules:GetGameModeEntity():SetExecuteOrderFilter(Dynamic_Wrap(CommunityCustomHeroesGameMode, 'OrderFilter'), self)
 	-- Set damage filter
-	GameRules:GetGameModeEntity():SetDamageFilter(Dynamic_Wrap(CommunityCustomHeroesGameMode, 'DamageFilter'), self)
+	--GameRules:GetGameModeEntity():SetDamageFilter(Dynamic_Wrap(CommunityCustomHeroesGameMode, 'DamageFilter'), self)
 
 
-	--[[XP_PER_LEVEL_TABLE = {
+	XP_PER_LEVEL_TABLE = {
 	        0, -- 1
 	      200, -- 2
 	      500, -- 3
@@ -194,8 +343,8 @@ function CommunityCustomHeroesGameMode:InitGameMode()
 	  	50500, -- 33
 	  	53500, -- 34
 	  	56500  -- 35
-	  }]]--
-	  XP_PER_LEVEL_TABLE = {
+	  }
+	  --[[XP_PER_LEVEL_TABLE = {
 	        0, -- 1
 	      100, -- 2
 	      250, -- 3
@@ -231,7 +380,7 @@ function CommunityCustomHeroesGameMode:InitGameMode()
 	  	25500, -- 33
 	  	26500, -- 34
 	  	28500  -- 35
-	  }
+	  }]]
 	  GameRules:GetGameModeEntity():SetCustomXPRequiredToReachNextLevel(XP_PER_LEVEL_TABLE)
 
 
@@ -305,6 +454,17 @@ function CommunityCustomHeroesGameMode:OrderFilter(order)
 	return true
 end
 
+function CommunityCustomHeroesGameMode:ToggleCameraLock( event )
+	local pID = event.pID
+	local locked = event.locked
+	local hero = PlayerResource:GetSelectedHeroEntity( pID )
+	if locked == 0 then
+		PlayerResource:SetCameraTarget( pID, nil )
+	elseif locked == 1 then
+		PlayerResource:SetCameraTarget( pID, hero )
+	end
+end
+
 ---------------------------------------------------------------------------
 -- Event: OnEntityKilled
 ---------------------------------------------------------------------------
@@ -316,7 +476,7 @@ function CommunityCustomHeroesGameMode:OnEntityKilled( event )
     local heroTeam = hero:GetTeam()
     local extraTime = 0 
 
-    if killedUnit:IsRealHero() and killedUnit:GetRespawnTime() > 100 then
+    if killedUnit:IsRealHero() and killedUnit:GetLevel() > 25 then
         print("Hero has been killed")   
 
         print(hero:GetLevel())
@@ -326,7 +486,9 @@ function CommunityCustomHeroesGameMode:OnEntityKilled( event )
 end
 
 function SetRespawnTime( killedTeam, killedUnit, respawnTime )
-    killedUnit:SetTimeUntilRespawn(100)   
+	if killedUnit:IsReincarnating() ==false then
+    	killedUnit:SetTimeUntilRespawn(100)
+    end
 end
 
 function CommunityCustomHeroesGameMode:DamageFilter(filterTable)
@@ -373,11 +535,7 @@ end
 --------------------------------------------------------------------------------
 function CommunityCustomHeroesGameMode:OnNPCSpawned( event )
 	spawnedUnit = EntIndexToHScript( event.entindex )
-	if spawnedUnit:IsRealHero() and not spawnedUnit:IsClone() then
-		local team = spawnedUnit:GetTeamNumber()
-      	local player = spawnedUnit:GetPlayerOwner()
-      	local pID = player:GetPlayerID()
-      	--player:SetGold(1750, false)
+	if spawnedUnit:IsRealHero() and not spawnedUnit:IsClone() and not spawnedUnit:IsIllusion() then
 		CheckForInnates(spawnedUnit)
 	end
 
@@ -385,13 +543,7 @@ end
 
 
 function CheckForInnates(spawnedUnit)
-	if(spawnedUnit:GetName() == "npc_dota_hero_treant") then
-		local innate = spawnedUnit:FindAbilityByName("parasight_combust")
-		if innate then innate:SetLevel(1) end
-	elseif(spawnedUnit:GetName() == "npc_dota_hero_venomancer") then
-		local innate = spawnedUnit:FindAbilityByName("viscous_ooze_size_mutator")
-		if innate then innate:SetLevel(1) end
-	elseif(spawnedUnit:GetName() == "npc_dota_hero_legion_commander") then
+	if(spawnedUnit:GetName() == "npc_dota_hero_legion_commander") then
 		local innate = spawnedUnit:FindAbilityByName("legion_demon_form")
 		if innate then innate:SetLevel(1) end
 	elseif(spawnedUnit:GetName() == "npc_dota_hero_dragon_knight") then

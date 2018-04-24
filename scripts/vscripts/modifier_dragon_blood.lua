@@ -15,7 +15,6 @@ function modifier_dragon_blood:OnCreated()
     health_step = ability:GetSpecialValueFor("hurt_health_step")
 
     self:SetStackCount( 1 )
-    self:GetParent():CalculateStatBonus()
 
     self:StartIntervalThink(0.1) 
 end
@@ -52,8 +51,6 @@ function modifier_dragon_blood:OnRefresh()
     local ability = self:GetAbility()
     local StackCount = self:GetStackCount()
     local caster = self:GetParent()
-
-    self:GetParent():CalculateStatBonus()
 end
 
 function modifier_dragon_blood:DeclareFunctions()

@@ -7,7 +7,7 @@ LinkLuaModifier("modifier_dragon_blood", LUA_MODIFIER_MOTION_NONE)
     Date: 30.09.2015
     Simply applies the lua modifier
 --]]
-function ApplyLuaModifier(keys)
+function ApplyLuaModifier(keys, event)
     local caster = keys.caster
     local ability = keys.ability
     local modifiername = keys.ModifierName

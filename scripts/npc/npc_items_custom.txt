@@ -46,7 +46,7 @@
 		"ItemResult"					"item_stout_mail"
 		"ItemRequirements"
 		{
-			"01"						"item_blade_mail;item_ogre_axe;item_ogre_axe"
+			"01"						"item_blade_mail;item_ogre_axe;item_ogre_axe;item_stout_shield"
 		}
 	}
 	"item_aether_core"
@@ -175,7 +175,7 @@
 
     // Item Info
     //-------------------------------------------------------------------------------------------------------------
-    "ItemCost"                                            "4775"
+    "ItemCost"                                            "4975"
     "ItemShopTags"                                        "block;int;str;armor;damage;hard_to_tag"
     "ItemQuality"                                         "artifact"
     "ItemAliases"                                         "stout mail;casalmar plate"
@@ -197,12 +197,12 @@
 		"01"
 		{
 			"var_type"                                        "FIELD_INTEGER"
-			"damage_block_melee"                              "26"
+			"damage_block_melee"                              "20"
 		}
 		"02"
 		{
 			"var_type"                                        "FIELD_INTEGER"
-			"damage_block_ranged"                             "13"
+			"damage_block_ranged"                             "10"
 		}
 		"03"
 		{
@@ -237,7 +237,7 @@
 		"09"
 		{
 			"var_type"						"FIELD_FLOAT"
-			"return_duration"				"5.5"
+			"return_duration"				"5"
 		}
 		"10"
 		{

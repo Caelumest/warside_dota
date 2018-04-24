@@ -5,14 +5,12 @@ function OnHit( keys )
     local stack_modifier = keys.stack_modifier
     local stack_count = target:GetModifierStackCount(stack_modifier, ability)
     local duration_buff = ability:GetLevelSpecialValueFor( "duration", ( ability:GetLevel() - 1 ) )
-    if target:IsTower() == false then
+    if target:IsBuilding() == false then
         ability:ApplyDataDrivenModifier(caster, target, stack_modifier, {duration = duration_buff})
         target:SetModifierStackCount(stack_modifier, ability, stack_count + 1)
-        if target:IsAlive() then
-            if stack_count == 2 then
+        if stack_count == 2 then
             ability:ApplyDataDrivenModifier(caster, target, "modifier_explosion", {duration = 0})
             target:RemoveModifierByName(stack_modifier)
-            end
         end
     end
 end
