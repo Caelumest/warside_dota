@@ -6,6 +6,43 @@
 "DOTAAbilities"
 {
     "Version"       "1"
+    "insatiable_hunger"
+    {
+    	"BaseClass"             "ability_datadriven"
+	"AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+	"AbilityTextureName"    "insatiable_hunger"
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"		"FIELD_FLOAT"
+			"health_treshold"	"0.2"
+		}
+		"02"
+		{
+			"var_type"		"FIELD_FLOAT"
+			"charges_to_buff"	"10"
+		}
+		"03"
+		{
+			"var_type"		"FIELD_FLOAT"
+			"max_charges"		"100"
+		}
+		"04"
+		{
+			"var_type"		"FIELD_FLOAT"
+			"lifesteal_buff"	"4 6 8 10"
+		}
+		"05"
+		{
+			"var_type"		"FIELD_FLOAT"
+			"charges_duration"	"8 10 12 14"
+		}
+		"precache"
+		{
+		}
+		
+    }
     "demon_blood"
 {
     // General
