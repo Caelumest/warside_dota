@@ -12,17 +12,19 @@
         "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
         "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
         "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
-        "AnimationPlaybackRate"         ""
         "AbilityCastRange"              "1500"
         "AbilityCastPoint"              "0.2"
+        "AnimationPlaybackRate"         "1.2"
         "AbilityCooldown"               "18 15 12 9"
         "AbilityManaCost"               "70 80 90 100"
         "AbilityDamage"                 "100 150 200 250"
-        //"AbilityCastAnimation"          "ACT_DOTA_KILLTAUNT"
+        "AbilityCastAnimation"          "ACT_DOTA_ATTACK_EVENT"
         "precache"
         {
             "soundfile"         "soundevents/game_sounds_heroes/game_sounds_magnataur.vsndevts"
             "particle"           "particles/units/heroes/hero_magnataur/magnataur_shockwave.vpcf"
+            "particle"          "particles\econ\items\juggernaut\jugg_relentless_sword\juggernaut_relentless_sword_glow.vpcf"
+            "particle"          "particles\units\heroes\hero_faceless_void\faceless_void_dialatedebuf.vpcf"
         }
         "AbilitySpecial"
         {
@@ -40,6 +42,7 @@
             {
                 "var_type"              "FIELD_INTEGER"
                 "distance"              "650 700 750 800"
+                "LinkedSpecialBonus"    "special_bonus_unique_jugg_1"
             }
             "04"
             {
@@ -102,15 +105,24 @@
         }
         "Modifiers"
         {
+            "modifier_marked"
+            {
+                "IsPurgable"        "0"
+                "IsBuff"            "0"
+                "IsDebuff"          "1"
+                "IsStunDebuff"      "0"
+                //Purge(bool RemovePositiveBuffs, bool RemoveDebuffs, bool BuffsCreatedThisFrameOnly, bool RemoveStuns, bool RemoveExceptions)"
+                "IsHidden"              "0"
+                "EffectName"            "particles\units\heroes\hero_faceless_void\faceless_void_dialatedebuf.vpcf"
+                "EffectAttachType"      "follow_hitloc"
+            }
             "modifier_wave_blink"
             {
                 "Passive"           "0"
                 "IsHidden"          "1"
                 "IsDebuff"          "0"
-                "Duration"          "5"
                 
             }
-
         }
     }
 
@@ -124,15 +136,12 @@
         "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_ROOT_DISABLES | DOTA_ABILITY_BEHAVIOR_IMMEDIATE" 
         "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
         "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO"
-        "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
-        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_YES"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
         "AnimationPlaybackRate"         "0.8"
         "AbilityCastRange"              "900"
         "AbilityCastPoint"              "0"
         "AbilityCooldown"               "0.1"
         "AbilityManaCost"               "0"
-        "AbilityDamage"                 "80 120 160 200"
-        "AbilityCastAnimation"          ""
         "precache"
         {
             "soundfile"         "soundevents/game_sounds_heroes/game_sounds_huskar.vsndevts"
@@ -183,15 +192,6 @@
                 "damage_max"            "150 300 450 600"
             }
         }
-        "OnAbilityPhaseStart"
-        {
-            "ApplyModifier"
-            {
-                "ModifierName"  "modifier_gesture"
-                "Target"        "CASTER"
-                "Duration"      "1"
-            }
-        }
         "OnSpellStart"
         {
             "ActOnTargets"
@@ -208,23 +208,21 @@
                     "RunScript"
                     {
                         "ScriptFile"    "heroes/new_hero/wave_blink.lua"
-                        "Function"      "LifeBreak"
+                        "Function"      "StartSub"
                     }
                     "ApplyMotionController"
                     // For this: gfycat.com/BraveHideousGiantschnauzer -> check: bit.ly/1KWulqA
                     {
                         "Target"         "CASTER"
                         "ScriptFile"     "heroes/new_hero/wave_blink.lua"
-                        "HorizontalControlFunction" "JumpHorizonal"    
+                        "HorizontalControlFunction" "MoveTo"    
                     }
                 }
-                
             }
-
         }
         "Modifiers"
         {
-            "modifier_gesture"
+            "modifier_hide_ability"
             {
                 "IsHidden"      "1"
                 "OverrideAnimation"     "ACT_DOTA_ATTACK"
@@ -257,11 +255,6 @@
                     }
                 }
             }
-            "modifier_turn"
-            {
-                "IsHidden"          "1"
-                "IsDebuff"          "0"
-            }
             "modifier_check_area"
             {
                 "Passive"           "1"
@@ -283,23 +276,10 @@
                         "ScriptFile"    "heroes/new_hero/wave_blink.lua"
                         "Function"      "CheckTime"
                     }
-                    "ActOnTargets"
+                    "RunScript"
                     {
-                        "Target"
-                        {
-                            "Center"    "CASTER"
-                            "Radius"    "1600"
-                            "Teams"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
-                            "Types"     "DOTA_UNIT_TARGET_HERO"
-                        }
-                        "Action"    
-                        {
-                            "RunScript"
-                            {
-                                "ScriptFile"    "heroes/new_hero/wave_blink.lua"
-                                "Function"      "CheckArea"
-                            }
-                        }
+                        "ScriptFile"    "heroes/new_hero/wave_blink.lua"
+                        "Function"      "CheckArea"
                     }
                 }
             }

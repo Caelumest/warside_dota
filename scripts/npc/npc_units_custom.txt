@@ -10,7 +10,7 @@
 	{
 		// General
 		//----------------------------------------------------------------
-		"Model"						"models/heroes/legion_commander/legion_commander.vmdl"	// Model.
+		"Model"						"models/heroes/dragon_knight/dragon_knight.vmdl"	// Model.
 		"BaseClass"					"npc_dota_creature"
 		"SoundSet"					"n_creep_Melee"
 		"GameSoundsFile"			"soundevents/game_sounds_creeps.vsndevts"
@@ -78,24 +78,93 @@
 		// Creature Data
 		//----------------------------------------------------------------
 		"Creature"
-		{
-			//Level Up
-			"HPGain"					"50"
-			"DamageGain"				"2"
-			"ArmorGain"					"0.25"
-			"MagicResistGain"			"0.1"
-			"MoveSpeedGain"				"1"
-			"BountyGain"				"3"
-			"XPGain"					"15"
-			"AttachWearables"
-	    	{
-	        	"Wearable1" { "ItemDef"		"5810" }
-	        	"Wearable2" { "ItemDef"		"5810" }
-	        	"Wearable3" { "ItemDef"		"5810" }
-	    	}
-		}
+        {
+                "DisableClumpingBehavior"       "1"
+                "AttachWearables"
+                {
+                        "Wearable1" { "ItemDef" "63" }
+                        "Wearable2" { "ItemDef" "64" }
+                        "Wearable3" { "ItemDef" "65" }
+                        "Wearable4" { "ItemDef" "66" }
+                        "Wearable5" { "ItemDef" "67" }
+                        "Wearable6" { "ItemDef" "68" }
+                }
+        }
 	}
 
+	"npc_dota_hero_krigler"
+  {
+    "BaseClass"                 "npc_dota_hero_juggernaut"
+    "HeroID"                    "128"
+    "Model"                    	"models/heroes/krigler/juggernaut.vmdl"
+    "SoundSet"                  "Hero_Juggernaut"
+    "GameSoundsFile"            "soundevents/game_sounds_heroes/game_sounds_juggernaut.vsndevts"
+    "Portrait"					"materials/vgui/hud/heroportraits/portrait_juggernaut"
+
+    "MovementCapabilities"    "DOTA_UNIT_CAP_MOVE_GROUND"
+    "MovementTurnRate"          "1.5"
+    "MovementSpeed"             "325"
+    "HeroSelectSoundEffect"		"Hero_Juggernaut.Pick"
+
+    "AttackCapabilities"        "DOTA_UNIT_CAP_MELEE_ATTACK"
+    "AttackDamageMin"           "31"
+    "AttackDamageMax"           "33"
+    "AttackRange"               "150"
+    "AttackRate"                "1.7"
+    "AttackAnimationPoint"      "0.33"
+    "AttackSpeedActivityModifiers"
+    {
+      "fast"    "170"
+      "faster"  "275"
+      "fastest" "350"
+    }
+    "precache"
+	{
+		"soundfile"         "soundevents/game_sounds_heroes/game_sounds_juggernaut.vsndevts"
+	}
+
+    "ArmorPhysical"             "5"
+    "MagicalResistance"         "25"
+
+    "StatusHealthRegen"         "3.25"
+    "StatusHealth"              "200"
+    "StatusManaRegen"           "0.9"
+    "StatusMana"                "75"
+    "HealthBarOffset"       	"210"
+
+    "AttributePrimary"          "DOTA_ATTRIBUTE_STRENGTH"
+    "AttributeBaseStrength"     "23"
+    "AttributeStrengthGain"     "3.5"
+    "AttributeBaseAgility"      "18"
+    "AttributeAgilityGain"      "1.5"
+    "AttributeBaseIntelligence" "17"
+    "AttributeIntelligenceGain" "1.2"
+    "RingRadius"                "60"
+
+    "Ability1"                  "wave_blink"
+    "Ability2"                  "insatiable_anger"
+    "Ability3"                  "pain_wave"
+    "Ability6"                  "release_anger"
+    "Ability8"					"wave_blink_sub"
+
+    "Ability10"					"special_bonus_cleave_15"
+    "Ability11"					"special_bonus_strength_8"
+    "Ability12"					"special_bonus_unique_jugg_1"
+    "Ability13"					"special_bonus_agility_10"
+    "Ability14"					"special_bonus_hp_400"
+	"Ability15"					"special_bonus_unique_jugg_2"
+	"Ability16"					"special_bonus_strength_40"
+	"Ability17"					"special_bonus_unique_jugg_3"
+    
+
+    "CombatClassAttack"     "DOTA_COMBAT_CLASS_ATTACK_HERO"
+    "CombatClassDefend"     "DOTA_COMBAT_CLASS_DEFEND_HERO"
+    "UnitRelationshipClass"   "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_HERO"
+    "HasInventory"        "1" // This KV must be added in units file only
+
+    "VisionDaytimeRange"        "1800"                            // Range of vision during day light.
+    "VisionNighttimeRange"      "1200"                             // Range of vision at night time.
+  }
 	"npc_dummy_unit"
 	{	
 	// General

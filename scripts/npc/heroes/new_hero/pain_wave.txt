@@ -12,13 +12,12 @@
         "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
         "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
         "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
-        "AnimationPlaybackRate"         ""
         "AbilityCastRange"              "300"
         "AbilityCastPoint"              "0"
+        "AnimationPlaybackRate"         ""
         "AbilityCooldown"               "12 11 10 9"
         "AbilityManaCost"               "100 95 80 75"
         "AbilityDamage"                 "100 160 220 280"
-        "AbilityCastAnimation"          "ACT_DOTA_ATTACK_EVENT"
         "precache"
         {
             "soundfile"         "soundevents/game_sounds_heroes/game_sounds_earth_spirit.vsndevts"
@@ -44,6 +43,11 @@
                 "var_type"              "FIELD_INTEGER"
                 "radius"                "300"
             }
+            "04"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "lotus_duration"        "1"
+            }
         }
         "OnSpellStart"
         {
@@ -67,7 +71,7 @@
             {
                 "ModifierName"  "modifier_item_lotus_orb_active"
                 "Target"        "CASTER"
-                "Duration"      "1"
+                "Duration"      "%lotus_duration"
             }
             "DelayedAction"
             {
@@ -85,6 +89,25 @@
                     {
                         "EffectName"    "Hero_EarthSpirit.StoneRemnant.Destroy"
                         "Target"        "CASTER"
+                    }
+                }
+            }
+            "DelayedAction"
+            {
+                "Delay"     "1.18"
+                "Action"    
+                {
+                    "ApplyModifier"
+                    {
+                        "ModifierName"  "modifier_animation"
+                        "Target"        "CASTER"
+                        "Duration"      "2"
+                    }
+                    "ApplyModifier"
+                    {
+                        "ModifierName"  "modifier_fly_movement"
+                        "Target"        "CASTER"
+                        "Duration"      "0.82"
                     }
                 }
             }
@@ -138,6 +161,20 @@
         }
         "Modifiers"
         {
+            "modifier_animation"
+            {
+                "IsHidden"      "1"
+                "OverrideAnimation"     "ACT_DOTA_ATTACK_TAUNT"
+            }
+            "modifier_fly_movement"
+            {
+                "IsHidden"          "1"
+                "States"
+                {
+                    "MODIFIER_STATE_FLYING_FOR_PATHING_PURPOSES_ONLY"   "MODIFIER_STATE_VALUE_ENABLED"
+                    "MODIFIER_STATE_NO_UNIT_COLLISION"  "MODIFIER_STATE_VALUE_ENABLED"
+                }
+            }
             "modifier_reflect"
             {
                 "Passive"           "0"

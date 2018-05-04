@@ -1,0 +1,119 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.0",
+    "signature": "ebaee8266abc6148f15c4f76bb50d645bd54ae38"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.0": {
+      "Decompiler/0.0.12.582": {
+        "dependencies": {
+          "CommandLineParser": "1.9.71",
+          "ValvePak": "0.4.0.11",
+          "ValveResourceFormat": "0.0.12.582"
+        },
+        "runtime": {
+          "Decompiler.dll": {}
+        }
+      },
+      "Avalonia.Skia.Linux.Natives/1.57.1.4": {
+        "dependencies": {
+          "SkiaSharp": "1.57.1"
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libSkiaSharp.so": {
+            "rid": "linux-x64",
+            "assetType": "native"
+          }
+        }
+      },
+      "CommandLineParser/1.9.71": {
+        "runtime": {
+          "lib/net45/CommandLine.dll": {}
+        }
+      },
+      "SkiaSharp/1.57.1": {
+        "runtime": {
+          "lib/netstandard1.3/SkiaSharp.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/osx/native/libSkiaSharp.dylib": {
+            "rid": "osx",
+            "assetType": "native"
+          },
+          "runtimes/win7-x64/native/libSkiaSharp.dll": {
+            "rid": "win7-x64",
+            "assetType": "native"
+          },
+          "runtimes/win7-x86/native/libSkiaSharp.dll": {
+            "rid": "win7-x86",
+            "assetType": "native"
+          }
+        }
+      },
+      "System.Numerics.Vectors/4.4.0": {},
+      "ValvePak/0.4.0.11": {
+        "runtime": {
+          "lib/net40/ValvePak.dll": {}
+        }
+      },
+      "ValveResourceFormat/0.0.12.582": {
+        "dependencies": {
+          "Avalonia.Skia.Linux.Natives": "1.57.1.4",
+          "SkiaSharp": "1.57.1",
+          "System.Numerics.Vectors": "4.4.0"
+        },
+        "runtime": {
+          "ValveResourceFormat.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Decompiler/0.0.12.582": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Avalonia.Skia.Linux.Natives/1.57.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1Vv/yEOg1ZSVxWQurBLaP/Kj4aYlx5/2eBEl7exhrhFSUBweMN8rYHUuWXxDqd+ykkEWXtggj8iLoNmOpT8fgw==",
+      "path": "avalonia.skia.linux.natives/1.57.1.4",
+      "hashPath": "avalonia.skia.linux.natives.1.57.1.4.nupkg.sha512"
+    },
+    "CommandLineParser/1.9.71": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zm4qHiMcFsxrZ4JqrSmqQVNkaZrKHlMih7mQJrd+GB617QBUxdmg3v1yFHxKfrcjY+UbwBuFq9W8Um8HEomuXg==",
+      "path": "commandlineparser/1.9.71",
+      "hashPath": "commandlineparser.1.9.71.nupkg.sha512"
+    },
+    "SkiaSharp/1.57.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Y2WU+/qhdMON0rTyO+MtbUMEbcPvg8do40AhXMI2/C8Yqi59GLhqZexY54snTutCt07/24HZda7hq/Wy53/beg==",
+      "path": "skiasharp/1.57.1",
+      "hashPath": "skiasharp.1.57.1.nupkg.sha512"
+    },
+    "System.Numerics.Vectors/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UiLzLW+Lw6HLed1Hcg+8jSRttrbuXv7DANVj0DkL9g6EnnzbL75EB7EWsw5uRbhxd/4YdG8li5XizGWepmG3PQ==",
+      "path": "system.numerics.vectors/4.4.0",
+      "hashPath": "system.numerics.vectors.4.4.0.nupkg.sha512"
+    },
+    "ValvePak/0.4.0.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-CR3NmP6NFBVavID0wKq2pvZpf/ghA4JHsZ83CSM172SAbRol8L9Lvj6S9g26DR6vLsbiBXeReBMo08yyrOQ77A==",
+      "path": "valvepak/0.4.0.11",
+      "hashPath": "valvepak.0.4.0.11.nupkg.sha512"
+    },
+    "ValveResourceFormat/0.0.12.582": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

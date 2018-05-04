@@ -1,14 +1,16 @@
 function wave_projectile (event)
-	local caster	= event.caster
+	caster	= event.caster
 	local ability	= event.ability
 	local maxDist = event.distance
+	main_ability = caster:FindAbilityByName("wave_blink")
+	sub_ability = caster:FindAbilityByName("wave_blink_sub")
 	local radius			= event.radius
-	local talent = caster:FindAbilityByName("special_bonus_unique_jugg_1")
+	talent = caster:FindAbilityByName("special_bonus_unique_jugg_1")
 	if talent:GetLevel() > 0 then
 		maxDist = maxDist + talent:GetSpecialValueFor("value")
 	end
 	if caster:HasModifier("modifier_item_aether_lens") then
-		maxDist = event.distance + 250
+		maxDist = maxDist + 250
 	end
 	local speed				= event.speed
 	local visionRadius		= event.vision
@@ -36,17 +38,12 @@ function wave_projectile (event)
 		iVisionTeamNumber	= caster:GetTeamNumber(),
 	} )
 	EmitSoundOn( "Hero_Magnataur.ShockWave.Particle", caster )
-	print("Soltou Wave")
-
 end
 
 function wave_damage( keys )
-	local caster = keys.caster
 	local ability = keys.ability
 	target = keys.target
-	local sub_ability = caster:FindAbilityByName("wave_blink_sub")
-	local sub_radius = sub_ability:GetLevelSpecialValueFor("radius", (ability:GetLevel() - 1))
-
+	sub_radius = sub_ability:GetLevelSpecialValueFor("radius", (ability:GetLevel() - 1))
 	local damage_table = {}
 	damage_table.attacker = caster
 	damage_table.victim = target
@@ -59,61 +56,40 @@ function wave_damage( keys )
 		EmitSoundOn( "Hero_Magnataur.ShockWave.Target", target )
 	end
 	if target:IsHero() then
+		caster:RemoveModifierByName("modifier_hide_ability")
 		EmitSoundOn( "Hero_Magnataur.Attack.Anvil", target )
 		ProjectileManager:DestroyLinearProjectile( projID )
 		ability:ApplyDataDrivenModifier(caster, target, "modifier_wave_blink", {})
-
-		local sub_ability_name = keys.sub_ability_name
-		local main_ability_name = ability:GetAbilityName()
-		local sub_ability = caster:FindAbilityByName("wave_blink_sub")
+		ability:ApplyDataDrivenModifier(caster, target, "modifier_marked", {duration = 5})
 		sub_ability:SetLevel(ability:GetLevel())
 		if sub_ability:IsHidden() then
-			caster:SwapAbilities(main_ability_name, sub_ability_name, false, true)
+			caster:SwapAbilities("wave_blink", "wave_blink_sub", false, true)
 		end
-
-		wave_start_time = GameRules:GetGameTime()
-
-		if (target:HasModifier("modifier_wave_blink")) and (caster:GetRangeToUnit(target) <= sub_radius) then
+		if (target:HasModifier("modifier_wave_blink")) and (caster:GetRangeToUnit(target) <= sub_radius) and caster:CanEntityBeSeenByMyTeam(target) and target:IsAlive() then
 			sub_ability:SetActivated(true)
 		else
 			sub_ability:SetActivated(false)
 		end
+		wave_start_time = GameRules:GetGameTime()
 	end
 end
 
-function LifeBreak( keys )
-    -- Variables
-    local caster = keys.caster
-
-    local ability = keys.ability
-    local ability_prim = caster:FindAbilityByName("wave_blink")
-    local charge_speed = ability:GetLevelSpecialValueFor("speed", (ability:GetLevel() - 1)) * 1/30
-    ability:ApplyDataDrivenModifier(caster, caster, "modifier_turn", {})
-    caster:RemoveModifierByName("modifier_check_area")
-    ability:SetActivated(false)
-    ability_prim:ApplyDataDrivenModifier(caster, target, "modifier_wave_blink", {})
-    ability:ApplyDataDrivenModifier(caster, caster, "modifier_cant_walk", {})
-    caster:Stop()
-    caster:Stop()
-    caster:Stop()
+function StartSub()
+    local charge_speed = sub_ability:GetLevelSpecialValueFor("speed", (sub_ability:GetLevel() - 1)) * 1/30
+    sub_ability:SetActivated(false)
+    main_ability:ApplyDataDrivenModifier(caster, target, "modifier_wave_blink", {})
+    sub_ability:ApplyDataDrivenModifier(caster, caster, "modifier_cant_walk", {})
     EmitSoundOn("Hero_Huskar.Life_Break", caster)
-
-    -- Save modifiernames in ability
-    ability.modifiername = keys.ModifierName
-    ability.modifiername_debuff = keys.ModifierName_Debuff
-
     -- Motion Controller Data
-    ability.target = target
-    ability.velocity = charge_speed
-    ability.life_break_z = 0
-    ability.initial_distance = (GetGroundPosition(target:GetAbsOrigin(), target)-GetGroundPosition(caster:GetAbsOrigin(), caster)):Length2D()
-    ability.traveled = 0
+    sub_ability.target = target
+    sub_ability.velocity = charge_speed
+    sub_ability.life_break_z = 0
+    sub_ability.initial_distance = (GetGroundPosition(target:GetAbsOrigin(), target)-GetGroundPosition(caster:GetAbsOrigin(), caster)):Length2D()
+    sub_ability.traveled = 0
     local target_loc = GetGroundPosition(target:GetAbsOrigin(), target)
     local caster_loc = GetGroundPosition(caster:GetAbsOrigin(), caster)
     local direction = (target_loc - caster_loc):Normalized()
     caster:MoveToPosition(target_loc)
-    caster:SetForwardVector(direction)
-   
 end
 
 function AutoAttack(caster, target)
@@ -126,130 +102,113 @@ function AutoAttack(caster, target)
 	         Queue = true
 	      }
 	      ExecuteOrderFromTable(order)
-
 end
 
-function DoDamage(caster, target, ability)
-	local dmg_table_target = {
-                                victim = target,
-                                attacker = caster,
-                                damage = 50,
-                                damage_type = DAMAGE_TYPE_MAGICAL
-                            }
-    ApplyDamage(dmg_table_target)
-    EmitSoundOn( "Hero_Huskar.Life_Break.Impact", target )
-end
-
-function OnMotionDone(caster, target, ability)
+function OnMotionDone(caster, target, sub_ability)
+	local target_loc = GetGroundPosition(target:GetAbsOrigin(), target)
+	local caster_loc = GetGroundPosition(caster:GetAbsOrigin(), caster)
 	target:RemoveModifierByName("modifier_wave_blink")
-	ability:ApplyDataDrivenModifier( caster, caster, "modifier_check_area", {} )
-	local main_ability = caster:FindAbilityByName("wave_blink")
-	local sub_ability = caster:FindAbilityByName("wave_blink_sub")
-	main_ability:SetLevel(ability:GetLevel())
-	caster:SwapAbilities("wave_blink_sub", "wave_blink", false, true)
-    EmitSoundOn("Hero_Huskar.Life_Break.Impact", target)
-    --Particles and effects
-    local particle = ParticleManager:CreateParticle("particles/units/heroes/hero_huskar/huskar_life_break.vpcf", PATTACH_ABSORIGIN_FOLLOW, target)
-    ParticleManager:SetParticleControlEnt(particle, 0, target, PATTACH_ABSORIGIN_FOLLOW, "attach_hitloc", target:GetAbsOrigin(), true)
-    ParticleManager:SetParticleControlEnt(particle, 1, target, PATTACH_ABSORIGIN_FOLLOW, "attach_hitloc", target:GetAbsOrigin(), true)
-    ParticleManager:ReleaseParticleIndex(particle)
-    caster:RemoveModifierByName("modifier_cant_walk")
-    caster:RemoveModifierByName("modifier_turn")
-    DoDamage(caster, target, ability)
-
-    AutoAttack(caster, target)
+	target:RemoveModifierByName("modifier_marked")
+	main_ability:SetLevel(sub_ability:GetLevel())
+	if main_ability:IsHidden() then
+		caster:SwapAbilities("wave_blink_sub", "wave_blink", false, true)
+	end
+	if (target_loc - caster_loc):Length2D() <= 100 and target:IsAlive() and caster:IsStunned() == false then
+	    EmitSoundOn("Hero_Huskar.Life_Break.Impact", target)
+	    local particle = ParticleManager:CreateParticle("particles/units/heroes/hero_huskar/huskar_life_break.vpcf", PATTACH_ABSORIGIN_FOLLOW, target)
+	    ParticleManager:SetParticleControlEnt(particle, 0, target, PATTACH_ABSORIGIN_FOLLOW, "attach_hitloc", target:GetAbsOrigin(), true)
+	    ParticleManager:SetParticleControlEnt(particle, 1, target, PATTACH_ABSORIGIN_FOLLOW, "attach_hitloc", target:GetAbsOrigin(), true)
+	    ParticleManager:ReleaseParticleIndex(particle)
+	    caster:RemoveModifierByName("modifier_hide_ability")
+	    AutoAttack(caster, target)
+	end
 end
 
-function JumpHorizonal( keys )
-    -- Variables
-    local caster = keys.target
-    local ability = keys.ability
+function MoveTo()
     if target:HasModifier("modifier_wave_blink") and target:IsHero() then
-    	caster:StartGesture( ACT_DOTA_RUN )
+    	caster:StartGesture(ACT_DOTA_OVERRIDE_ABILITY_4)
+    	sub_ability:ApplyDataDrivenModifier(caster, caster, "modifier_hide_ability", {})
+    	sub_ability:SetActivated(false)
+
 	    local target_loc = GetGroundPosition(target:GetAbsOrigin(), target)
 	    local caster_loc = GetGroundPosition(caster:GetAbsOrigin(), caster)
 	    local direction = (target_loc - caster_loc):Normalized()
-	    local max_distance = ability:GetLevelSpecialValueFor("max_distance", ability:GetLevel()-1)
+	    local max_distance = sub_ability:GetLevelSpecialValueFor("max_distance", sub_ability:GetLevel()-1)
 
 	    -- Max distance break condition
 	    if (target_loc - caster_loc):Length2D() >= max_distance then
 	    	caster:InterruptMotionControllers(true)
-	    	caster:FadeGesture( ACT_DOTA_RUN )
-	    	local main_ability = caster:FindAbilityByName("wave_blink")
-			local sub_ability = caster:FindAbilityByName("wave_blink_sub")
 			main_ability:SetLevel(sub_ability:GetLevel())
 	    	caster:SwapAbilities("wave_blink_sub", "wave_blink", false, true)
-	    	sub_ability:ApplyDataDrivenModifier( caster, caster, "modifier_check_area", {} )
-	    	caster:RemoveModifierByName("modifier_cant_walk")
-    		caster:RemoveModifierByName("modifier_turn")
+	    	caster:RemoveModifierByName("modifier_hide_ability")
 	    end
 
 	    -- Moving the caster closer to the target until it reaches the enemy
 	    if (target_loc - caster_loc):Length2D() > 100 and target:IsAlive() and caster:IsStunned() == false then
-	        caster:SetAbsOrigin(caster:GetAbsOrigin() + direction * ability.velocity)
-	        ability.traveled = ability.traveled + ability.velocity
+	        caster:SetAbsOrigin(caster:GetAbsOrigin() + direction * sub_ability.velocity)
+	        sub_ability.traveled = sub_ability.traveled + sub_ability.velocity
 		else
 			caster:InterruptMotionControllers(true)
 	        caster:SetAbsOrigin(GetGroundPosition(caster:GetAbsOrigin(), caster))
-	        caster:FadeGesture( ACT_DOTA_RUN )
-			OnMotionDone(caster, target, ability)
+			OnMotionDone(caster, target, sub_ability)
 	    end
 	end
 end
 
-function CheckStunned(args)
-	local caster = args.caster
-	local ability = args.ability
-
-	if caster:HasModifier("modifier_cant_walk") and caster:IsStunned() then
-    	--caster:InterruptMotionControllers(true)
-        caster:SetAbsOrigin(GetGroundPosition(caster:GetAbsOrigin(), caster))
-        caster:FadeGesture( ACT_DOTA_RUN )
-        caster:RemoveModifierByName("modifier_cant_walk")
-        caster:SwapAbilities("wave_blink_sub", "wave_blink", false, true)
+function CheckStunned()
+	if caster:HasModifier("modifier_cant_walk") then
+		if caster:IsStunned() or target:IsAlive() == false or caster:IsHexed() or caster:IsRooted() or caster:HasModifier("modifier_drowranger_wave_of_silence_knockback") or
+			caster:HasModifier("modifier_blinding_light_knockback") or caster:HasModifier("modifier_invoker_deafening_blast_knockback") or caster:HasModifier("modifier_flamebreak_knockback") or 
+			caster:HasModifier("modifier_flamebreak_knockback") or caster:HasModifier("modifier_knockback") then
+			if caster:HasModifier("modifier_drowranger_wave_of_silence_knockback") or caster:IsStunned() or caster:HasModifier("modifier_blinding_light_knockback") or 
+				caster:HasModifier("modifier_invoker_deafening_blast_knockback") or caster:HasModifier("modifier_flamebreak_knockback") or 
+				caster:HasModifier("modifier_flamebreak_knockback") or caster:HasModifier("modifier_knockback") then
+				caster:SetAbsOrigin(GetGroundPosition(caster:GetAbsOrigin(), caster))
+			else
+	    		caster:InterruptMotionControllers(true)
+	    	end
+	        if main_ability:IsHidden() then
+	        	caster:SwapAbilities("wave_blink_sub", "wave_blink", false, true)
+	        	main_ability:SetLevel(sub_ability:GetLevel())
+	        end
+	        target:RemoveModifierByName("modifier_marked")
+	        caster:RemoveModifierByName("modifier_hide_ability")
+	    end
     end
 end
 
-function CheckArea(args)
-	local caster = args.caster
-	local ability = args.ability
-	local talent = caster:FindAbilityByName("special_bonus_unique_jugg_1")
-	local sub_radius = ability:GetLevelSpecialValueFor("radius", (ability:GetLevel() - 1))
+function CheckArea()
 	local target_loc = GetGroundPosition(target:GetAbsOrigin(), target)
-
 	local caster_loc = GetGroundPosition(caster:GetAbsOrigin(), caster)
 	local distance = (target_loc - caster_loc):Length2D()
-	print(distance)
+	if caster:HasModifier("modifier_hide_ability") == false then
+		caster:RemoveModifierByName("modifier_cant_walk")
+	    caster:FadeGesture(ACT_DOTA_OVERRIDE_ABILITY_4)
+	end
 	if talent:GetLevel() > 0 then
 		sub_radius = sub_radius + talent:GetSpecialValueFor("value")
 	end
-	if (target:HasModifier("modifier_wave_blink")) and (distance <= sub_radius) and caster:CanEntityBeSeenByMyTeam(target) and target:IsAlive() then
-		ability:SetActivated(true)
+	if (target:HasModifier("modifier_wave_blink")) and (distance <= sub_radius) and caster:CanEntityBeSeenByMyTeam(target) and target:IsAlive() and caster:HasModifier("modifier_hide_ability") == false and target:IsMagicImmune() == false then
+		sub_ability:SetActivated(true)
 	else
-		ability:SetActivated(false)
+		sub_ability:SetActivated(false)
+		if (target:HasModifier("modifier_wave_blink")) and target:IsAlive() and caster:HasModifier("modifier_hide_ability") and caster:HasModifier("modifier_cant_walk") then
+	    	caster:MoveToPosition(target_loc)
+		end
 	end
 end
 
-function Respawn(args)
-	local caster = args.caster
-	local main_ability = caster:FindAbilityByName("wave_blink")
-	local sub_ability = caster:FindAbilityByName("wave_blink_sub")
+function Respawn()
 	if main_ability:IsHidden() then
 		main_ability:SetLevel(sub_ability:GetLevel())
 		caster:SwapAbilities("wave_blink_sub", "wave_blink", false, true)
-		sub_ability:ApplyDataDrivenModifier( caster, caster, "modifier_check_area", {} )
 	end
 end
 
-function CheckTime(args)
-	local caster = args.caster
-	local ability = args.ability
-
+function CheckTime()
 	local expiration_time = GameRules:GetGameTime() - wave_start_time
-	if expiration_time > 5 and caster:FindAbilityByName("wave_blink"):IsHidden() then
-		local main_ability = caster:FindAbilityByName("wave_blink")
-		local sub_ability = caster:FindAbilityByName("wave_blink_sub")
-		main_ability:SetLevel(ability:GetLevel())
+	if expiration_time > 5 and caster:FindAbilityByName("wave_blink"):IsHidden() and caster:HasModifier("modifier_hide_ability") == false then
+		main_ability:SetLevel(sub_ability:GetLevel())
 		caster:SwapAbilities("wave_blink_sub", "wave_blink", false, true)
 	end
 end

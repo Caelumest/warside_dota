@@ -3,12 +3,14 @@
      "insatiable_anger"
     {
         "BaseClass"             "ability_datadriven"
-        "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+        "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_NO_TARGET "
         "AbilityTextureName"    "insatiable_anger"
-        "AbilityCastPoint"              "0"
-        "AbilityCooldown"               "30 25 20 15"
+        "AbilityCastPoint"              "0.65"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+        "AnimationPlaybackRate"         "2"
+        "AbilityCooldown"               "28 26 24 22"
         "AbilityManaCost"               "60 80 100 120"
-        "AbilityCastAnimation"          "ACT_DOTA_KILLTAUNT"
+        "AbilityCastAnimation"          "ACT_DOTA_VICTORY"
         "AbilitySpecial"
         {
             "01"
@@ -39,12 +41,12 @@
             "06"
             {
                 "var_type"          "FIELD_FLOAT"
-                "stun_multiplier"   "0.035 0.04 0.045 0.05"
+                "stun_multiplier"   "0.045 0.055 0.065 0.075"
             }
             "07"
             {
                 "var_type"          "FIELD_FLOAT"
-                "slow"              "-15 -20 -25 -30"
+                "move_slow"              "-15 -20 -25 -30"
             }
             "08"
             {
@@ -54,12 +56,24 @@
             "09"
             {
                 "var_type"          "FIELD_FLOAT"
-                "bonus_damage"      "2 3 4 5"
+                "bonus_damage"      "3 3.5 4 5"
+            }
+            "10"
+            {
+                "var_type"          "FIELD_FLOAT"
+                "tresh_tooltip"      "2"
+                "LinkedSpecialBonus"    "special_bonus_unique_jugg_2"
+            }
+            "11"
+            {
+                "var_type"          "FIELD_FLOAT"
+                "slow_tooltip"      "15 20 25 30"
             }
         }
             "precache"
             {
                 "soundfile"         "soundevents/game_sounds_heroes/game_sounds_juggernaut.vsndevts"
+                "soundfile"         "soundevents/game_sounds_heroes/game_sounds_vo_juggernaut.vsndevts"
                 "soundfile"         "soundevents/game_sounds_heroes/game_sounds_slardar.vsndevts"
                 "particle"             "particles\econ\items\legion\legion_overwhelming_odds_ti7\legion_commander_odds_ti7_ambient_mist.vpcf"
                 "particle"              "particles/generic_gameplay/generic_lifesteal.vpcf"
@@ -75,11 +89,10 @@
                     "EffectName"    "Hero_Juggernaut.ArcanaTrigger"
                     "Target"        "CASTER"
                 }
-                "ApplyModifier"
+                "RunScript"
                 {
-                    "ModifierName"  "modifier_effects"
-                    "Target"        "CASTER"
-                    "Duration"      "charges_duration"
+                    "ScriptFile"    "heroes/new_hero/insatiable_anger.lua"
+                    "Function"      "PlaySound"
                 }
                 "FireEffect"
                 {
@@ -122,7 +135,7 @@
                     "Passive"           "0"
                     "IsHidden"          "0"
                     "IsDebuff"          "0"
-                    "IsPurgable"        "0"
+                    "IsPurgable"        "1"
                     "Properties"
                     {
                         "MODIFIER_PROPERTY_PREATTACK_BONUS_DAMAGE" "%bonus_damage"
@@ -131,25 +144,10 @@
                 "modifier_effects"
                 {
                     "Passive"           "0"
-                    "IsHidden"          "1"
+                    "IsHidden"          "0"
                     "IsDebuff"          "0"
                     "IsPurgable"        "0"
-                    "OnCreated"
-                    {
-                        "AttachEffect"
-                        {
-                            "EffectName"        "particles\econ\items\juggernaut\jugg_arcana\juggernaut_arcana_trigger_body_glow.vpcf"
-                            "EffectAttachType"  "attach_origin"
-                            "Target"            "CASTER"
-                        }
-                        "AttachEffect"
-                        {
-                            "EffectName"        "particles\econ\items\juggernaut\jugg_arcana\juggernaut_arcana_trigger_head.vpcf"
-                            "EffectAttachType"  "attach_origin"
-                            "Target"            "CASTER"
-                        }
-                        
-                    }
+                    "OverrideAnimation"     "ACT_DOTA_LOADOUT_RARE_STATUE"
                 }
                 "modifier_anger_slow"
                 {
@@ -161,7 +159,7 @@
                     "IsPurgable"        "1"
                     "Properties"
                     {
-                        "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"  "%slow"
+                        "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"  "%move_slow"
                     }
                 }
                 "modifier_check_ult"

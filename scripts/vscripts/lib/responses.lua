@@ -171,6 +171,16 @@ function VoiceResponses:OnOrder(order)
             self:TriggerSound("OnMoveOrder", order.unit, unitResponses)
         end
 
+        if order.order_type == DOTA_UNIT_ORDER_PURCHASE_ITEM then
+            print("qqqqqqqqqqqqqqqqqq")
+            local hero = order.unit:GetUnitName()
+            print(hero,"qqqqqqqqqqqqqqqqqq")
+            --local item = EntIndexToHScript(order.ItemEntityIndex)
+            print(item,"qqqqqqqqqqqqqqqqqq")
+
+                self:TriggerSound("Testando", order.itemname, hero, unitResponses)
+        end
+
         -- Attack order
         if order.order_type == DOTA_UNIT_ORDER_ATTACK_TARGET then
             self:TriggerSound("OnAttackOrder", order.unit, unitResponses)

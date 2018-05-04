@@ -7,15 +7,11 @@ function modifier_release_anger:DeclareFunctions()
 end
 
 function modifier_release_anger:IsHidden()
-    return false
+    return true
 end
 
 function modifier_release_anger:IsPurgable()
-    return false
-end
-
-function modifier_release_anger:GetEffectName()
-    return "particles/units/heroes/hero_dragon_knight/dragon_knight_transform_green.vpcf"
+    return true
 end
 
 function modifier_release_anger:GetModifierPreAttack_CriticalStrike()

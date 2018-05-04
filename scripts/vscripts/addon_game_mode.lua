@@ -1,3 +1,8 @@
+require("lib.timers")
+require("lib.responses")
+require("libraries/animations")
+require("libraries/attachments")
+require("libraries/notifications")
 if CommunityCustomHeroesGameMode == nil then
 	CommunityCustomHeroesGameMode = class({})
 end
@@ -9,11 +14,11 @@ function Precache(context)
 	PrecacheUnitByNameSync("npc_dota_hero_monkey_king", context)
 	PrecacheUnitByNameSync("npc_dota_hero_lone_druid", context)
 	PrecacheUnitByNameSync("npc_dota_hero_keeper_of_the_light", context)
-
+PrecacheResource( "soundfile", "soundevents/game_sounds_ui_imported.vsndevts", context )
 	--Items
 	PrecacheItemByNameSync("item_aether_core", context)
   	PrecacheItemByNameSync("item_stout_mail", context)
-
+PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_koh.vsndevts", context )
 	--[[ Sobek precache
 	PrecacheResource( "particle", "particles/econ/generic/generic_buff_1/generic_buff_1.vpcf", context )
 	PrecacheResource( "particle", "particles/items2_fx/medallion_of_courage_friend.vpcf", context )
@@ -22,8 +27,8 @@ function Precache(context)
 	PrecacheResource( "particle", "particles/units/heroes/hero_sobek/sobek_voracious_appetite_consume.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_sobek/sobek_absorption_base.vpcf", context )
 	PrecacheResource( "particle", "particles/units/heroes/hero_sobek/sobek_absorption_creep.vpcf", context )
-	PrecacheResource( "soundfile", "soundevents/game_sounds_ui_imported.vsndevts", context )
-	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_koh.vsndevts", context )
+	
+	
 	PrecacheModel("models/creeps/neutral_creeps/n_creep_kobold/kobold_a/n_creep_kobold_a.vmdl", context)
 
 	-- Parasight precache
@@ -40,11 +45,13 @@ function Precache(context)
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_parasight.vsndevts", context )
 	
 	-- Viscous Ooze precache
-	PrecacheUnitByNameSync("npc_dota_hero_venomancer",context)
+	
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_viscous_ooze.vsndevts", context )
 	PrecacheModel("models/heroes/viscous_ooze/viscous_ooze.vmdl", context)
 	PrecacheModel("models/heroes/viscous_ooze/oozeling.vmdl", context)]]
-
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_juggernaut.vsndevts", context )
+	PrecacheUnitByNameSync("npc_dota_hero_kringler",context)
+	PrecacheUnitByNameSync("npc_dota_hero_juggernaut",context)
 
 
 	
@@ -165,7 +172,6 @@ function CommunityCustomHeroesGameMode:OnGameStateChanged( keys )
             "npc_dota_hero_drow_ranger",
             "npc_dota_hero_earthshaker",
             "npc_dota_hero_jakiro",
-            "npc_dota_hero_juggernaut",
             "npc_dota_hero_kunkka",
             "npc_dota_hero_necrolyte",
             "npc_dota_hero_sven",
@@ -284,12 +290,12 @@ function CommunityCustomHeroesGameMode:InitGameMode()
 	-- Debug
 	-- GameRules:SetPreGameTime(20)
 
-	--VoiceResponses:Start()
-	--VoiceResponses:RegisterUnit("npc_dota_hero_windrunner", "scripts/responses/sobek_responses.txt")
-	--VoiceResponses:RegisterUnit("npc_dota_hero_treant", "scripts/responses/parasight_responses.txt")
+	VoiceResponses:Start()
+	VoiceResponses:RegisterUnit("npc_dota_hero_juggernaut", "scripts/responses/juggernaut_responses.txt")
+	VoiceResponses:RegisterUnit("npc_dota_hero_treant", "scripts/responses/sobek_responses.txt")
 	--CustomGameEventManager:RegisterListener("player_toggle_camera_lock", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleCameraLock'))
 	-- Link modifiers
-	--LinkLuaModifier("modifier_activatable", "scripts/vscripts/modifiers/modifier_activatable.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_activatable", "scripts/vscripts/modifiers/modifier_activatable.lua", LUA_MODIFIER_MOTION_NONE)
 
 	-- Listen to game events
 	--ListenToGameEvent( "player_toggle_camera_lock", Dynamic_Wrap( CommunityCustomHeroesGameMode, 'ToggleCameraLock' ), self )
@@ -558,7 +564,9 @@ function CheckForInnates(spawnedUnit)
 	elseif(spawnedUnit:GetName() == "npc_dota_hero_keeper_of_the_light") then
 		local innate = spawnedUnit:FindAbilityByName("spirit_form")
 		if innate then innate:SetLevel(1) end
-	end
+	elseif(spawnedUnit:GetName() == "npc_dota_hero_juggernaut") then
+ 		--AddAnimationTranslate(spawnedUnit, "arcana")
+ 	end
 end
 
 

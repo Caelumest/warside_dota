@@ -8,27 +8,27 @@
         "MaxLevel"                      "3"
         "AbilityType"                   "DOTA_ABILITY_TYPE_ULTIMATE"
         "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET" 
-        "AnimationPlaybackRate"         ""
         "AbilityCastRange"              "650 700 750 800"
-        "AbilityCastPoint"              "0.1"
-        "AnimationPlaybackRate"         "0.7"
-        "AbilityCooldown"               "40 35 30"
+        "AbilityCastPoint"              "0.2"
+        "AnimationPlaybackRate"         "2"
+        "AbilityCooldown"               "60 55 50"
         "AbilityManaCost"               "50 75 100"
-        "AbilityCastAnimation"          "ACT_DOTA_KILLTAUNT"
+        "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_2"
+        "HasScepterUpgrade"             "1"
         "precache"
         {
             "soundfile"         "soundevents/game_sounds_heroes/game_sounds_magnataur.vsndevts"
             "soundfile"         "soundevents/game_sounds_heroes/game_sounds_clinkz.vsndevts"
-            "particle"           "particles/units/heroes/hero_magnataur/magnataur_shockwave.vpcf"
+            "particle"          "particles/units/heroes/hero_magnataur/magnataur_shockwave.vpcf"
             "particle"          "particles\units\heroes\hero_clinkz\clinkz_strafe.vpcf"
-            "particle" "particles\econ\items\alchemist\alchemist_aurelian_weapon\alchemist_chemical_rage_aurelian.vpcf"
+            "particle"          "particles\econ\items\alchemist\alchemist_aurelian_weapon\alchemist_chemical_rage_aurelian.vpcf"
         }
         "AbilitySpecial"
         {
             "01"
             {
                 "var_type"              "FIELD_FLOAT"
-                "duration"              "7 9 11"
+                "duration"              "10"
             }
             "02"
             {
@@ -39,16 +39,33 @@
             {
                 "var_type"              "FIELD_FLOAT"
                 "atkspeed"              "1 1.5 2"
+                "LinkedSpecialBonus"    "special_bonus_unique_jugg_3"
             }
             "04"
             {
                 "var_type"              "FIELD_FLOAT"
                 "crit_damage"           "2 2.25 2.5"
+                "LinkedSpecialBonus"    "special_bonus_unique_jugg_3"
             }
             "05"
             {
                 "var_type"              "FIELD_INTEGER"
                 "chance"                "20"
+            }
+            "06"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "base_crit"             "100"
+            }
+            "07"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "base_crit_scepter"     "160"
+            }
+            "08"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "duration_scepter"      "20"
             }
         }
         "OnSpellStart"
@@ -86,6 +103,7 @@
                 "Passive"           "0"
                 "IsHidden"          "0"
                 "IsDebuff"          "0"
+                "IsPurgable"        "1"
                 
                 "EffectName"        "particles\econ\items\alchemist\alchemist_aurelian_weapon\alchemist_chemical_rage_aurelian.vpcf"
                 "EffectAttachType"  "follow_origin"
@@ -100,6 +118,7 @@
                 "Passive"           "0"
                 "IsHidden"          "0"
                 "IsDebuff"          "0"
+                "IsPurgable"        "1"
         
                 "EffectName"        "particle_name"
                 "EffectAttachType"  "follow_origin"
@@ -107,8 +126,8 @@
             "anger_crit"
             {
                 "Passive"       "0"
-                "IsHidden"      "0"
-                "IsPurgable"    "0"
+                "IsHidden"      "1"
+                "IsPurgable"    "1"
                 "duration"      "%duration"
                 "EffectName"    "particles\units\heroes\hero_clinkz\clinkz_strafe.vpcf"
                 "EffectAttachType"  "attach_origin"
@@ -166,6 +185,7 @@
             "modifier_release_ang"
             {
                 "IsHidden"  "1"
+                "IsPurgable"    "0"
                 "OnCreated"
                 {
                     "RunScript"

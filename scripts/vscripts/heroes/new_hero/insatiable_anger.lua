@@ -1,3 +1,20 @@
+function PlaySound(keys)
+    local caster = keys.caster
+    local ability = keys.ability
+    local random = RandomInt(1, 4)
+    print(random,"Random")
+    if random == 1 then
+        EmitSoundOn("juggernaut_jug_ability_bladefury_09", caster)
+    elseif random == 2 then
+        EmitSoundOn("juggernaut_jug_arc_ability_bladefury_09", caster)
+    elseif random == 3 then
+        EmitSoundOn("juggernaut_jugg_ability_bladefury_12", caster)
+    elseif random == 4 then
+        EmitSoundOn("juggernaut_jug_ability_bladefury_02", caster)
+    end
+end
+
+
 function WhenLossHealth(keys)
 	local caster = keys.caster
     local ability = keys.ability
@@ -9,7 +26,7 @@ function WhenLossHealth(keys)
     local healthpercent = max_health*health_treshold
     local talent = caster:FindAbilityByName("special_bonus_unique_jugg_2")
     if talent:GetLevel() > 0 then
-        healthpercent = max_health * talent:GetSpecialValueFor("value")
+        healthpercent = max_health * 0.014
     end
     if caster:HasModifier("modifier_release_angers") then
         healthpercent =healthpercent / 2
@@ -70,10 +87,10 @@ function OnHit(keys)
                 print("DAMAGE", damage)
                 ParticleManager:CreateParticle("particles/generic_gameplay/generic_lifesteal.vpcf", PATTACH_ABSORIGIN_FOLLOW, caster)
             end
-            if stack_count < 10 then
+            if stack_count < 20 and target:IsMagicImmune() == false then
                 local slow_dur = slow_duration * stack_count
                 ability:ApplyDataDrivenModifier(caster, target, "modifier_anger_slow", {duration = slow_dur})
-            elseif stack_count >= 10 then
+            elseif stack_count >= 20 and target:IsMagicImmune() == false then
                 if stun_dur > 2.5 then
                     stun_dur = 2.5
                 end
@@ -82,7 +99,6 @@ function OnHit(keys)
             end
         end
         caster:RemoveModifierByName("modifier_effects")
-        print("DAMAGE + TABLE", damage)
         caster:RemoveModifierByName(stack_modifier)
     end
 end
@@ -116,5 +132,8 @@ function CheckStacks(keys)
         ultimate:SetActivated(false)
     else
         ultimate:SetActivated(true)
+    end
+    if caster:HasModifier("modifier_release_angers") == false then
+        RemoveAnimationTranslate(caster)
     end
 end
