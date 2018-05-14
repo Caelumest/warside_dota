@@ -70,15 +70,80 @@ function Activate()
 	--GameRules:SetCustomGameTeamMaxPlayers(1, 5)
 	--GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS,5)
 	--GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, 5)
-	
+	GAME_OPTIONS_SET = true
+	CustomGameEventManager:RegisterListener("set_starting_gold", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleStartingGold'))
+  	CustomGameEventManager:RegisterListener("set_multiplier_gold", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleMultiplierGold'))
+  	CustomGameEventManager:RegisterListener("set_multiplier_xp", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleMultiplierExp'))
 	GameRules.GameMode = CommunityCustomHeroesGameMode()
 	GameRules.GameMode:InitGameMode()
 	isBotActive = 0
 	local mode = GameRules:GetGameModeEntity()
   	mode:SetBotThinkingEnabled( true )
   	CustomGameEventManager:RegisterListener("set_bots_difficulty", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'OnBotDifficulty'))
+  	
   	CustomGameEventManager:RegisterListener("player_toggle_bots", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleBots'))
   	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( CommunityCustomHeroesGameMode, 'OnGameStateChanged' ), self )
+end
+
+
+function CommunityCustomHeroesGameMode:ToggleStartingGold(event)
+	local startingGold = event.startingGold
+	
+	if tostring(startingGold) == 'GoldOption1' then
+		starting_Gold = 600 - 600
+		GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>600</font>", 2, 1)
+	elseif tostring(startingGold) == 'GoldOption2' then
+		starting_Gold = 1000 - 600
+		GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>1000</font>", 2, 1)
+	elseif tostring(startingGold) == 'GoldOption3' then
+		starting_Gold = 1400 - 600
+		GameRules:SetStartingGold(1400)
+		GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>1400</font>", 2, 1)
+	elseif tostring(startingGold) == 'GoldOption4' then
+		starting_Gold = 1800 - 600
+		GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>1800</font>", 2, 1)
+	elseif tostring(startingGold) == 'GoldOption5' then
+		starting_Gold = 2200 - 600
+		GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>2200</font>", 2, 1)
+	end
+	print("START",starting_Gold)
+end
+
+function CommunityCustomHeroesGameMode:ToggleMultiplierGold(event)
+	local multiplierGold = event.multiplierGold
+	if tostring(multiplierGold) == 'MultiplierOption1' then
+		multiplier_Gold = 0
+		GameRules:SendCustomMessage("Gold Multiplier = <font color='#0F0'>1x</font>", 2, 1)
+	elseif tostring(multiplierGold) == 'MultiplierOption2' then
+		multiplier_Gold = 1
+		GameRules:SendCustomMessage("Gold Multiplier = <font color='#0F0'>2x</font>", 2, 1)
+	elseif tostring(multiplierGold) == 'MultiplierOption3' then
+		multiplier_Gold = 2
+		GameRules:SendCustomMessage("Gold Multiplier = <font color='#0F0'>3x</font>", 2, 1)
+	elseif tostring(multiplierGold) == 'MultiplierOption4' then
+		multiplier_Gold = 3
+		GameRules:SendCustomMessage("Gold Multiplier = <font color='#0F0'>4x</font>", 2, 1)
+	end
+	print("MULT",multiplier_Gold)
+end
+
+function CommunityCustomHeroesGameMode:ToggleMultiplierExp(event)
+	local multiplierExp = event.multiplierExp
+	
+	if tostring(multiplierExp) == 'ExpOption1' then
+		multiplier_Exp = 0
+		GameRules:SendCustomMessage("EXP Multiplier = <font color='#0F0'>1x</font>", 2, 1)
+	elseif tostring(multiplierExp) == 'ExpOption2' then
+		multiplier_Exp = 1
+		GameRules:SendCustomMessage("EXP Multiplier = <font color='#0F0'>2x</font>", 2, 1)
+	elseif tostring(multiplierExp) == 'ExpOption3' then
+		multiplier_Exp = 2
+		GameRules:SendCustomMessage("EXP Multiplier = <font color='#0F0'>3x</font>", 2, 1)
+	elseif tostring(multiplierExp) == 'ExpOption4' then
+		multiplier_Exp = 3
+		GameRules:SendCustomMessage("EXP Multiplier = <font color='#0F0'>4x</font>", 2, 1)
+	end
+	print("MAMAMAMAMAMA",multiplier_Exp)
 end
 
 function CommunityCustomHeroesGameMode:ToggleBots( event )
@@ -138,6 +203,10 @@ end
 
 function CommunityCustomHeroesGameMode:OnGameStateChanged( keys )
     local state = GameRules:State_Get()
+    if state == DOTA_GAMERULES_STATE_HERO_SELECTION then
+    	print("HERO SELECTION")
+
+    end
     if state == DOTA_GAMERULES_STATE_STRATEGY_TIME then
         local num = 0
         local used_hero_name = "npc_dota_hero_luna"
@@ -205,6 +274,7 @@ function CommunityCustomHeroesGameMode:OnGameStateChanged( keys )
                 used_hero_name = PlayerResource:GetSelectedHeroName(i)
                 num = num + 1
             end
+
         end
         
         self.numPlayers = num
@@ -268,6 +338,7 @@ function CommunityCustomHeroesGameMode:OnGameStateChanged( keys )
             print("Players total",totalplayers)
             for helper=0,9 do
             	print(helper,"<< Num  Hero>>",PlayerResource:GetSelectedHeroName(helper))
+         
             end
             --GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
             --SendToServerConsole("dota_bot_populate")
@@ -280,23 +351,26 @@ function CommunityCustomHeroesGameMode:OnGameStateChanged( keys )
                 PlayerResource:GetPlayer(i):GetAssignedHero():SetBotDifficulty(bot_difficulty)
                 print("Bot",i,"difficulty setted to:",bot_difficulty)
             end
+            if starting_Gold ~= nil then
+				PlayerResource:ModifyGold(i, starting_Gold, false, 0);
+			end
         end
     end
 end
 
 function CommunityCustomHeroesGameMode:InitGameMode()
 	print("Loaded CommunityCustomHeroes")
-
+	ListenToGameEvent( "set_starting_gold", Dynamic_Wrap( CommunityCustomHeroesGameMode, "ToggleStartingGold" ), self )
 	-- Debug
 	-- GameRules:SetPreGameTime(20)
-
 	VoiceResponses:Start()
 	VoiceResponses:RegisterUnit("npc_dota_hero_juggernaut", "scripts/responses/juggernaut_responses.txt")
 	VoiceResponses:RegisterUnit("npc_dota_hero_treant", "scripts/responses/sobek_responses.txt")
 	--CustomGameEventManager:RegisterListener("player_toggle_camera_lock", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleCameraLock'))
 	-- Link modifiers
+	local GameMode = GameRules:GetGameModeEntity()
 	LinkLuaModifier("modifier_activatable", "scripts/vscripts/modifiers/modifier_activatable.lua", LUA_MODIFIER_MOTION_NONE)
-
+	--GameMode:SetModifyGoldFilter( Dynamic_Wrap( CommunityCustomHeroesGameMode, "FilterGold" ), self )
 	-- Listen to game events
 	--ListenToGameEvent( "player_toggle_camera_lock", Dynamic_Wrap( CommunityCustomHeroesGameMode, 'ToggleCameraLock' ), self )
 	GameRules:SetCustomGameSetupTimeout(60)
@@ -305,9 +379,9 @@ function CommunityCustomHeroesGameMode:InitGameMode()
 	GameRules:GetGameModeEntity():SetUseCustomHeroLevels ( true )
 	GameRules:SetSameHeroSelectionEnabled(true)
 	GameRules:GetGameModeEntity():SetCustomHeroMaxLevel(35)
-	--GameRules:SetStartingGold(1400)
+	--GameRules:SetStartingGold(starting_Gold)
 	--GameRules:SetGoldPerTick(1)
-	--GameRules:SetGoldTickTime(0.22)
+	--GameRules:SetGoldTickTime(multiplierGold)
 	-- Set order filter
 	--GameRules:GetGameModeEntity():SetExecuteOrderFilter(Dynamic_Wrap(CommunityCustomHeroesGameMode, 'OrderFilter'), self)
 	-- Set damage filter
@@ -479,22 +553,81 @@ function CommunityCustomHeroesGameMode:OnEntityKilled( event )
 
     local killedUnit = EntIndexToHScript( event.entindex_killed )
     local killedTeam = killedUnit:GetTeam()
-    local hero = EntIndexToHScript( event.entindex_attacker )
-    local heroTeam = hero:GetTeam()
+    local attacker = EntIndexToHScript( event.entindex_attacker )
+    local heroTeam = attacker:GetTeam()
     local extraTime = 0 
-
+    print("KILLED",killedUnit:GetName())
+    print("KILLED TEAM",killedUnit:GetTeam())
+    print("Heroteam",heroTeam)
+    count = 0
+    if attacker ~= nil and killedUnit ~= nil then
+    	if attacker:IsRealHero() then
+    		heroID = attacker:GetPlayerID()
+    	end
+    	local xpbounty = killedUnit:GetDeathXP()
+    	
+    	if multiplier_Exp ~= nil and attacker:IsRealHero() then
+    		local units = FindUnitsInRadius( killedUnit:GetTeamNumber(), killedUnit:GetOrigin(), nil, 1500, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_INVULNERABLE + DOTA_UNIT_TARGET_FLAG_NOT_ANCIENTS + DOTA_UNIT_TARGET_FLAG_NOT_ILLUSIONS + DOTA_UNIT_TARGET_FLAG_NOT_CREEP_HERO + DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD, 0, false )
+            if killedUnit:GetTeam() ~= heroTeam then
+	            for _,hEnemy in pairs( units ) do
+	            	if count < 1 then
+			            for _,hEnemy in pairs( units ) do
+			            	count = count + 1
+			            	print("COUNT",count)
+			    		end
+			    	end
+	    			hEnemy:AddExperience(((xpbounty/count) * multiplier_Exp),0, false, true)
+	    			print("EXP DIVIDIDA", (xpbounty/count) * multiplier_Exp)
+	    			print("UNIDADE", hEnemy:GetName())
+	    		end
+    			count = 0
+	    	elseif killedUnit:GetTeam() == heroTeam then
+	    		local allyUnits = FindUnitsInRadius( killedUnit:GetTeamNumber(), killedUnit:GetOrigin(), nil, 1300, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_INVULNERABLE + DOTA_UNIT_TARGET_FLAG_NOT_ANCIENTS + DOTA_UNIT_TARGET_FLAG_NOT_ILLUSIONS + DOTA_UNIT_TARGET_FLAG_NOT_CREEP_HERO + DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD, 0, false )
+	    		for _,hEnemy in pairs( allyUnits ) do
+	            	if count < 1 then
+			            for _,hEnemy in pairs( allyUnits ) do
+			            	count = count + 1
+			            	print("COUNT",count)
+			    		end
+			    	end
+	    			hEnemy:AddExperience((((xpbounty / 4) / count) * multiplier_Exp),0, false, true)
+	    			print("EXP DIVIDIDA", ((xpbounty / 4) / count) * multiplier_Exp)
+	    			print("UNIDADE", hEnemy:GetName())
+	    		end
+	    		count = 0
+	    	end
+    	end
+    	if multiplier_Gold ~= nil and killedUnit:GetTeam() ~= heroTeam  then
+    		local goldbounty = killedUnit:GetGoldBounty()
+    		if killedUnit:IsTower() or killedUnit:GetName() == 'npc_dota_roshan' or killedUnit:IsBarracks() or killedUnit:IsShrine() then
+    			if attacker:IsRealHero() and killedUnit:IsTower() and killedUnit:GetTeam() ~= heroTeam then
+    				PlayerResource:ModifyGold(heroID, (200*multiplier_Gold), false, 0);
+    			end
+    			print("FOI PORRA")
+    			if heroTeam == 2 and killedUnit:GetTeam() ~= heroTeam then
+    				for i=0, 4 do
+    					PlayerResource:ModifyGold(i, (150*multiplier_Gold), false, 0);
+    				end
+    			elseif heroTeam == 3 and killedUnit:GetTeam() ~= heroTeam then
+    				for i=5, 9 do
+    					PlayerResource:ModifyGold(i, (150*multiplier_Gold), false, 0);
+    				end
+    			end
+    		end
+    		if attacker:IsRealHero() then
+    			PlayerResource:ModifyGold(heroID, (goldbounty * multiplier_Gold), false, 0);
+    		end
+    		print("BOUNTY", goldbounty)
+    	end
+    end
     if killedUnit:IsRealHero() and killedUnit:GetLevel() > 25 then
         print("Hero has been killed")   
 
-        print(hero:GetLevel())
+        print(attacker:GetLevel())
 
-        SetRespawnTime( killedteam, killedUnit, respawnTime )   
-    end
-end
-
-function SetRespawnTime( killedTeam, killedUnit, respawnTime )
-	if killedUnit:IsReincarnating() ==false then
-    	killedUnit:SetTimeUntilRespawn(100)
+        if killedUnit:IsReincarnating() ==false and killedUnit:GetRespawnTime() > 100 then
+    		killedUnit:SetTimeUntilRespawn(100)
+    	end   
     end
 end
 
@@ -570,7 +703,22 @@ function CheckForInnates(spawnedUnit)
  	end
 end
 
+function CommunityCustomHeroesGameMode:FilterGold( filterTable )
+	local killedUnit = EntIndexToHScript( filterTable.entindex_killed ) 
+	local hero = EntIndexToHScript( event.entindex_attacker )
+    local gold = filterTable["gold"]
+    local playerID = filterTable["player_id_const"]
+    local reason = filterTable["reason_const"]
+   
 
+    -- Disable all hero kill gold
+    if reason == DOTA_ModifyGold_HeroKill then
+        local goldBounty = killedUnit:GetGoldBounty()
+        hero:SetGold(5000, false)
+    end
+
+    return true
+end
 
 function CDOTA_BaseNPC:GetPhysicalArmorReduction()
 	local armornpc = self:GetPhysicalArmorValue()
