@@ -4,13 +4,13 @@ function PlaySound(keys)
     local random = RandomInt(1, 4)
     print(random,"Random")
     if random == 1 then
-        EmitSoundOn("juggernaut_jug_ability_bladefury_09", caster)
+        EmitSoundOn("juggernaut_jugsc_arc_ability_bladefury_02", caster)
     elseif random == 2 then
-        EmitSoundOn("juggernaut_jug_arc_ability_bladefury_09", caster)
+        EmitSoundOn("juggernaut_jugsc_arc_ability_bladefury_09", caster)
     elseif random == 3 then
-        EmitSoundOn("juggernaut_jugg_ability_bladefury_12", caster)
-    elseif random == 4 then
-        EmitSoundOn("juggernaut_jug_ability_bladefury_02", caster)
+        EmitSoundOn("juggernaut_jugsc_arc_ability_bladefury_12", caster)
+    else
+        EmitSoundOn("juggernaut_jugsc_arc_ability_bladefury_16", caster)
     end
 end
 
@@ -80,8 +80,11 @@ function OnHit(keys)
     if stack_count > 0 then
         --ApplyDamage(damage_table)
         local heal = damage * ((stack_count*lifesteal_buff)/100)
-        if target:IsBuilding() == false then
+        if target:IsBuilding() == false and caster:GetTeam() ~= target:GetTeam() then
             if heal > 0 then
+                if heal > target:GetHealth() then
+                    heal = target:GetHealth() * ((stack_count*lifesteal_buff)/100)
+                end
                 caster:Heal(heal, ability)
                 print("HEAL",heal)
                 print("DAMAGE", damage)
@@ -111,8 +114,14 @@ function WhenActivate(keys)
     local stack_count = caster:GetModifierStackCount(stack_modifier, ability)
     local max_stacks = ability:GetLevelSpecialValueFor("max_stacks", (ability:GetLevel() - 1))
     local activate_stack = ability:GetLevelSpecialValueFor("stack_bonus", (ability:GetLevel() - 1))
+
     if caster:HasModifier("modifier_release_angers") then
         activate_stack = activate_stack * 2
+        local particle = ParticleManager:CreateParticle("particles/econ/items/juggernaut/jugg_arcana/juggernaut_arcana_trigger.vpcf", PATTACH_ABSORIGIN_FOLLOW, caster)
+        ParticleManager:ReleaseParticleIndex(particle)
+    else
+        local particle = ParticleManager:CreateParticle("particles/econ/items/juggernaut/jugg_arcana/juggernaut_arcana_v2_trigger.vpcf", PATTACH_ABSORIGIN_FOLLOW, caster)
+        ParticleManager:ReleaseParticleIndex(particle)
     end
     local total_stacks = stack_count + activate_stack
     if total_stacks > max_stacks then
@@ -120,6 +129,23 @@ function WhenActivate(keys)
     end
     ability:ApplyDataDrivenModifier(caster, caster, stack_modifier, {duration = charges_duration})
     caster:SetModifierStackCount(stack_modifier, ability, total_stacks)
+    local units = FindUnitsInRadius( caster:GetTeam(), caster:GetOrigin(), nil, 500, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP, DOTA_UNIT_TARGET_FLAG_INVULNERABLE + DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD, 0, false )
+    for _,enemy in pairs( units ) do
+        if enemy:IsHero() and insatiableFlag == nil then
+            ExecuteOrderFromTable({
+                UnitIndex = caster:entindex(),
+                OrderType = DOTA_UNIT_ORDER_ATTACK_TARGET,
+                AbilityIndex = ability:entindex(),
+                TargetIndex = enemy:entindex(),
+                Queue = false,
+            })
+            insatiableFlag = true
+        end
+    end
+    if insatiableFlag == nil then
+        caster:Stop()
+    end
+    insatiableFlag = nil
 end
 
 function CheckStacks(keys)
@@ -128,12 +154,16 @@ function CheckStacks(keys)
     local ultimate = caster:FindAbilityByName("release_anger")
     local stack_modifier = keys.stack_modifier
     local stacks = caster:GetModifierStackCount(stack_modifier, ability)
+    if flag == nil then
+        flag = 0
+    end
     if stacks < 1 or stacks == nil then
         ultimate:SetActivated(false)
     else
         ultimate:SetActivated(true)
     end
     if caster:HasModifier("modifier_release_angers") == false then
-        RemoveAnimationTranslate(caster)
+        RemoveOneAnimationTranslate(caster, "odachi")
+        RemoveOneAnimationTranslate(caster, "run_fast")
     end
 end

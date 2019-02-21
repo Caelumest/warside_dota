@@ -1,0 +1,135 @@
+"DOTAAbilities"
+{
+     "postponed_karma"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_AOE"
+        "AbilityTextureName"            "postponed_karma"
+        "AbilityCastPoint"              "0.2"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+        "AnimationPlaybackRate"         "1.5"
+        "AbilityCooldown"               "30 27 24 21"
+        "AbilityManaCost"               "90 100 110 120"
+        "AbilityCastRange"              "%radius"
+        "AbilityCastAnimation"          "ACT_DOTA_UNDYING_TOMBSTONE"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "damage_returned"        "0.65 0.7 0.75 0.8"
+            }
+            "02"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "radius"        "575 650 725 800"
+            }
+            "03"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "duration"      "3 3.5 4 4.5"
+            }
+            "04"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "dmg_tooltip"   "65 70 75 80"
+            }
+        }
+        "precache"
+        {
+
+            "soundfile" "soundevents/game_sounds_heroes/game_sounds_oracle.vsndevts"
+            "soundfile" "soundevents/game_sounds_heroes/game_sounds_medusa.vsndevts"
+            "particle"  "particles/units/heroes/hero_puck/puck_dreamcoil_tether.vpcf"
+            "particle"  "particles/units/heroes/hero_riki/riki_tricks_ring.vpcf"
+            "particle"  "particles/units/heroes/hero_oracle/oracle_false_promise_attacked.vpcf"
+            "particle"  "particles\units\heroes\hero_riki\riki_tricks_ring_cracks.vpcf"
+        }
+        "OnSpellStart"
+        {
+            "RemoveModifier"
+            {
+                "ModifierName"  "modifier_check_hits"
+                "Target"        "CASTER"
+            }
+            "ApplyModifier"
+            {
+                "ModifierName"  "modifier_check_hits"
+                "Target"        "CASTER"
+                "Duration"      "%duration"
+            }
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/casalmar/postponed_karma.lua"
+                "Function"      "CheckHealth"
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_check_hits"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "IsPurgable"        "0"
+                "ThinkInterval"     "0.1"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/casalmar/postponed_karma.lua"
+                        "Function"      "CheckArea"
+                    }
+                }
+                "OnTakeDamage"
+                {
+                    "FireSound"
+                    {
+                        "EffectName"    "Hero_Medusa.ManaShield.Proc"
+                        "Target"        "CASTER"
+                    }
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/casalmar/postponed_karma.lua"
+                        "Function"      "OnTakeDamage"
+                        "modifier"      "modifier_hp_bonus"
+                        "Damage"        "%attack_damage"
+                    }
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/casalmar/postponed_karma.lua"
+                        "Function"      "OnEnd"
+                    }
+                }
+            }
+            "modifier_damage_mark"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "IsPurgable"        "0"
+                "OnCreated"
+                {
+                    "AttachEffect"
+                    {
+                        "EffectName"        "particles/units/heroes/hero_puck/puck_dreamcoil_tether.vpcf"
+                        "EffectAttachType"  "attach_hitloc"
+                        "Target"            "CASTER"
+                        "ControlPointEntities"
+                        {
+                            "CASTER"    "attach_hitloc"
+                            "TARGET"    "attach_hitloc"
+                        }
+                    }
+                }
+                "Properties"
+                {
+                    "MODIFIER_PROPERTY_PROVIDES_FOW_POSITION" "1"
+                }
+            }
+        }     
+    }
+}

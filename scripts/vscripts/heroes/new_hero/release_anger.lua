@@ -13,9 +13,8 @@ function release_anger(event)
     local crit_damage = ability:GetSpecialValueFor("crit_damage")
     local atkspeed = ability:GetSpecialValueFor("atkspeed")
     local talent = caster:FindAbilityByName("special_bonus_unique_jugg_3")
-    AddAnimationTranslate(caster, "arcana")
-    AddAnimationTranslate(caster, "run_fast")
     AddAnimationTranslate(caster, "odachi")
+    AddAnimationTranslate(caster, "run_fast")
     if talent:GetLevel() > 0 then
         atkspeed = atkspeed + talent:GetSpecialValueFor("value")
         crit_damage = crit_damage + talent:GetSpecialValueFor("value")
@@ -31,6 +30,12 @@ function release_anger(event)
         caster:SetModifierStackCount("modifier_release_angerss", ability, crit_base + (total_stacks * crit_damage))
         ability:ApplyDataDrivenModifier(caster, caster, "anger_crit", {duration = buff_duration})
     end
+end
+
+function Effects(event)
+    local caster = event.caster
+    caster:RemoveModifierByName("modifier_krigler_effects")
+    caster:AddNewModifier(caster, nil, "modifier_krigler_effects", {})
 end
 
 function anger_crit(args)

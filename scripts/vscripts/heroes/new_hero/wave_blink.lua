@@ -16,10 +16,14 @@ function wave_projectile (event)
 	local visionRadius		= event.vision
 	local visionDuration	= event.vision_duration
 	local casterOrigin		= caster:GetAbsOrigin()
-
+	if caster:HasModifier("modifier_release_angers") then
+		proj = "particles/units/heroes/hero_magnataur/magnataur_shockwave.vpcf"
+	else
+		proj = "particles/econ/items/magnataur/shock_of_the_anvil/magnataur_shockanvil.vpcf"
+	end
 	projID = ProjectileManager:CreateLinearProjectile( {
 		Ability				= ability,
-		EffectName			= "particles/units/heroes/hero_magnataur/magnataur_shockwave.vpcf",
+		EffectName			= proj,
 		vSpawnOrigin		= casterOrigin,
 		fDistance			= maxDist,
 		fStartRadius		= radius,
@@ -79,7 +83,10 @@ function StartSub()
     sub_ability:SetActivated(false)
     main_ability:ApplyDataDrivenModifier(caster, target, "modifier_wave_blink", {})
     sub_ability:ApplyDataDrivenModifier(caster, caster, "modifier_cant_walk", {})
+    StartAnimation(caster, {duration=1, activity=ACT_DOTA_FLAIL, rate=1, translate="forcestaff_friendly"})
+    Timers:CreateTimer(0.3, function () FreezeAnimation(caster, 4) end)
     EmitSoundOn("Hero_Huskar.Life_Break", caster)
+    caster:SetForwardVector(target:GetAbsOrigin())
     -- Motion Controller Data
     sub_ability.target = target
     sub_ability.velocity = charge_speed
@@ -89,7 +96,7 @@ function StartSub()
     local target_loc = GetGroundPosition(target:GetAbsOrigin(), target)
     local caster_loc = GetGroundPosition(caster:GetAbsOrigin(), caster)
     local direction = (target_loc - caster_loc):Normalized()
-    caster:MoveToPosition(target_loc)
+    --caster:MoveToPosition(target_loc)
 end
 
 function AutoAttack(caster, target)
@@ -120,13 +127,16 @@ function OnMotionDone(caster, target, sub_ability)
 	    ParticleManager:SetParticleControlEnt(particle, 1, target, PATTACH_ABSORIGIN_FOLLOW, "attach_hitloc", target:GetAbsOrigin(), true)
 	    ParticleManager:ReleaseParticleIndex(particle)
 	    caster:RemoveModifierByName("modifier_hide_ability")
+	    UnfreezeAnimation(caster)
+	    AddAnimationTranslate(caster, "walk")
+      	AddAnimationTranslate(caster, "arcana")
 	    AutoAttack(caster, target)
 	end
 end
 
 function MoveTo()
     if target:HasModifier("modifier_wave_blink") and target:IsHero() then
-    	caster:StartGesture(ACT_DOTA_OVERRIDE_ABILITY_4)
+
     	sub_ability:ApplyDataDrivenModifier(caster, caster, "modifier_hide_ability", {})
     	sub_ability:SetActivated(false)
 
@@ -162,7 +172,7 @@ function CheckStunned()
 			caster:HasModifier("modifier_flamebreak_knockback") or caster:HasModifier("modifier_knockback") then
 			if caster:HasModifier("modifier_drowranger_wave_of_silence_knockback") or caster:IsStunned() or caster:HasModifier("modifier_blinding_light_knockback") or 
 				caster:HasModifier("modifier_invoker_deafening_blast_knockback") or caster:HasModifier("modifier_flamebreak_knockback") or 
-				caster:HasModifier("modifier_flamebreak_knockback") or caster:HasModifier("modifier_knockback") then
+				caster:HasModifier("modifier_flamebreak_knockback") or caster:HasModifier("modifier_knockback") or caster:HasModifier("modifier_pudge_meat_hook") then
 				caster:SetAbsOrigin(GetGroundPosition(caster:GetAbsOrigin(), caster))
 			else
 	    		caster:InterruptMotionControllers(true)
@@ -178,22 +188,24 @@ function CheckStunned()
 end
 
 function CheckArea()
-	local target_loc = GetGroundPosition(target:GetAbsOrigin(), target)
-	local caster_loc = GetGroundPosition(caster:GetAbsOrigin(), caster)
-	local distance = (target_loc - caster_loc):Length2D()
-	if caster:HasModifier("modifier_hide_ability") == false then
-		caster:RemoveModifierByName("modifier_cant_walk")
-	    caster:FadeGesture(ACT_DOTA_OVERRIDE_ABILITY_4)
-	end
-	if talent:GetLevel() > 0 then
-		sub_radius = sub_radius + talent:GetSpecialValueFor("value")
-	end
-	if (target:HasModifier("modifier_wave_blink")) and (distance <= sub_radius) and caster:CanEntityBeSeenByMyTeam(target) and target:IsAlive() and caster:HasModifier("modifier_hide_ability") == false and target:IsMagicImmune() == false then
-		sub_ability:SetActivated(true)
-	else
-		sub_ability:SetActivated(false)
-		if (target:HasModifier("modifier_wave_blink")) and target:IsAlive() and caster:HasModifier("modifier_hide_ability") and caster:HasModifier("modifier_cant_walk") then
-	    	caster:MoveToPosition(target_loc)
+	if target then
+		local target_loc = GetGroundPosition(target:GetAbsOrigin(), target)
+		local caster_loc = GetGroundPosition(caster:GetAbsOrigin(), caster)
+		local distance = (target_loc - caster_loc):Length2D()
+		if caster:HasModifier("modifier_hide_ability") == false then
+			caster:RemoveModifierByName("modifier_cant_walk")
+		    --EndAnimation(caster)
+		end
+		if talent:GetLevel() > 0 then
+			sub_radius = sub_radius + talent:GetSpecialValueFor("value")
+		end
+		if (target:HasModifier("modifier_wave_blink")) and (distance <= sub_radius) and caster:CanEntityBeSeenByMyTeam(target) and target:IsAlive() and caster:HasModifier("modifier_hide_ability") == false and target:IsMagicImmune() == false then
+			sub_ability:SetActivated(true)
+		else
+			sub_ability:SetActivated(false)
+			if (target:HasModifier("modifier_wave_blink")) and target:IsAlive() and caster:HasModifier("modifier_hide_ability") and caster:HasModifier("modifier_cant_walk") then
+		    	caster:MoveToPosition(target_loc)
+			end
 		end
 	end
 end

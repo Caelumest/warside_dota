@@ -1,0 +1,292 @@
+// Rewrite of Earthshaker Fissure
+// Author: YOLOSPAGHETTI
+// Date: July 30, 2016
+// Version: 6.88
+// Type: Datadriven
+//
+// ----- FILE REQUIREMENTS -----
+// Script files:
+// scripts/vscripts/heroes/hero_earthshaker/fissure.lua
+//
+// Notes: the sides are stickier than normal, there is no automatic pathing, and sometimes the front and back do not fully restrict movement
+
+"DOTAAbilities"
+{
+	"fertile_soil"
+	{
+		"BaseClass"					"ability_lua"
+		"ScriptFile"				"heroes/casalmar/fertile_soil.lua"
+		"AbilityTextureName"		"fertile_soil"
+
+		"AbilityBehavior"			"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+		"AbilityType"				"DOTA_ABILITY_TYPE_ULTIMATE"
+		"SpellImmunityType"         "SPELL_IMMUNITY_ENEMIES_YES"
+
+		"AbilityCastPoint"			"0.4"
+		"AbilityCastRange"			"350"
+		"AbilityCooldown"			"110.0 100.0 90.0"
+		"AbilityManaCost"			"200 250 300"
+		"HasScepterUpgrade"			"1"
+
+		"AbilityCastAnimation"		"ACT_DOTA_UNDYING_DECAY"
+
+		"precache"
+		{
+			"particle"  "particles/units/heroes/hero_troy/troy_arena.vpcf"
+			"particle"  "particles/units/heroes/hero_troy/troy_arena_lava.vpcf"
+			"soundfile"	"gsoundevents/game_sounds_heroes/game_sounds_earth_jeremy.vsndevts"
+			"soundfile" "soundevents/game_sounds_heroes/game_sounds_earth_spirit.vsndevts"
+			"soundfile" "soundevents/game_sounds_heroes/game_sounds_brewmaster.vsndevts"
+			"soundfile" "soundevents/game_sounds_heroes/game_sounds_tusk.vsndevts"
+		}
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"delay"					"0.8"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"radius"				"350"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"duration"				"6.0"
+				"LinkedSpecialBonus"	"special_bonus_troy_arena_duration"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_damage"			"40 80 120"
+			}
+			"05"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"wall_damage"			"100"
+			}
+			"06"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"wall_hit_distance"		"100"
+			}
+			"07"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"wall_hit_height"		"100"
+			}
+			"08"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"wall_hit_duration"		"0.3"
+			}
+			"09"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"pct_dps_scepter"		"0.05 0.055 0.06"
+			}
+			"10"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"dmg_scepter"			"5 5.5 6"
+			}
+		}
+	}
+
+	"arena_cast_error_inside"
+	{
+		"BaseClass"             		"ability_lua"
+		"ScriptFile"				"heroes/casalmar/arena_cast_error_inside.lua"
+		"MaxLevel" 						"1"
+		"AbilityTextureName"			"disruptor_kinetic_field"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+	}
+
+	"arena_cast_error_outside"
+	{
+		"BaseClass"             		"ability_lua"
+		"ScriptFile"				"heroes/casalmar/arena_cast_error_outside.lua"
+		"MaxLevel" 						"1"
+		"AbilityTextureName"			"disruptor_kinetic_field"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+	}
+
+	// Instant arena spawn
+	"special_bonus_troy_instant_arena"
+	{
+		"BaseClass"				"special_bonus_undefined"
+		"AbilityType"			"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"		"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"		"FIELD_INTEGER"
+				"value"			"1"
+			}
+		}
+	}
+
+	// Bonus arena duration
+	"special_bonus_unique_casalmar_arena_duration"
+	{
+		"BaseClass"				"special_bonus_undefined"
+		"AbilityType"			"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"		"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"		"FIELD_INTEGER"
+				"value"			"3"
+			}
+		}
+	}
+	"fissure_datadriven"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"						"ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"	
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"				"1"
+		"AbilityTextureName"			"earthshaker_fissure"
+
+		"precache"
+		{
+			"particle"		"particles/units/heroes/hero_earthshaker/earthshaker_fissure.vpcf"
+			"soundfile"		"soundevents/game_sounds_heroes/game_sounds_earthshaker.vsndevts"
+			"soundfile"		"sounds/weapons/hero/earthshaker/fissure.vsnd"
+			"soundfile"		"sounds/weapons/hero/earthshaker/fissure_destroy01.vsnd"
+			"soundfile"		"sounds/weapons/hero/earthshaker/fissure_destroy02.vsnd"
+			"soundfile"		"sounds/weapons/hero/earthshaker/fissure_destroy03.vsnd"
+			"soundfile"		"sounds/weapons/hero/earthshaker/fissure_destroy04.vsnd"
+			"soundfile"		"sounds/weapons/hero/earthshaker/fissure_destroy05.vsnd"
+		}
+		
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"1400"
+		"AbilityCastPoint"				"0.69 0.69 0.69 0.69"
+
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"15.0 15.0 15.0 15.0"
+		"AbilityDuration"				"1.0 1.25 1.5 1.75"
+
+		// Damage.
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityDamage"					"110 160 210 260"
+
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"125 140 155 170"		
+
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"fissure_range"				"1350"
+			}
+			"02"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"fissure_duration"			"8.0"
+			}
+			"03"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"fissure_radius"				"225"
+			}
+			"04"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"stun_duration"				"1.0 1.25 1.5 1.75"
+			}
+			"05"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"duration"					"7"
+			}
+			"06"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"offset"					"1"
+			}
+		}
+		
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"	"Hero_EarthShaker.Fissure"
+				"Target"		"CASTER"
+			}
+			"ApplyModifier"
+			{
+			    "ModifierName"  "modifier_get_attacker"
+			    "Target"        "CASTER"
+			    "Duration"      "%duration"
+			}
+		}
+		
+		"Modifiers"
+		{
+			"modifier_negate_attacker"
+			{
+				"IsHidden"			"0"
+				"IsPurgable"        "1"
+				"Passive"			"1"
+				"OnTakeDamage"
+				// "%attack_damage" is set to the damage value after mitigation
+				{
+				    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/casalmar/fertile_soil.lua"
+                        "Function"      "NegateDamage"
+                        "modifier"      "modifier_hp_bonus"
+                        "Damage"        "%attack_damage"
+                    }
+				}
+			}
+			"modifier_get_attacker"
+			{
+
+				"IsHidden"			"0"
+				"IsPurgable"       "1"
+				"IsBuff"            "1"
+				"IsDebuff"          "0"
+				"IsStunDebuff"      "0"
+				"OnTakeDamage"
+				{
+				    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/casalmar/fertile_soil.lua"
+                        "Function"      "OnTakeDamage"
+                        "modifier"      "modifier_hp_bonus"
+                        "Damage"        "%attack_damage"
+                    }
+				}
+			}
+			"modifier_negate_damage"
+			{
+				"IsHidden"			"0"
+				"IsPurgable"       "1"
+				"IsBuff"            "1"
+				"IsDebuff"          "0"
+				"IsStunDebuff"      "0"
+			}
+		}
+	}
+}

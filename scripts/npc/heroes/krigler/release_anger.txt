@@ -1,0 +1,228 @@
+"DOTAAbilities"
+{
+    "release_anger"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityTextureName"            "release_anger"
+        "ScriptFile"                    ""
+        "MaxLevel"                      "3"
+        "AbilityType"                   "DOTA_ABILITY_TYPE_ULTIMATE"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET" 
+        "AbilityCastRange"              "650 700 750 800"
+        "AbilityCastPoint"              "0.2"
+        "AnimationPlaybackRate"         "2"
+        "AbilityCooldown"               "60 55 50"
+        "AbilityManaCost"               "50 75 100"
+        "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_2"
+        "HasScepterUpgrade"             "1"
+        "precache"
+        {
+            "soundfile"         "soundevents/game_sounds_heroes/game_sounds_magnataur.vsndevts"
+            "soundfile"         "soundevents/game_sounds_heroes/game_sounds_clinkz.vsndevts"
+            "particle"          "particles/units/heroes/hero_magnataur/magnataur_shockwave.vpcf"
+            "particle"          "particles\units\heroes\hero_clinkz\clinkz_strafe.vpcf"
+            "particle"          "particles\econ\items\alchemist\alchemist_aurelian_weapon\alchemist_chemical_rage_aurelian.vpcf"
+        }
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "duration"              "10"
+            }
+            "02"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "status_resistance"     "50"
+            }
+            "03"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "atkspeed"              "1 1.5 2"
+                "LinkedSpecialBonus"    "special_bonus_unique_jugg_3"
+            }
+            "04"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "crit_damage"           "2 2.25 2.5"
+                "LinkedSpecialBonus"    "special_bonus_unique_jugg_3"
+            }
+            "05"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "chance"                "20"
+            }
+            "06"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "base_crit"             "100"
+            }
+            "07"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "base_crit_scepter"     "160"
+            }
+            "08"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "duration_scepter"      "16"
+            }
+        }
+        "OnSpellStart"
+        {
+            "FireSound"
+            {
+                "EffectName"    "Hero_Clinkz.Strafe"
+                "Target"        "CASTER"
+            }
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/new_hero/release_anger.lua"
+                "Function"      "release_anger"
+
+                "radius"            "%radius"
+                "distance"          "%distance"
+                "speed"             "%speed"
+                "vision"            "%vision"
+                "vision_duration"   "%vision_duration"
+            }
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/new_hero/release_anger.lua"
+                "Function"      "Effects"
+            }
+        }
+        "OnUpgrade"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/new_hero/insatiable_anger.lua"
+                "Function"      "CheckStacks"
+                "stack_modifier"        "modifier_anger_stacks"
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_release_angers"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "IsPurgable"        "1"
+                
+                "EffectName"        "particles\econ\items\alchemist\alchemist_aurelian_weapon\alchemist_chemical_rage_aurelian.vpcf"
+                "EffectAttachType"  "follow_origin"
+        
+                "Properties"
+                {
+                    "MODIFIER_PROPERTY_ATTACKSPEED_BONUS_CONSTANT" "1"
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero/release_anger.lua"
+                        "Function"      "Effects"
+                    }
+                }
+            }
+            "modifier_release_angerss"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "IsPurgable"        "1"
+        
+                "EffectName"        "particle_name"
+                "EffectAttachType"  "follow_origin"
+            }
+            "anger_crit"
+            {
+                "Passive"       "0"
+                "IsHidden"      "1"
+                "IsPurgable"    "1"
+                "duration"      "%duration"
+                "EffectName"    "particles\units\heroes\hero_clinkz\clinkz_strafe.vpcf"
+                "EffectAttachType"  "attach_origin"
+                "OnAttackStart"
+                {
+                // Remove the modifier on each attach start to disable people 
+                // from canceling attacks to get a guaranteed crit.
+                    "RemoveModifier"
+                    {
+                        "ModifierName"  "modifier_release_anger"
+                        "Target"        "CASTER"
+                    }
+                    "RemoveModifier"
+                    {
+                        "ModifierName"  "modifier_release_ang"
+                        "Target"        "CASTER"
+                    }
+                    "Random"
+                    {
+                        "Chance" "%chance"
+                        "OnSuccess"
+                        {
+                            "ActOnTargets"
+                            {
+                                "Target"
+                                {
+                                    "Center"    "TARGET"
+                                    "Teams"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
+                                    "Types"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+                                }
+                                "Action"    
+                                {
+                                    "FireSound"
+                                    {
+                                        "EffectName"        "Hero_LegionCommander.Courage"
+                                        "Target"            "CASTER"
+                                    }
+                                    "FireEffect"
+                                    {
+                                        "EffectName"        "particles/units/heroes/hero_chaos_knight/chaos_knight_weapon_blur_critical.vpcf"
+                                        "EffectAttachType"  "attach_attack"
+                                        "Target"            "CASTER"
+                                    }
+                                }
+                            }
+                            "ApplyModifier"
+                            {
+                                "ModifierName" "modifier_release_ang"
+                                "Target" "CASTER"
+                            }
+                        }
+                    }
+                }
+            }
+            "modifier_release_ang"
+            {
+                "IsHidden"  "1"
+                "IsPurgable"    "0"
+                "OnCreated"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero/release_anger.lua"
+                        "Function"      "anger_crit"
+                    }
+                }
+
+                "OnAttackLanded"
+                {
+                    "RemoveModifier"
+                    {
+                        "ModifierName"  "modifier_release_anger"
+                        "Target"        "CASTER"    
+                    }
+                    "RemoveModifier"
+                    {
+                        "ModifierName"  "modifier_release_ang"
+                        "Target"        "CASTER"
+                    }
+                }
+            }
+        }
+    }
+
+}

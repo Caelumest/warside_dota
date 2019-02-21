@@ -38,7 +38,7 @@ function modifier_dk_dragon_form:OnAttackLanded()
 end
 
 function modifier_dk_dragon_form:GetModifierModelChange()
-    return "models/heroes/dragon_knight/dragon_knight_dragon.vmdl"
+    return "models/heroes/undying/undying_flesh_golem.vmdl"
 end
 
 function modifier_dk_dragon_form:IsHidden()

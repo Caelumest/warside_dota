@@ -1,486 +1,244 @@
+--Loads all custom libraries
+require("lib.keyvalues")
 require("lib.timers")
 require("lib.responses")
+
 require("libraries/animations")
 require("libraries/attachments")
 require("libraries/notifications")
-if CommunityCustomHeroesGameMode == nil then
-	CommunityCustomHeroesGameMode = class({})
-end
+--Loads all custom functions
+require("functions/utilities")
+require("functions/multiply_gold_xp")
+require("functions/check_for_innates")
 
+if WarsideDotaGameMode == nil then
+	_G.WarsideDotaGameMode = class({})
+end
+require("libraries/options_menu") --Loads the menu options
+require("hero_selection")
+require("constants")
+--------------------------------------------------------------------------------
+--Runs the script to add bots when turned on at options menu. 
+--Needs to be below OnGameStateChanged
+--------------------------------------------------------------------------------
+require("libraries/add_bot")
+
+
+--------------------------------------------------------------------------------
+-- Preloads everything before the game is created
+--------------------------------------------------------------------------------
 function Precache(context)
-	-- Custom Heroes
+	--Custom Heroes
 	PrecacheUnitByNameSync("npc_dota_hero_dragon_knight", context)
 	PrecacheUnitByNameSync("npc_dota_hero_legion_commander", context)
 	PrecacheUnitByNameSync("npc_dota_hero_monkey_king", context)
 	PrecacheUnitByNameSync("npc_dota_hero_lone_druid", context)
 	PrecacheUnitByNameSync("npc_dota_hero_keeper_of_the_light", context)
-PrecacheResource( "soundfile", "soundevents/game_sounds_ui_imported.vsndevts", context )
+	PrecacheUnitByNameSync("npc_dota_hero_krigler",context)
+	PrecacheUnitByNameSync("npc_dota_hero_juggernaut",context)
+	PrecacheUnitByNameSync("npc_dota_hero_casalmar",context)
+	PrecacheUnitByNameSync("npc_dota_hero_andrax",context)
+	PrecacheUnitByNameSync("npc_dota_hero_soul_tamer",context)
 	--Items
 	PrecacheItemByNameSync("item_aether_core", context)
   	PrecacheItemByNameSync("item_stout_mail", context)
-PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_koh.vsndevts", context )
-	--[[ Sobek precache
-	PrecacheResource( "particle", "particles/econ/generic/generic_buff_1/generic_buff_1.vpcf", context )
-	PrecacheResource( "particle", "particles/items2_fx/medallion_of_courage_friend.vpcf", context )
-	PrecacheResource( "particle", "particles/ui_mouseactions/range_finder_ward_aoe_ring.vpcf", context )
-	PrecacheResource( "particle", "particles/units/heroes/hero_sobek/sobek_voracious_appetite_consume_base.vpcf", context )
-	PrecacheResource( "particle", "particles/units/heroes/hero_sobek/sobek_voracious_appetite_consume.vpcf", context )
-	PrecacheResource( "particle", "particles/units/heroes/hero_sobek/sobek_absorption_base.vpcf", context )
-	PrecacheResource( "particle", "particles/units/heroes/hero_sobek/sobek_absorption_creep.vpcf", context )
-	
-	
-	PrecacheModel("models/creeps/neutral_creeps/n_creep_kobold/kobold_a/n_creep_kobold_a.vmdl", context)
-
-	-- Parasight precache
-	PrecacheResource( "particle", "particles/units/heroes/hero_bane/bane_enfeeble.vpcf", context )
-	PrecacheResource( "particle", "particles/units/heroes/hero_alchemist/alchemist_unstable_concoction_projectile_explosion.vpcf", context )
-	PrecacheResource( "particle", "particles/econ/items/bane/slumbering_terror/bane_slumber_nightmare.vpcf", context )
-	PrecacheResource( "particle", "particles/units/heroes/hero_clinkz/clinkz_death_pact.vpcf", context )
-	PrecacheResource( "particle", "particles/items_fx/ironwood_tree.vpcf", context )
-	PrecacheResource( "particle", "particles/econ/courier/courier_trail_international_2013/courier_international_2013.vpcf", context )
-	PrecacheResource( "particle", "particles/world_shrine/radiant_shrine_active.vpc", context )
-	PrecacheResource( "particle", "particles/econ/items/abaddon/abaddon_alliance/abaddon_aphotic_shield_alliance_explosion.vpcf", context )
-	PrecacheResource( "model", "models/items/wards/esl_wardchest_toadstool/esl_wardchest_toadstool.vmdl", context )
-	PrecacheResource( "model", "models/items/wards/ward_bramble_snatch/ward_bramble_snatch.vmdl", context )
-	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_parasight.vsndevts", context )
-	
-	-- Viscous Ooze precache
-	
-	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_viscous_ooze.vsndevts", context )
-	PrecacheModel("models/heroes/viscous_ooze/viscous_ooze.vmdl", context)
-	PrecacheModel("models/heroes/viscous_ooze/oozeling.vmdl", context)]]
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_koh.vsndevts", context )
+	--Particles
+	PrecacheResource( "particle", "particles/units/heroes/hero_troy/troy_arena_lava.vpcf", context )
+	PrecacheResource( "particle", "particles/econ/items/juggernaut/jugg_arcana/juggernaut_arcana_v2_ambient.vpcf", context )
+	--Sounds
+	PrecacheResource( "soundfile", "soundevents/game_sounds_warside_custom.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds_ui_imported.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_jeremy.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_juggernaut.vsndevts", context )
-	PrecacheUnitByNameSync("npc_dota_hero_kringler",context)
-	PrecacheUnitByNameSync("npc_dota_hero_juggernaut",context)
-
-
-	
-		--Precache things we know we'll use.  Possible file types include (but not limited to):
-			PrecacheResource( "model", "*.vmdl", context )
-			PrecacheResource( "soundfile", "*.vsndevts", context )
-			PrecacheResource( "particle", "*.vpcf", context )
-			PrecacheResource( "particle_folder", "particles/folder", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_undying.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/voscripts/game_sounds_vo_undying.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/voscripts/game_sounds_vo_krigler.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/voscripts/game_sounds_vo_andrax.vsndevts", context )
+	--Precache things we know we'll use.  Possible file types include (but not limited to):
+	PrecacheResource( "model", "*.vmdl", context )
+	PrecacheResource( "soundfile", "*.vsndevts", context )
+	PrecacheResource( "particle", "*.vpcf", context )
+	PrecacheResource( "particle_folder", "particles/folder", context )
+	LinkLuaModifier("modifier_hide_hero", "modifiers/modifier_hide_hero.lua", LUA_MODIFIER_MOTION_NONE )
+	LinkLuaModifier("modifier_command_restricted", "modifiers/modifier_command_restricted.lua", LUA_MODIFIER_MOTION_NONE )
 end
 
--- Create the game mode when we activate
+--------------------------------------------------------------------------------
+-- Create the game mode
+--------------------------------------------------------------------------------
 function Activate()
-
-	
-	-- TODO: Remove from finished product, we just want spectators for playtests
-	--GameRules:SetCustomGameTeamMaxPlayers(1, 5)
-	--GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS,5)
-	--GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, 5)
-	GAME_OPTIONS_SET = true
-	CustomGameEventManager:RegisterListener("set_starting_gold", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleStartingGold'))
-  	CustomGameEventManager:RegisterListener("set_multiplier_gold", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleMultiplierGold'))
-  	CustomGameEventManager:RegisterListener("set_multiplier_xp", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleMultiplierExp'))
-	GameRules.GameMode = CommunityCustomHeroesGameMode()
+	GameRules:SetCustomGameTeamMaxPlayers(1, 5)
+	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS,5)
+	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, 5)
+	CustomGameEventManager:RegisterListener("set_starting_gold", Dynamic_Wrap(WarsideDotaGameMode, 'ToggleStartingGold'))
+  	CustomGameEventManager:RegisterListener("set_multiplier_gold", Dynamic_Wrap(WarsideDotaGameMode, 'ToggleMultiplierGold'))
+  	CustomGameEventManager:RegisterListener("set_multiplier_xp", Dynamic_Wrap(WarsideDotaGameMode, 'ToggleMultiplierExp'))
+  	CustomGameEventManager:RegisterListener("set_bots_difficulty", Dynamic_Wrap(WarsideDotaGameMode, 'OnBotDifficulty'))
+  	CustomGameEventManager:RegisterListener("player_toggle_bots", Dynamic_Wrap(WarsideDotaGameMode, 'ToggleBots'))
+  	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( WarsideDotaGameMode, 'OnGameStateChanged' ), self )
+  	GameRules:GetGameModeEntity():SetCustomGameForceHero(DUMMY_HERO)
+	GameRules.GameMode = WarsideDotaGameMode()
 	GameRules.GameMode:InitGameMode()
-	isBotActive = 0
-	local mode = GameRules:GetGameModeEntity()
-  	mode:SetBotThinkingEnabled( true )
-  	CustomGameEventManager:RegisterListener("set_bots_difficulty", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'OnBotDifficulty'))
-  	
-  	CustomGameEventManager:RegisterListener("player_toggle_bots", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleBots'))
-  	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( CommunityCustomHeroesGameMode, 'OnGameStateChanged' ), self )
 end
 
-
-function CommunityCustomHeroesGameMode:ToggleStartingGold(event)
-	local startingGold = event.startingGold
-	
-	if tostring(startingGold) == 'GoldOption1' then
-		starting_Gold = 600 - 600
-		GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>600</font>", 2, 1)
-	elseif tostring(startingGold) == 'GoldOption2' then
-		starting_Gold = 1000 - 600
-		GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>1000</font>", 2, 1)
-	elseif tostring(startingGold) == 'GoldOption3' then
-		starting_Gold = 1400 - 600
-		GameRules:SetStartingGold(1400)
-		GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>1400</font>", 2, 1)
-	elseif tostring(startingGold) == 'GoldOption4' then
-		starting_Gold = 1800 - 600
-		GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>1800</font>", 2, 1)
-	elseif tostring(startingGold) == 'GoldOption5' then
-		starting_Gold = 2200 - 600
-		GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>2200</font>", 2, 1)
-	end
-	print("START",starting_Gold)
-end
-
-function CommunityCustomHeroesGameMode:ToggleMultiplierGold(event)
-	local multiplierGold = event.multiplierGold
-	if tostring(multiplierGold) == 'MultiplierOption1' then
-		multiplier_Gold = 0
-		GameRules:SendCustomMessage("Gold Multiplier = <font color='#0F0'>1x</font>", 2, 1)
-	elseif tostring(multiplierGold) == 'MultiplierOption2' then
-		multiplier_Gold = 1
-		GameRules:SendCustomMessage("Gold Multiplier = <font color='#0F0'>2x</font>", 2, 1)
-	elseif tostring(multiplierGold) == 'MultiplierOption3' then
-		multiplier_Gold = 2
-		GameRules:SendCustomMessage("Gold Multiplier = <font color='#0F0'>3x</font>", 2, 1)
-	elseif tostring(multiplierGold) == 'MultiplierOption4' then
-		multiplier_Gold = 3
-		GameRules:SendCustomMessage("Gold Multiplier = <font color='#0F0'>4x</font>", 2, 1)
-	end
-	print("MULT",multiplier_Gold)
-end
-
-function CommunityCustomHeroesGameMode:ToggleMultiplierExp(event)
-	local multiplierExp = event.multiplierExp
-	
-	if tostring(multiplierExp) == 'ExpOption1' then
-		multiplier_Exp = 0
-		GameRules:SendCustomMessage("EXP Multiplier = <font color='#0F0'>1x</font>", 2, 1)
-	elseif tostring(multiplierExp) == 'ExpOption2' then
-		multiplier_Exp = 1
-		GameRules:SendCustomMessage("EXP Multiplier = <font color='#0F0'>2x</font>", 2, 1)
-	elseif tostring(multiplierExp) == 'ExpOption3' then
-		multiplier_Exp = 2
-		GameRules:SendCustomMessage("EXP Multiplier = <font color='#0F0'>3x</font>", 2, 1)
-	elseif tostring(multiplierExp) == 'ExpOption4' then
-		multiplier_Exp = 3
-		GameRules:SendCustomMessage("EXP Multiplier = <font color='#0F0'>4x</font>", 2, 1)
-	end
-	print("MAMAMAMAMAMA",multiplier_Exp)
-end
-
-function CommunityCustomHeroesGameMode:ToggleBots( event )
-	local botsOn = event.botsOn
-	if botsOn == 0 then
-		isBotActive = 0
-		print("Bots OFF")
-	elseif botsOn == 1 then
-		isBotActive = 1
-		print("Bots ON")
-	end
-end
-
-function CommunityCustomHeroesGameMode:OnBotDifficulty( args )
-
-	local botsdifficulty = args.bots_difficulty
-
-	-- If the player who sent the game options is not the host, do nothing
-	if tostring(botsdifficulty) == 'BotsOption1' then
-		bot_difficulty = 0
-		print("BOT DIFFICULTY:", bot_difficulty)
-	elseif tostring(botsdifficulty) == "BotsOption2" then
-		bot_difficulty = 1
-		print("BOT DIFFICULTY:", bot_difficulty)
-	elseif tostring(botsdifficulty) == "BotsOption3" then
-		bot_difficulty = 2
-		print("BOT DIFFICULTY:", bot_difficulty)
-	elseif tostring(botsdifficulty) == "BotsOption4" then
-		bot_difficulty = 3
-		print("BOT DIFFICULTY:", bot_difficulty)
-	elseif tostring(botsdifficulty) == "BotsOption5" then
-		bot_difficulty = 4
-		print("BOT DIFFICULTY:", bot_difficulty)
-	end
-	GAME_OPTIONS_SET = true
-	if isBotActive == 1 then
-		if bot_difficulty == 0 then
-			GameRules:SendCustomMessage("Bots = <font color='#0F0'>ON</font>", 2, 1)
-			GameRules:SendCustomMessage("Difficulty = <font color='#00CCCC'>Passive</font>", 2, 1)
-		elseif bot_difficulty == 1 then
-			GameRules:SendCustomMessage("Bots = <font color='#0F0'>ON</font>", 2, 1)
-			GameRules:SendCustomMessage("Difficulty = <font color='#FF9933'>Easy</font>", 2, 1)
-		elseif bot_difficulty == 2 then
-			GameRules:SendCustomMessage("Bots = <font color='#0F0'>ON</font>", 2, 1)
-			GameRules:SendCustomMessage("Difficulty = <font color='#FFFF33'>Medium</font>", 2, 1)
-		elseif bot_difficulty == 3 then
-			GameRules:SendCustomMessage("Bots = <font color='#0F0'>ON</font>", 2, 1)
-			GameRules:SendCustomMessage("Difficulty = <font color='#99FF99'>Hard</font>", 2, 1)
-		elseif bot_difficulty == 4 then
-			GameRules:SendCustomMessage("Bots = <font color='#0F0'>ON</font>", DOTA_TEAM_GOODGUYS, 1)
-			GameRules:SendCustomMessage("Difficulty = <font color='#FF3333'>Unfair</font>", DOTA_TEAM_GOODGUYS, 1)
-		end
-	elseif isBotActive == 0 then
-		GameRules:SendCustomMessage("Bots = <font color='#F00'>OFF</font>", 2, 1)
-	end
-end
-
-function CommunityCustomHeroesGameMode:OnGameStateChanged( keys )
-    local state = GameRules:State_Get()
-    if state == DOTA_GAMERULES_STATE_HERO_SELECTION then
-    	print("HERO SELECTION")
-
-    end
-    if state == DOTA_GAMERULES_STATE_STRATEGY_TIME then
-        local num = 0
-        local used_hero_name = "npc_dota_hero_luna"
-        local brokenBots = {
-            "npc_dota_hero_tidehunter",
-            "npc_dota_hero_razor",
-            "npc_dota_hero_legion_commander",
-            "npc_dota_hero_dragon_knight",
-            "npc_dota_hero_lone_druid",
-            "npc_dota_hero_keeper_of_the_light",
-            "npc_dota_hero_monkey_king"}
-
-        local workingBots = {
-        	"npc_dota_hero_axe",
-            "npc_dota_hero_skywrath_mage",
-            "npc_dota_hero_nevermore",
-            "npc_dota_hero_pudge",
-            "npc_dota_hero_phantom_assassin",
-            "npc_dota_hero_skeleton_king",
-            "npc_dota_hero_lina",
-            "npc_dota_hero_luna",
-            "npc_dota_hero_bloodseeker",
-            "npc_dota_hero_lion",
-            "npc_dota_hero_tiny",
-            "npc_dota_hero_oracle",
-            "npc_dota_hero_bane",
-            "npc_dota_hero_bristleback",
-            "npc_dota_hero_chaos_knight",
-            "npc_dota_hero_crystal_maiden",
-            "npc_dota_hero_dazzle",
-            "npc_dota_hero_death_prophet",
-            "npc_dota_hero_drow_ranger",
-            "npc_dota_hero_earthshaker",
-            "npc_dota_hero_jakiro",
-            "npc_dota_hero_kunkka",
-            "npc_dota_hero_necrolyte",
-            "npc_dota_hero_sven",
-        	"npc_dota_hero_lich",
-            "npc_dota_hero_omniknight",
-            "npc_dota_hero_sand_king",
-            "npc_dota_hero_sniper",
-            "npc_dota_hero_vengefulspirit",
-            "npc_dota_hero_viper",
-            "npc_dota_hero_warlock",
-            "npc_dota_hero_witch_doctor",
-            "npc_dota_hero_zuus"
-        }
-
-        for i=0, DOTA_MAX_TEAM_PLAYERS do
-            if PlayerResource:IsValidPlayer(i) then
-                print(i)
-                
-                -- Random heroes for people who have not picked
-                if PlayerResource:HasSelectedHero(i) == false then
-                    print("Randoming hero for:", i)
-                    
-                    local player = PlayerResource:GetPlayer(i)
-                    player:MakeRandomHeroSelection()
-                    
-                    local hero_name = PlayerResource:GetSelectedHeroName(i)
-                    
-                    print("Randomed:", hero_name)
-                end
-                
-                used_hero_name = PlayerResource:GetSelectedHeroName(i)
-                num = num + 1
-            end
-
-        end
-        
-        self.numPlayers = num
-        print("Number of players:", num)
-        for j=1,#brokenBots do
-            print("Broken:", brokenBots[j])
-        end
-        totalplayers = self.numPlayers
-        print("TOTAL", totalplayers)
-        totalradiant=0
-        totaldire=0
-        for hel=0,9 do
-        	local teamss = PlayerResource:GetTeam(hel)
-        	if teamss == 2 then
-        		totalradiant = totalradiant + 1
-    		elseif teamss == 3 then
-    			totaldire = totaldire + 1
-    		end
-        	print("TEAMMMM", teamss)
-        end
-    	print("TOTAL RADIANT", totalradiant)
-    	print("TOTAL DIRE", totaldire)
-
-    	if isBotActive == nil then
-    		isBotActive = 1
-    	end
-    	print("ValorFinal",isBotActive)
-        if IsServer() == true and 10 - self.numPlayers > 0 and isBotActive == 1 then
-            print("Adding bots in empty slots")
-            for i=1, 5 do
-            	local botsToRadiant = 5 - totalradiant
-            	local botsToDire = 5 - totaldire
-            	if botsToRadiant > 0 then
-            		print("TOTAL IF", totalplayers)
-	            	while nomebot == nil or nomebot==PlayerResource:GetSelectedHeroName(0) or nomebot==PlayerResource:GetSelectedHeroName(1) or nomebot==PlayerResource:GetSelectedHeroName(2) or nomebot==PlayerResource:GetSelectedHeroName(3) or nomebot==PlayerResource:GetSelectedHeroName(4) or nomebot==PlayerResource:GetSelectedHeroName(5) or nomebot==PlayerResource:GetSelectedHeroName(6) or nomebot==PlayerResource:GetSelectedHeroName(7) or nomebot==PlayerResource:GetSelectedHeroName(8) or nomebot==PlayerResource:GetSelectedHeroName(9) do
-	            		randomNum = RandomInt(0,#workingBots)
-	            		print("Random Number:",randomNum)
-	            		print("Nomebot inside while",nomebot)
-	            		nomebot = workingBots[randomNum]
-	            	end
-	            	print("Nomebot outside while",nomebot)
-            		Tutorial:AddBot(nomebot, "","", true)
-            		totalradiant = totalradiant + 1
-            		print("Total radiant:", totalradiant)
-	            end
-            	if botsToDire > 0 then
-            		print("TOTAL IF", totalplayers)
-	            	while nomebot == nil or nomebot==PlayerResource:GetSelectedHeroName(0) or nomebot==PlayerResource:GetSelectedHeroName(1) or nomebot==PlayerResource:GetSelectedHeroName(2) or nomebot==PlayerResource:GetSelectedHeroName(3) or nomebot==PlayerResource:GetSelectedHeroName(4) or nomebot==PlayerResource:GetSelectedHeroName(5) or nomebot==PlayerResource:GetSelectedHeroName(6) or nomebot==PlayerResource:GetSelectedHeroName(7) or nomebot==PlayerResource:GetSelectedHeroName(8) or nomebot==PlayerResource:GetSelectedHeroName(9) do
-	            		randomNum = RandomInt(0,#workingBots)
-	            		print("Random Number:",randomNum)
-	            		print("Nomebot inside while",nomebot)
-	            		nomebot = workingBots[randomNum]
-	            	end
-	     
-	            	print("Nomebot outside while",nomebot)
-            		Tutorial:AddBot(nomebot, "","", false)
-            		totaldire = totaldire + 1
-            		print("Total dire:", totaldire)
-	            end
-            end
-            print("Players total",totalplayers)
-            for helper=0,9 do
-            	print(helper,"<< Num  Hero>>",PlayerResource:GetSelectedHeroName(helper))
-         
-            end
-            --GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
-            --SendToServerConsole("dota_bot_populate")
-            --SendToServerConsole("dota_bot_set_difficulty 2")
-        end
-    elseif state == DOTA_GAMERULES_STATE_PRE_GAME then
-    	Tutorial:StartTutorialMode()
-        for i=0, DOTA_MAX_TEAM_PLAYERS do
-        	if PlayerResource:IsFakeClient(i) == true then
-                PlayerResource:GetPlayer(i):GetAssignedHero():SetBotDifficulty(bot_difficulty)
-                print("Bot",i,"difficulty setted to:",bot_difficulty)
-            end
-            if starting_Gold ~= nil then
-				PlayerResource:ModifyGold(i, starting_Gold, false, 0);
-			end
-        end
-    end
-end
-
-function CommunityCustomHeroesGameMode:InitGameMode()
-	print("Loaded CommunityCustomHeroes")
-	ListenToGameEvent( "set_starting_gold", Dynamic_Wrap( CommunityCustomHeroesGameMode, "ToggleStartingGold" ), self )
-	-- Debug
-	-- GameRules:SetPreGameTime(20)
+--------------------------------------------------------------------------------
+-- GameEvent: InitGameMode
+--------------------------------------------------------------------------------
+function WarsideDotaGameMode:InitGameMode()
+	print("Loaded Warside Dota")
 	VoiceResponses:Start()
-	VoiceResponses:RegisterUnit("npc_dota_hero_juggernaut", "scripts/responses/juggernaut_responses.txt")
-	VoiceResponses:RegisterUnit("npc_dota_hero_treant", "scripts/responses/sobek_responses.txt")
-	--CustomGameEventManager:RegisterListener("player_toggle_camera_lock", Dynamic_Wrap(CommunityCustomHeroesGameMode, 'ToggleCameraLock'))
+	VoiceResponses:RegisterUnit("npc_dota_hero_krigler", "scripts/responses/krigler_responses.txt")
+	VoiceResponses:RegisterUnit("npc_dota_hero_andrax", "scripts/responses/andrax_responses.txt")
+	GameRules:SetPreGameTime(PRE_GAME_TIME)
 	-- Link modifiers
-	local GameMode = GameRules:GetGameModeEntity()
-	LinkLuaModifier("modifier_activatable", "scripts/vscripts/modifiers/modifier_activatable.lua", LUA_MODIFIER_MOTION_NONE)
-	--GameMode:SetModifyGoldFilter( Dynamic_Wrap( CommunityCustomHeroesGameMode, "FilterGold" ), self )
 	-- Listen to game events
-	--ListenToGameEvent( "player_toggle_camera_lock", Dynamic_Wrap( CommunityCustomHeroesGameMode, 'ToggleCameraLock' ), self )
+	--WarsideDotaGameMode:SetHUDVisible(5, false)
+	if IsInToolsMode() then
+		require("demo")
+		self:SetupDemoMode()
+	end
+	GameRules:GetGameModeEntity():SetUseDefaultDOTARuneSpawnLogic(true)
 	GameRules:SetCustomGameSetupTimeout(60)
-	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( CommunityCustomHeroesGameMode, "OnNPCSpawned" ), self )
-	ListenToGameEvent( "entity_killed", Dynamic_Wrap( CommunityCustomHeroesGameMode, "OnEntityKilled" ), self )
+	ListenToGameEvent("player_chat", Dynamic_Wrap(self, 'OnPlayerChat'), self)
+	GameRules:GetGameModeEntity():SetExecuteOrderFilter(Dynamic_Wrap(self, 'OrderFilter'), self)
+	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( WarsideDotaGameMode, "OnNPCSpawned" ), self )
+	ListenToGameEvent( "entity_killed", Dynamic_Wrap( WarsideDotaGameMode, "OnEntityKilled" ), self )
 	GameRules:GetGameModeEntity():SetUseCustomHeroLevels ( true )
 	GameRules:SetSameHeroSelectionEnabled(true)
-	GameRules:GetGameModeEntity():SetCustomHeroMaxLevel(35)
-	--GameRules:SetStartingGold(starting_Gold)
-	--GameRules:SetGoldPerTick(1)
-	--GameRules:SetGoldTickTime(multiplierGold)
-	-- Set order filter
-	--GameRules:GetGameModeEntity():SetExecuteOrderFilter(Dynamic_Wrap(CommunityCustomHeroesGameMode, 'OrderFilter'), self)
-	-- Set damage filter
-	--GameRules:GetGameModeEntity():SetDamageFilter(Dynamic_Wrap(CommunityCustomHeroesGameMode, 'DamageFilter'), self)
-
-
-	XP_PER_LEVEL_TABLE = {
-	        0, -- 1
-	      200, -- 2
-	      500, -- 3
-	      900, -- 4
-	     1400, -- 5
-	     2000, -- 6
-	     2640, -- 7
-	     3300, -- 8
-	     3980, -- 9
-	     4680, -- 10
-	     5400, -- 11
-	     6140, -- 12
-	     7340, -- 13
-	     8565, -- 14
-	     9815, -- 15
-	    11090, -- 16
-	    12390, -- 17
-	    13715, -- 18
-	    15115, -- 19
-	    16605, -- 20
-	    18205, -- 21
-	    20105, -- 22
-	    22305, -- 23
-	    24805, -- 24
-	    27500, -- 25
-	    30000, -- 26
-	    32500, -- 27
-	    35000, -- 28
-	    38500, -- 29
-	  	40500, -- 30
-	  	43500, -- 31
-	  	47500, -- 32
-	  	50500, -- 33
-	  	53500, -- 34
-	  	56500  -- 35
-	  }
-	  --[[XP_PER_LEVEL_TABLE = {
-	        0, -- 1
-	      100, -- 2
-	      250, -- 3
-	      450, -- 4
-	     700, -- 5
-	     1000, -- 6
-	     1320, -- 7
-	     1650, -- 8
-	     1990, -- 9
-	     2340, -- 10
-	     2700, -- 11
-	     3050, -- 12
-	     3500, -- 13
-	     4250, -- 14
-	     4700, -- 15
-	    5500, -- 16
-	    6000, -- 17
-	    7000, -- 18
-	    7515, -- 19
-	    8300, -- 20
-	    9200, -- 21
-	    10000, -- 22
-	    11150, -- 23
-	    12000, -- 24
-	    13500, -- 25
-	    15000, -- 26
-	    16500, -- 27
-	    17500, -- 28
-	    19000, -- 29
-	  	20500, -- 30
-	  	21500, -- 31
-	  	23500, -- 32
-	  	25500, -- 33
-	  	26500, -- 34
-	  	28500  -- 35
-	  }]]
-	  GameRules:GetGameModeEntity():SetCustomXPRequiredToReachNextLevel(XP_PER_LEVEL_TABLE)
-
-
-	  
-
+	Convars:RegisterCommand("chip_toggle_hud", Dynamic_Wrap(self, 'ToggleHUD'), "", 0)
+	LinkLuaModifier("modifier_command_restricted", "modifiers/modifier_command_restricted.lua", LUA_MODIFIER_MOTION_NONE )
+	LinkLuaModifier("modifier_activatable", "scripts/vscripts/modifiers/modifier_activatable.lua", LUA_MODIFIER_MOTION_NONE)
+	require("libraries/xp_table")
 end
 
-function CommunityCustomHeroesGameMode:OrderFilter(order)
+---------------------------------------------------------------------------
+-- Event: OnEntityKilled
+---------------------------------------------------------------------------
+function WarsideDotaGameMode:OnEntityKilled( event )
+    local killedUnit = EntIndexToHScript( event.entindex_killed )
+    local attacker = EntIndexToHScript( event.entindex_attacker )
+
+    MultiplyGoldXp(killedUnit, attacker)
+
+    if killedUnit:IsRealHero() and killedUnit:GetLevel() > 25 and killedUnit:IsReincarnating() == false then
+        print("Hero has been killed")   
+        print(attacker:GetLevel())
+    	killedUnit:SetTimeUntilRespawn(100)
+    end
+end
+
+--------------------------------------------------------------------------------
+-- GameEvent: OnNPCSpawned
+--------------------------------------------------------------------------------
+function WarsideDotaGameMode:OnNPCSpawned( event )
+	spawnedUnit = EntIndexToHScript( event.entindex )
+	if spawnedUnit:IsIllusion() then
+		CheckForIllusionsInnate(spawnedUnit)
+	end
+	if spawnedUnit:GetUnitName() == "npc_dota_hero_custom" then
+		spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_hide_hero", {})
+	end
+	if spawnedUnit:IsRealHero() and not spawnedUnit:IsClone() and not spawnedUnit:IsIllusion() and spawnedUnit:GetUnitName() ~= "npc_dota_hero_custom" and spawnedUnit:GetUnitName() ~= "npc_dota_creature_spirit_vessel" then
+		CheckForInnates(spawnedUnit)
+		if IsInToolsMode() and spawnedUnit.toolsmodeflag == nil then
+			if spawnedUnit:HasRoomForItem("item_blink", true, true) then
+		   		local dagger = CreateItem("item_blink", spawnedUnit, spawnedUnit)
+		   		dagger:SetPurchaseTime(0)
+		   		spawnedUnit:AddItem(dagger)
+    		end
+    		spawnedUnit:HeroLevelUp(false)
+    		spawnedUnit:HeroLevelUp(false)
+    		spawnedUnit:HeroLevelUp(false)
+    		spawnedUnit:HeroLevelUp(false)
+    		spawnedUnit:HeroLevelUp(false)
+    		spawnedUnit.toolsmodeflag = 0
+    	end
+	end
+	if spawnedUnit:IsRealHero() and not spawnedUnit:IsClone() then
+		if spawnedUnit.FirstTime == nil then
+			spawnedUnit.FirstTime = true
+			Timers:CreateTimer(0.1, function()
+				if spawnedUnit:IsIllusion() then return end
+				if spawnedUnit:GetUnitName() ~= DUMMY_HERO then
+					-- if IsDonator(npc:GetPlayerID()) then
+					-- 	Timers:CreateTimer(2.0, function()
+					-- 		local steam_id = tostring(PlayerResource:GetSteamID(npc:GetPlayerID()))
+					-- 		if steam_id == "76561198015161808" then
+					-- 			DonatorCompanion(npc:GetPlayerID(), "npc_chp_donator_companion_cookies")
+					-- 		elseif steam_id == "76561198014254115" then
+					-- 			DonatorCompanion(npc:GetPlayerID(), "npc_chp_donator_companion_icefrog")
+					-- 		elseif steam_id == "76561198014254115" then
+					-- 			DonatorCompanion(npc:GetPlayerID(), "npc_chp_donator_companion_suthernfriend")
+					-- 		else -- replace seekling by players choice stored in DB
+					-- 			DonatorCompanion(npc:GetPlayerID(), "npc_chp_donator_companion_seekling")
+					-- 		end
+					-- 	end)
+					-- end
+
+					return
+				else
+					local time_elapsed = 0
+					Timers:CreateTimer(function()
+						if not spawnedUnit:HasModifier("modifier_command_restricted") then
+							spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_command_restricted", {})
+							spawnedUnit:AddEffects(EF_NODRAW)
+							if spawnedUnit:GetTeamNumber() == DOTA_TEAM_GOODGUYS then
+								PlayerResource:SetCameraTarget(spawnedUnit:GetPlayerOwnerID(), GoodCamera)
+								--FindClearSpaceForUnit(npc, GoodCamera:GetAbsOrigin(), false)
+							else
+								PlayerResource:SetCameraTarget(spawnedUnit:GetPlayerOwnerID(), BadCamera)					
+								--FindClearSpaceForUnit(npc, BadCamera:GetAbsOrigin(), false)
+							end
+						end
+						if time_elapsed < 0.9 then
+							time_elapsed = time_elapsed + 0.1
+						else			
+							return nil
+						end
+						return 0.1
+					end)
+
+					return
+				end
+			end)
+		end
+	end
+end
+
+function WarsideDotaGameMode:ToggleHUD()
+	CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(0), "chip_toggle_hud", {})
+end
+
+--------------------------------------------------------------------------------
+-- GameEvent: GetPhysicalArmorReduction
+--------------------------------------------------------------------------------
+function CDOTA_BaseNPC:GetPhysicalArmorReduction()
+	local armornpc = self:GetPhysicalArmorValue()
+	local armor_reduction = 1 - (0.06 * armornpc) / (1 + (0.06 * math.abs(armornpc)))
+	armor_reduction = 100 - (armor_reduction * 100)
+	return armor_reduction
+end
+
+local activationOrders = {
+	[DOTA_UNIT_ORDER_MOVE_TO_TARGET] = true,
+	[DOTA_UNIT_ORDER_ATTACK_TARGET] = true
+}
+
+local castOrders = {
+	[DOTA_UNIT_ORDER_CAST_POSITION] = true,
+	[DOTA_UNIT_ORDER_CAST_TARGET] = true,
+	[DOTA_UNIT_ORDER_CAST_TARGET_TREE] = true,
+	[DOTA_UNIT_ORDER_CAST_RUNE] = true,
+}
+
+function WarsideDotaGameMode:OrderFilter(order)
 	local target_unit = nil
 	if order.entindex_target ~= 0 then
 		target_unit = EntIndexToHScript(order.entindex_target)
 	end
 
 	-- Check for activatable modifier
-	local activationOrders = {
-		[DOTA_UNIT_ORDER_MOVE_TO_TARGET] = true,
-		[DOTA_UNIT_ORDER_ATTACK_TARGET] = true
-	}
-
 	if order.queue == 0 and activationOrders[order.order_type] and target_unit ~= nil then
 		if target_unit.FindModifierByName then
 			local modifier = target_unit:FindModifierByName("modifier_activatable")
@@ -518,15 +276,162 @@ function CommunityCustomHeroesGameMode:OrderFilter(order)
 	-- Check for modifier
 	for key, unit_index in pairs(order.units) do
 		local unit = EntIndexToHScript(order.units["0"])
+		--The Arena
+		if castOrders[order.order_type] then
+			local arena_modifier = unit:FindModifierByName("modifier_troy_the_arena_check_position")
+			if arena_modifier and arena_modifier:GetAbility() and arena_modifier.target_point then
+				local radius = arena_modifier:GetAbility():GetSpecialValueFor("radius")
+				local origin = unit:GetAbsOrigin()
+				if (arena_modifier.target_point - origin):Length2D() < radius then
+					if order["position_x"] and not target_unit then
+						local posX = order["position_x"]
+						local posY = order["position_y"]
+						local posZ = order["position_z"]
+
+						local vector = Vector(posX, posY, posZ)
+						-- print((arena_modifier.target_point - vector):Length2D())
+
+						if (arena_modifier.target_point - vector):Length2D() > radius then
+							-- local newVector = arena_modifier.target_point + (vector - arena_modifier.target_point):Normalized() * (radius - 25)
+							-- order["position_x"] = newVector.x
+							-- order["position_y"] = newVector.y
+							-- order["position_z"] = newVector.z
+							-- unit:AddNewModifier(unit, nil, "modifier_command_restricted", {Duration = 0.03})
+							--return false
+							if unit:GetPlayerOwnerID() then
+								local dummy = CreateUnitByName("npc_arena_dummy", arena_modifier.target_point, true, nil, nil, unit:GetTeamNumber())
+								dummy:SetControllableByPlayer(unit:GetPlayerOwnerID(), true)
+								-- dummy:SetOwner(unit)
+								local errorAbility = dummy:FindAbilityByName("arena_cast_error_outside")
+								errorAbility:UpgradeAbility(true)
+								dummy:AddNewModifier(unit, nil, "modifier_kill", {duration = 0.03})
+								dummy:AddNewModifier(unit, nil, "modifier_invulnerable", {})
+
+								order.entindex_ability = errorAbility:entindex()
+								order.order_type = DOTA_UNIT_ORDER_CAST_NO_TARGET
+								order.units["0"] = dummy:entindex()
+							end
+						end
+					elseif target_unit then
+						local vector = target_unit:GetAbsOrigin()
+						if (arena_modifier.target_point - vector):Length2D() > radius then
+							-- local newVector = arena_modifier.target_point + (vector - arena_modifier.target_point):Normalized() * (radius - 25)
+							-- local newTarget = CreateUnitByName("npc_dummy", newVector, false, nil, nil, DOTA_TEAM_GOODGUYS)
+							-- newTarget:AddNewModifier(unit, nil, "modifier_kill", {duration = 1})
+							-- order.entindex_target = newTarget:entindex()
+							-- unit:AddNewModifier(unit, nil, "modifier_command_restricted", {Duration = 0.03})
+							--return false
+							if unit:GetPlayerOwnerID() then
+								local dummy = CreateUnitByName("npc_arena_dummy", arena_modifier.target_point, true, nil, nil, unit:GetTeamNumber())
+								dummy:SetControllableByPlayer(unit:GetPlayerOwnerID(), true)
+								dummy:SetOwner(unit)
+								local errorAbility = dummy:FindAbilityByName("arena_cast_error_outside")
+								errorAbility:UpgradeAbility(true)
+								dummy:AddNewModifier(unit, nil, "modifier_kill", {duration = 0.03})
+								dummy:AddNewModifier(unit, nil, "modifier_invulnerable", {})
+
+								order.entindex_ability = errorAbility:entindex()
+								order.order_type = DOTA_UNIT_ORDER_CAST_NO_TARGET
+								order.units["0"] = dummy:entindex()
+							end
+						end
+					else
+						local vector = unit:GetAbsOrigin()
+						-- print(vector)
+						-- print((arena_modifier.target_point - vector):Length2D())
+						if (arena_modifier.target_point - vector):Length2D() > radius then
+							local newVector = arena_modifier.target_point + (vector - arena_modifier.target_point):Normalized() * (radius - 25)
+							unit:SetAbsOrigin(newVector)
+						end
+					end
+				else
+					if order["position_x"] and not target_unit then
+						local posX = order["position_x"]
+						local posY = order["position_y"]
+						local posZ = order["position_z"]
+
+						local vector = Vector(posX, posY, posZ)
+						-- print((arena_modifier.target_point - vector):Length2D())
+
+						if (arena_modifier.target_point - vector):Length2D() < radius + 25 then
+							-- local newVector = arena_modifier.target_point + (vector - arena_modifier.target_point):Normalized() * (radius - 25)
+							-- order["position_x"] = newVector.x
+							-- order["position_y"] = newVector.y
+							-- order["position_z"] = newVector.z
+							-- unit:AddNewModifier(unit, nil, "modifier_command_restricted", {Duration = 0.03})
+							--return false
+							if unit:GetPlayerOwnerID() then
+								local dummy = CreateUnitByName("npc_arena_dummy", arena_modifier.target_point, true, nil, nil, unit:GetTeamNumber())
+								dummy:SetControllableByPlayer(unit:GetPlayerOwnerID(), true)
+								-- dummy:SetOwner(unit)
+								local errorAbility = dummy:FindAbilityByName("arena_cast_error_inside")
+								errorAbility:UpgradeAbility(true)
+								dummy:AddNewModifier(unit, nil, "modifier_kill", {duration = 0.03})
+								dummy:AddNewModifier(unit, nil, "modifier_invulnerable", {})
+
+								order.entindex_ability = errorAbility:entindex()
+								order.order_type = DOTA_UNIT_ORDER_CAST_NO_TARGET
+								order.units["0"] = dummy:entindex()
+							end
+						end
+					elseif target_unit then
+						local vector = target_unit:GetAbsOrigin()
+						if (arena_modifier.target_point - vector):Length2D() < radius + 25 then
+							-- local newVector = arena_modifier.target_point + (vector - arena_modifier.target_point):Normalized() * (radius - 25)
+							-- local newTarget = CreateUnitByName("npc_dummy", newVector, false, nil, nil, DOTA_TEAM_GOODGUYS)
+							-- newTarget:AddNewModifier(unit, nil, "modifier_kill", {duration = 1})
+							-- order.entindex_target = newTarget:entindex()
+							-- unit:AddNewModifier(unit, nil, "modifier_command_restricted", {Duration = 0.03})
+							--return false
+							if unit:GetPlayerOwnerID() then
+								local dummy = CreateUnitByName("npc_arena_dummy", arena_modifier.target_point, true, nil, nil, unit:GetTeamNumber())
+								dummy:SetControllableByPlayer(unit:GetPlayerOwnerID(), true)
+								-- dummy:SetOwner(unit)
+								local errorAbility = dummy:FindAbilityByName("arena_cast_error_inside")
+								errorAbility:UpgradeAbility(true)
+								dummy:AddNewModifier(unit, nil, "modifier_kill", {duration = 0.03})
+								dummy:AddNewModifier(unit, nil, "modifier_invulnerable", {})
+
+								order.entindex_ability = errorAbility:entindex()
+								order.order_type = DOTA_UNIT_ORDER_CAST_NO_TARGET
+								order.units["0"] = dummy:entindex()
+							end
+							
+						end
+					else
+						-- local vector = unit:GetAbsOrigin()
+						-- print(vector)
+						-- print((arena_modifier.target_point - vector):Length2D())
+						-- if (arena_modifier.target_point - vector):Length2D() < radius + 25 then
+							-- local newVector = arena_modifier.target_point + (vector - arena_modifier.target_point):Normalized() * (radius - 25)
+							-- unit:SetAbsOrigin(newVector)
+						-- end
+					end
+				end
+
+				Timers:CreateTimer(0.03, function() 
+					if not unit:IsNull() then
+						if unit:HasAbility("arena_cast_error_inside") then
+							unit:RemoveAbility("arena_cast_error_inside")
+						end
+						if unit:HasAbility("arena_cast_error_outside") then
+							unit:RemoveAbility("arena_cast_error_outside")
+						end
+					end
+				end)
+			end
+		end
+
+		--Parasitic Invasion
 		local invasion_modifier = unit:FindModifierByName("modifier_parasight_parasitic_invasion")
 
-		if invasion_modifier ~= nil then
+		if invasion_modifier ~= nil and unit:HasModifier("modifier_parasight_parasitic_invasion_control_buff") then
 			if invasion_modifier:OrderFilter(order) ~= true then
 				return false
 			end
 		end
 
-		local invasion_target_modifier = unit:FindModifierByName("modifier_parasight_parasitic_invasion_target")
+		local invasion_target_modifier = unit:FindModifierByName("modifier_parasight_parasitic_invasion_control")
 		if invasion_target_modifier ~= nil then
 			return invasion_target_modifier:OrderFilter(order)
 		end
@@ -535,103 +440,7 @@ function CommunityCustomHeroesGameMode:OrderFilter(order)
 	return true
 end
 
-function CommunityCustomHeroesGameMode:ToggleCameraLock( event )
-	local pID = event.pID
-	local locked = event.locked
-	local hero = PlayerResource:GetSelectedHeroEntity( pID )
-	if locked == 0 then
-		PlayerResource:SetCameraTarget( pID, nil )
-	elseif locked == 1 then
-		PlayerResource:SetCameraTarget( pID, hero )
-	end
-end
-
----------------------------------------------------------------------------
--- Event: OnEntityKilled
----------------------------------------------------------------------------
-function CommunityCustomHeroesGameMode:OnEntityKilled( event )
-
-    local killedUnit = EntIndexToHScript( event.entindex_killed )
-    local killedTeam = killedUnit:GetTeam()
-    local attacker = EntIndexToHScript( event.entindex_attacker )
-    local heroTeam = attacker:GetTeam()
-    local extraTime = 0 
-    print("KILLED",killedUnit:GetName())
-    print("KILLED TEAM",killedUnit:GetTeam())
-    print("Heroteam",heroTeam)
-    count = 0
-    if attacker ~= nil and killedUnit ~= nil then
-    	if attacker:IsRealHero() then
-    		heroID = attacker:GetPlayerID()
-    	end
-    	local xpbounty = killedUnit:GetDeathXP()
-    	
-    	if multiplier_Exp ~= nil and attacker:IsRealHero() then
-    		local units = FindUnitsInRadius( killedUnit:GetTeamNumber(), killedUnit:GetOrigin(), nil, 1500, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_INVULNERABLE + DOTA_UNIT_TARGET_FLAG_NOT_ANCIENTS + DOTA_UNIT_TARGET_FLAG_NOT_ILLUSIONS + DOTA_UNIT_TARGET_FLAG_NOT_CREEP_HERO + DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD, 0, false )
-            if killedUnit:GetTeam() ~= heroTeam then
-	            for _,hEnemy in pairs( units ) do
-	            	if count < 1 then
-			            for _,hEnemy in pairs( units ) do
-			            	count = count + 1
-			            	print("COUNT",count)
-			    		end
-			    	end
-	    			hEnemy:AddExperience(((xpbounty/count) * multiplier_Exp),0, false, true)
-	    			print("EXP DIVIDIDA", (xpbounty/count) * multiplier_Exp)
-	    			print("UNIDADE", hEnemy:GetName())
-	    		end
-    			count = 0
-	    	elseif killedUnit:GetTeam() == heroTeam then
-	    		local allyUnits = FindUnitsInRadius( killedUnit:GetTeamNumber(), killedUnit:GetOrigin(), nil, 1300, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_INVULNERABLE + DOTA_UNIT_TARGET_FLAG_NOT_ANCIENTS + DOTA_UNIT_TARGET_FLAG_NOT_ILLUSIONS + DOTA_UNIT_TARGET_FLAG_NOT_CREEP_HERO + DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD, 0, false )
-	    		for _,hEnemy in pairs( allyUnits ) do
-	            	if count < 1 then
-			            for _,hEnemy in pairs( allyUnits ) do
-			            	count = count + 1
-			            	print("COUNT",count)
-			    		end
-			    	end
-	    			hEnemy:AddExperience((((xpbounty / 4) / count) * multiplier_Exp),0, false, true)
-	    			print("EXP DIVIDIDA", ((xpbounty / 4) / count) * multiplier_Exp)
-	    			print("UNIDADE", hEnemy:GetName())
-	    		end
-	    		count = 0
-	    	end
-    	end
-    	if multiplier_Gold ~= nil and killedUnit:GetTeam() ~= heroTeam  then
-    		local goldbounty = killedUnit:GetGoldBounty()
-    		if killedUnit:IsTower() or killedUnit:GetName() == 'npc_dota_roshan' or killedUnit:IsBarracks() or killedUnit:IsShrine() then
-    			if attacker:IsRealHero() and killedUnit:IsTower() and killedUnit:GetTeam() ~= heroTeam then
-    				PlayerResource:ModifyGold(heroID, (200*multiplier_Gold), false, 0);
-    			end
-    			print("FOI PORRA")
-    			if heroTeam == 2 and killedUnit:GetTeam() ~= heroTeam then
-    				for i=0, 4 do
-    					PlayerResource:ModifyGold(i, (150*multiplier_Gold), false, 0);
-    				end
-    			elseif heroTeam == 3 and killedUnit:GetTeam() ~= heroTeam then
-    				for i=5, 9 do
-    					PlayerResource:ModifyGold(i, (150*multiplier_Gold), false, 0);
-    				end
-    			end
-    		end
-    		if attacker:IsRealHero() then
-    			PlayerResource:ModifyGold(heroID, (goldbounty * multiplier_Gold), false, 0);
-    		end
-    		print("BOUNTY", goldbounty)
-    	end
-    end
-    if killedUnit:IsRealHero() and killedUnit:GetLevel() > 25 then
-        print("Hero has been killed")   
-
-        print(attacker:GetLevel())
-
-        if killedUnit:IsReincarnating() ==false and killedUnit:GetRespawnTime() > 100 then
-    		killedUnit:SetTimeUntilRespawn(100)
-    	end   
-    end
-end
-
-function CommunityCustomHeroesGameMode:DamageFilter(filterTable)
+function WarsideDotaGameMode:DamageFilter(filterTable)
     local damage = filterTable["damage"] --Post reduction
     local ability
     if filterTable["entindex_inflictor_const"] ~= nil then
@@ -642,12 +451,35 @@ function CommunityCustomHeroesGameMode:DamageFilter(filterTable)
 	if filterTable["entindex_victim_const"] ~= nil then
 	    victim = EntIndexToHScript( filterTable["entindex_victim_const"] )
 	end
+
+	local attacker
+	if filterTable["entindex_attacker_const"] ~= nil then
+	    attacker = EntIndexToHScript( filterTable["entindex_attacker_const"] )
+	end
 	
-    local attacker = EntIndexToHScript( filterTable["entindex_attacker_const"] )
     local damagetype = filterTable["damagetype_const"]
 
-    if IsValidEntity(attacker) and attacker.FindModifierByName then
-    	local modifier = attacker:FindModifierByName("modifier_parasight_parasitic_invasion_target")
+    if attacker and IsValidEntity(attacker) and attacker.FindModifierByName then
+		
+		-- Check for Troy's Arena modifiers
+		if victim:HasModifier("modifier_troy_the_arena_check_position") then
+			local arena_modifier = victim:FindModifierByName("modifier_troy_the_arena_check_position")
+			if arena_modifier and arena_modifier:GetAbility() and arena_modifier.target_point then
+				local radius = arena_modifier:GetAbility():GetSpecialValueFor("radius")
+				local victim_distance = (arena_modifier.target_point - victim:GetAbsOrigin()):Length2D()
+				local attacker_distance = (arena_modifier.target_point - attacker:GetAbsOrigin()):Length2D()
+				if (victim_distance < radius and attacker_distance > radius) or (victim_distance > radius and attacker_distance < radius) then
+					if attacker == arena_modifier:GetCaster() and victim_distance <= (radius + 100) then
+						return true
+					else
+						return false
+					end
+				end
+			end
+		end
+
+    	-- Check for Parasitic Invasion modifier
+    	local modifier = attacker:FindModifierByName("modifier_parasight_parasitic_invasion_control")
     	if modifier then
             if damagetype == 1 then -- physical
                 damage = damage / (1 - victim:GetPhysicalArmorReduction() / 100 )
@@ -670,59 +502,58 @@ function CommunityCustomHeroesGameMode:DamageFilter(filterTable)
     return true
 end
 
---------------------------------------------------------------------------------
--- GameEvent: OnNPCSpawned
---------------------------------------------------------------------------------
-function CommunityCustomHeroesGameMode:OnNPCSpawned( event )
-	spawnedUnit = EntIndexToHScript( event.entindex )
-	if spawnedUnit:IsRealHero() and not spawnedUnit:IsClone() and not spawnedUnit:IsIllusion() then
-		CheckForInnates(spawnedUnit)
+function WarsideDotaGameMode:ModifierFilter(tModifierFilter)
+	-- tModifierFilter.duration
+	-- tModifierFilter.entindex_caster_const
+	-- tModifierFilter.entindex_parent_const
+	-- tModifierFilter.name_const
+
+	if not tModifierFilter.entindex_caster_const then return true end
+
+	local duration = tModifierFilter.duration
+	local caster = EntIndexToHScript(tModifierFilter.entindex_caster_const)
+	local target = EntIndexToHScript(tModifierFilter.entindex_parent_const)
+
+	-- Tenacity handling. Does not apply to friendly or infinite duration modifiers.
+	if caster:GetTeam() ~= target:GetTeam() and duration > 0 then
+
+		-- Do nothing if the target has no tenacity.
+		if target.GetTenacity and target:GetTenacity() > 0 then
+
+			-- Do nothing if the modifier is an exception
+			local exceptions_table = {
+				"modifier_dark_willow_cursed_crown",
+				"modifier_silencer_last_word"
+			}
+			for _, exception_name in pairs(exceptions_table) do
+				if exception_name == tModifierFilter.name_const then
+					return true
+				end
+			end
+
+			-- If it's not, reduce the modifier's duration
+			tModifierFilter.duration = tModifierFilter.duration * (1 - 0.01 * target:GetTenacity())
+		end
 	end
 
-end
+	-- Check for Troy's Arena modifiers
+	if tModifierFilter.name_const == "modifier_troy_the_arena_check_position" then return true end
+	
+	if target:HasModifier("modifier_troy_the_arena_check_position") then
+		local arena_modifier = target:FindModifierByName("modifier_troy_the_arena_check_position")
+		if arena_modifier and arena_modifier:GetAbility() and arena_modifier.target_point then
+			local radius = arena_modifier:GetAbility():GetSpecialValueFor("radius")
+			local victim_distance = (arena_modifier.target_point - target:GetAbsOrigin()):Length2D()
+			local attacker_distance = (arena_modifier.target_point - caster:GetAbsOrigin()):Length2D()
+			if (victim_distance < radius and attacker_distance > radius) or (victim_distance > radius and attacker_distance < radius) then
+				if caster == arena_modifier:GetCaster() and victim_distance <= (radius + 100) then
+					return true
+				else
+					return false
+				end
+			end
+		end
+	end
 
-
-function CheckForInnates(spawnedUnit)
-	if(spawnedUnit:GetName() == "npc_dota_hero_legion_commander") then
-		local innate = spawnedUnit:FindAbilityByName("legion_demon_form")
-		if innate then innate:SetLevel(1) end
-	elseif(spawnedUnit:GetName() == "npc_dota_hero_dragon_knight") then
-		local innate = spawnedUnit:FindAbilityByName("dk_dragon_form")
-		if innate then innate:SetLevel(1) end
-	elseif(spawnedUnit:GetName() == "npc_dota_hero_monkey_king") then
-		local innate = spawnedUnit:FindAbilityByName("mk_sage_form")
-		if innate then innate:SetLevel(1) end
-	elseif(spawnedUnit:GetName() == "npc_dota_hero_lone_druid") then
-		local innate = spawnedUnit:FindAbilityByName("lone_true_form")
-		if innate then innate:SetLevel(1) end
-	elseif(spawnedUnit:GetName() == "npc_dota_hero_keeper_of_the_light") then
-		local innate = spawnedUnit:FindAbilityByName("spirit_form")
-		if innate then innate:SetLevel(1) end
-	elseif(spawnedUnit:GetName() == "npc_dota_hero_juggernaut") then
- 		--AddAnimationTranslate(spawnedUnit, "arcana")
- 	end
-end
-
-function CommunityCustomHeroesGameMode:FilterGold( filterTable )
-	local killedUnit = EntIndexToHScript( filterTable.entindex_killed ) 
-	local hero = EntIndexToHScript( event.entindex_attacker )
-    local gold = filterTable["gold"]
-    local playerID = filterTable["player_id_const"]
-    local reason = filterTable["reason_const"]
-   
-
-    -- Disable all hero kill gold
-    if reason == DOTA_ModifyGold_HeroKill then
-        local goldBounty = killedUnit:GetGoldBounty()
-        hero:SetGold(5000, false)
-    end
-
-    return true
-end
-
-function CDOTA_BaseNPC:GetPhysicalArmorReduction()
-	local armornpc = self:GetPhysicalArmorValue()
-	local armor_reduction = 1 - (0.06 * armornpc) / (1 + (0.06 * math.abs(armornpc)))
-	armor_reduction = 100 - (armor_reduction * 100)
-	return armor_reduction
+	return true
 end

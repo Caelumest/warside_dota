@@ -1,0 +1,105 @@
+"DOTAAbilities"
+{
+     "instant_reaction"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_DIRECTIONAL | DOTA_ABILITY_BEHAVIOR_POINT"
+        "AbilityTextureName"            "instant_reaction"
+        "AbilityType"                   "DOTA_ABILITY_TYPE_BASIC"
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+        "AbilityCastPoint"              "0"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_PHYSICAL"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_YES"
+        "AnimationPlaybackRate"         "2"
+        "AbilityCastRange"              "1000"
+        "AbilityDamage"                 "100 135 170 205"
+        "AbilityCooldown"               "19 16 13 10"
+        "AbilityManaCost"               "80 90 100 110"
+        "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1_END"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "duration"      "10"
+            }
+            "02"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "hit_range"     "900"
+            }
+            "03"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "agi_damage"    "0.9 1.1 1.3 1.5"
+                "LinkedSpecialBonus"        "special_bonus_unique_andrax_agi_mult"
+            }
+        }
+        "precache"
+        {
+            "particle"      "particles/units/heroes/hero_pangolier/pangolier_swashbuckler.vpcf"
+            "particle"      "particles\items4_fx\meteor_hammer_aoe.vpcf"
+            "particle"      "particles/units/heroes/hero_pangolier/pangolier_heartpiercer_delay_model.vpcf"
+        }
+        "OnSpellStart"
+        {
+            "FireSound"
+            {
+                "EffectName"    "Hero_Pangolier.Swashbuckle"
+                "Target"        "CASTER"
+            }
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/new_hero_2/instant_reaction.lua"
+                "Function"      "Effects"
+            }
+
+            "ApplyModifier"
+            {
+                "ModifierName"  "modifier_instant_stop_caster"
+                "Target"        "CASTER"
+                "Duration"      "0.15"
+            }
+            "DelayedAction"
+            {
+                "Delay"     "0.3"
+                "Action"    
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero_2/instant_reaction.lua"
+                        "Function"      "RemoveEffect"
+                    }
+                }
+            }
+        }
+        "OnProjectileHitUnit"
+        {
+            "DeleteOnHit"    "0"
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/new_hero_2/instant_reaction.lua"
+                "Function"      "DealDamage"
+            }
+            "FireSound"
+            {
+                "EffectName"    "Hero_Pangolier.Swashbuckle.Damage"
+                "Target"        "TARGET"
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_instant_stop_caster"
+            {
+                "Passive"           "0"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "States"
+                {
+                    "MODIFIER_STATE_STUNNED"   "MODIFIER_STATE_VALUE_ENABLED"
+                }   
+            }
+        }
+    }
+}

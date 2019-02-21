@@ -3,7 +3,11 @@
 	//Custom Heroes
 	"npc_dota_hero_windrunner" "1"
 	"npc_dota_hero_treant" "1"
-	"npc_dota_hero_krigler" "0"
+	"npc_dota_hero_krigler" "1"
+	"npc_dota_hero_casalmar" "1"
+	"npc_dota_hero_andrax"	"1"
+	"npc_dota_hero_soul_tamer" "1"
+	"npc_dota_hero_sage_ronin" "1"
 
 	//Test Heroes
 	"npc_dota_hero_venomancer"  "1"
@@ -28,6 +32,7 @@
 	"npc_dota_hero_enigma" "1"
 	"npc_dota_hero_faceless_void" "1"
 	"npc_dota_hero_furion" "1"
+	"npc_dota_hero_grimstroke" "1"
 	"npc_dota_hero_juggernaut" "-1"
 	"npc_dota_hero_kunkka" "1"
 	"npc_dota_hero_leshrac" "1"

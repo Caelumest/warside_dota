@@ -1,0 +1,802 @@
+// Spirit Tamer Abilities File
+
+"DOTAAbilities"
+{
+    "tamer_move_soul"
+    {
+        "BaseClass"                 "ability_datadriven"
+        "AbilityTextureName"        "tamer_move"
+        "MaxLevel"                      "1"
+        "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_POINT"
+        "AbilityCastRange"          "800"
+        "AbilityCooldown"           "3"
+        "AbilityCastAnimation"      "ACT_DOTA_CAST_ABILITY_1"
+        "AnimationPlaybackRate"     "1.4"
+        "AbilityCastPoint"          "0.1"
+        "AbilityManaCost"           "0"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "max_creeps"    "4 6 8 10"
+                "LinkedSpecialBonus" "special_bonus_unique_sobek_1"
+            }
+            "02"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "strength_creep"    "4"
+            }
+            "03"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "movespeed" "15"
+            }
+            "04"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "atkrange"  "150"
+            }
+        }
+        "precache"
+        {
+            "particle"  "particles/units/heroes/hero_troll_warlord/troll_warlord_battletrance_buff.vpcf"
+            "particle"  "particles/units/heroes/hero_wisp/wisp_ambient.vpcf"
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                "Function"      "MoveSoul"
+            }
+            "RemoveModifier"
+            {
+                "ModifierName"  "modifier_soul_follow_caster"
+                "Target"        "CASTER"
+            }
+            "ApplyModifier"
+            {
+                "ModifierName"  "modifier_soul_moving"
+                "Target"        "CASTER"
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_soul_check_distance"
+            {
+                "Passive"           "0"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+        
+                "ThinkInterval"  "0.1"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "CheckDistance"
+                    }
+                }
+                "OnDeath"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "CheckDeath"
+                    }
+                }
+                "OnRespawn"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "CheckRespawn"
+                    }
+                }
+            }
+            "modifier_soul_moving"
+            {
+                "Passive"           "0"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+                "ThinkInterval"     "0.05"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "CheckIfMoving"
+                    }
+                }
+            }
+            "modifier_soul_follow_caster"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+                "EffectName"        "particles\units\heroes\hero_spirit_breaker\spirit_breaker_charge_mist.vpcf"
+                "EffectAttachType"  "follow_origin"
+                "OnCreated"
+                {
+                    "AttachEffect"
+                    {
+                        "EffectName"        "particles\econ\items\spirit_breaker\spirit_breaker_ambient_dc_ioc_orange\spirit_breaker_ambient_head.vpcf"
+                        "EffectAttachType"  "follow_customorigin"
+                        "Target"            "TARGET"
+                        "ControlPointEntities"
+                        {
+                            "TARGET"            "follow_overhead"
+                            "TARGET"            "follow_overhead"
+                        }
+                    }
+                    "AttachEffect"
+                    {
+                        "Target"                "TARGET"
+                        "EffectName"            "particles/units/heroes/hero_drow/drow_marksmanship.vpcf"
+                        "EffectAttachType"      "follow_origin"
+                        "ControlPoints"
+                        {
+                            "02"                "150 150 150"
+                        }
+                    }
+                }
+                "Properties"
+                {
+                    "MODIFIER_PROPERTY_ATTACK_RANGE_BONUS" "%atkrange"
+                    "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT" "%movespeed"
+                }
+                "ThinkInterval"  "0.01"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "SoulFollow"
+                    }
+                }
+            }
+        }
+    }
+    "tamer_target_soul"
+    {
+        "BaseClass"                 "ability_datadriven"
+        "AbilityTextureName"        "tamer_move"
+        "MaxLevel"                  "1"
+        "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+        "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO"
+        "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+        "AbilityCastRange"          "800"
+        "AbilityCooldown"           "3"
+        "AbilityCastAnimation"      "ACT_DOTA_CAST_ABILITY_1"
+        "AnimationPlaybackRate"     "1.4"
+        "AbilityCastPoint"          "0.1"
+        "AbilityManaCost"           "0"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "max_creeps"    "4 6 8 10"
+                "LinkedSpecialBonus" "special_bonus_unique_sobek_1"
+            }
+            "02"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "strength_creep"    "4"
+            }
+            "03"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "atkrange" "150"
+            }
+            "04"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "movespeed"  "15"
+            }
+        }
+        "precache"
+        {
+            "particle"  "particles\units\heroes\hero_spirit_breaker\spirit_breaker_charge.vpcf"
+            "particle"  "particles/units/heroes/hero_wisp/wisp_ambient.vpcf"
+            "particle"  "particles\econ\items\spirit_breaker\spirit_breaker_ambient_dc_ioc_orange\spirit_breaker_ambient_head.vpcf"
+            "particle"  "particles\units\heroes\hero_drow\drow_marksmanship.vpcf"
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                "Function"      "MoveToTarget"
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_soul_moving_to_target"
+            {
+                "Passive"           "0"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+        
+                "ThinkInterval"  "0.1"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "MoveToTargetThinker"
+                    }
+                }
+            }
+            "modifier_soul_current_target"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "EffectName"        "particles\units\heroes\hero_spirit_breaker\spirit_breaker_charge_mist.vpcf"
+                "EffectAttachType"  "follow_origin"
+                "OnCreated"
+                {
+                    "AttachEffect"
+                    {
+                        "EffectName"        "particles\econ\items\spirit_breaker\spirit_breaker_ambient_dc_ioc_orange\spirit_breaker_ambient_head.vpcf"
+                        "EffectAttachType"  "follow_customorigin"
+                        "Target"            "TARGET"
+                        "ControlPointEntities"
+                        {
+                            "TARGET"            "follow_overhead"
+                            "TARGET"            "follow_overhead"
+                        }
+                    }
+                    "AttachEffect"
+                    {
+                        "Target"                "TARGET"
+                        "EffectName"            "particles/units/heroes/hero_drow/drow_marksmanship.vpcf"
+                        "EffectAttachType"      "follow_origin"
+                        "ControlPoints"
+                        {
+                            "02"                "150 150 150"
+                        }
+                    }
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "RemoveFromTarget"
+                    }
+                }
+                "Properties"
+                {
+                    "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT" "%movespeed"
+                }
+                "ThinkInterval"  "0.01"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "StickToTargetThinker"
+                    }
+                }
+            }
+        }
+    }
+    "tamer_pull_to_soul"
+    {
+        "BaseClass"                 "ability_datadriven"
+        "AbilityTextureName"        "tamer_pull_soul"
+        "AbilityType"               "DOTA_ABILITY_TYPE_ULTIMATE"
+        "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+        "AbilityUnitDamageType"     "DAMAGE_TYPE_MAGICAL"
+        "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO"
+        "AbilityCastRange"          "500 550 600"
+        "AbilityCastAnimation"      "ACT_DOTA_TELEPORT_END"
+        "AbilityCooldown"           "120 110 100"
+        "HasScepterUpgrade"         "1"
+        "AbilityCastPoint"          "0.8"
+        "AnimationPlaybackRate"     "0.6"
+        "AbilityManaCost"           "150 225 300"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "damage"    "40 80 120"
+            }
+            "02"
+            {
+                "var_type"      "FIELD_INTEGER"
+                "pull_speed"    "100 150 200"
+            }
+            "03"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "strength_hero" "4 8 12 16"
+            }
+            "04"
+            {
+                "var_type"  "FIELD_FLOAT"
+                "duration"  "4 4.5 5"
+            }
+            "05"
+            {
+                "var_type"  "FIELD_FLOAT"
+                "duration_scepter"  "5 5.5 6"
+            }
+            "06"
+            {
+                "var_type"  "FIELD_FLOAT"
+                "dmgtype_scepter"  ""
+            }
+        }
+        "precache"
+        {
+            "particle"  "particles/units/heroes/hero_troll_warlord/troll_warlord_battletrance_buff.vpcf"
+            "particle"  "particles/units/heroes/hero_wisp/wisp_tether.vpcf"
+            "soundfile" "soundevents/game_sounds_heroes/game_sounds_slark.vsndevts"
+            "soundfile" "soundevents\game_sounds_heroes\game_sounds_keeper_of_the_light.vsndevts"
+            "particle"  "particles/units/heroes/hero_tusk/tusk_tag_team_base_edge.vpcf"
+            "particle"  "particles\units\heroes\hero_tusk\tusk_tag_team.vpcf"
+            "particle"  "particles/items_fx/glyph_tube.vpcf"
+            "particle"  "particles\units\heroes\hero_lich\lich_ice_age_aoe_ring.vpcf"
+            "particle"  "particles/units/heroes/hero_lich/lich_ice_age_aoe_soft.vpcf"
+            "particle"  "particles\units\heroes\hero_riki\riki_tricks_cast.vpcf"
+            "particle"  "particles/units/heroes/hero_keeper_of_the_light/keeper_chakra_magic.vpcf"
+            "particle"  "particles/ui_mouseactions/range_finder_tower_aoe_ring.vpcf"
+        }
+
+        "OnAbilityPhaseStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                "Function"      "PrePull"
+            }
+            "FireSound"
+            {
+                "EffectName"    "Hero_KeeperOfTheLight.ChakraMagic.Target"
+                "Target"        "CASTER"
+            }
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                "Function"      "CastPull"
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_pull_chase_soul"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+                "ThinkInterval"  "0.01"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "SoulFollow"
+                    }
+                }
+                "OnUnitMoved"
+                // Example: Bloodseeker ult
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "StopSoul"
+                    }
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                        "Function"      "RemovePull"
+                    }
+                    "FireSound"
+                    {
+                        "EffectName"    "Hero_KeeperOfTheLight.Recall.Fail"
+                        "Target"        "CASTER"
+                    }
+                }
+            }
+
+            "modifier_soul_casting_pull"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+                
+
+                "ThinkInterval"  "0.01"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "PullArea"
+                    }
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                        "Function"      "RemovePullEffects"
+                    }
+                }
+            }
+            "modifier_tamer_pull_effects"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "ThinkInterval"  "0.1"
+                "OnCreated"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                        "Function"      "AddPullEffects"
+                    }
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                        "Function"      "RemovePullEffects"
+                    }
+                }
+                "OnDeath"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "DeathRemove"
+                    }
+                }
+                "States"
+                {
+                    "MODIFIER_STATE_NO_UNIT_COLLISION"   "MODIFIER_STATE_VALUE_ENABLED"
+                    "MODIFIER_STATE_PROVIDES_VISION"      "MODIFIER_STATE_VALUE_ENABLED"
+                }
+            }
+        }
+    }
+     "tamer_push_area"
+    {
+        "BaseClass"                 "ability_datadriven"
+        "AbilityTextureName"        "tamer_soul_push"
+        "AbilityType"               "DOTA_ABILITY_TYPE_BASIC"
+        "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+        "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        "AbilityUnitDamageType"     "DAMAGE_TYPE_MAGICAL"
+        "AbilityCastRange"          "300 350 400 450"
+        "AbilityCastAnimation"      "ACT_DOTA_AW_MAGNETIC_FIELD"
+        "AbilityCastPoint"          "0.2"
+        "AbilityCooldown"           "20 18 16 14"
+        "AbilityManaCost"           "80 100 120 140"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "damage"    "150 220 290 360"
+                "LinkedSpecialBonus" "special_bonus_unique_sobek_1"
+            }
+            "02"
+            {
+                "var_type"      "FIELD_INTEGER"
+                "push_speed"    "300 350 400 450"
+            }
+            "03"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "distance"  "300 350 400 450"
+            }
+            "04"
+            {
+                "var_type"  "FIELD_FLOAT"
+                "duration"  "0.75 1 1.25 1.5"
+            }
+            "05"
+            {
+                "var_type"  "FIELD_FLOAT"
+                "knockduration"  "0.5"
+            }
+        }
+        "precache"
+        {
+            "particle"  "particles/units/heroes/hero_wisp/wisp_death.vpcf"
+            "particle"  "particles/units/heroes/hero_wisp/wisp_ambient.vpcf"
+            "soundfile" "soundevents\game_sounds_heroes\game_sounds_abaddon.vsndevts"
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                "Function"      "AddPushModifier"
+            }
+
+        }
+        "Modifiers"
+        {
+            "modifier_tamer_push_limit"
+            {
+                "Passive"           "0"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "IsPurgable"        "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+                "ThinkInterval"     "0.05"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "CheckIfMovedPush"
+                    }
+                }
+            }
+            "modifier_soul_root"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "1"
+                "IsPurgable"        "1"
+                "States"
+                {
+                    "MODIFIER_STATE_ROOTED"   "MODIFIER_STATE_VALUE_ENABLED"
+                }
+            }
+        }
+    }
+    "tamer_shield_target"
+    {
+        "BaseClass"                 "ability_datadriven"
+        "AbilityTextureName"        "tamer_shield"
+        "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+        "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO"
+        "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+        "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO"
+        "AbilityCastRange"          "0"
+        "AbilityCooldown"           "11 10 9 8"
+        "AbilityCastPoint"          "0.1"
+        "AbilityCastAnimation"      "ACT_DOTA_AW_MAGNETIC_FIELD"
+        "AnimationPlaybackRate"     "1.5"
+        "AbilityManaCost"           "40 55 70 85"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "shield_life"  "100 175 250 325"
+            }
+            "02"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "strength_creep"    "4"
+            }
+            "03"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "strength_hero" "4 8 12 16"
+            }
+            "04"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "duration"  "5"
+            }
+        }
+        "precache"
+        {
+            "particle"  "particles/units/heroes/hero_troll_warlord/troll_warlord_battletrance_buff.vpcf"
+            "particle"  "particles/units/heroes/hero_wisp/wisp_ambient.vpcf"
+            "particle"   "particles\units\heroes\hero_templar_assassin\templar_assassin_refraction.vpcf"
+            "particle"  "particles\units\heroes\hero_templar_assassin\templar_assassin_refraction_break.vpcf"
+            "particle"  "particles\units\heroes\hero_templar_assassin\templar_assassin_refract_hit.vpcf"
+            "soundfile" "soundevents/game_sounds_heroes/game_sounds_templar_assassin.vsndevts"
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                "Function"      "ShieldTarget"
+            }
+
+        }
+        "Modifiers"
+        {
+            "modifier_tamer_shield_life"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "IsPurgable"        "1"
+            }
+            "modifier_tamer_shield_activate"
+            {
+                "Passive"           "1"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "IsPurgable"        "0"
+                "ThinkInterval"  "0.05"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "CheckTarget"
+                    }
+                }
+            }
+            "modifier_tamer_shield_bonus"
+            {
+                "Passive"           "0"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "IsPurgable"        "1"
+                "OnTakeDamage"
+                // "%attack_damage" is set to the damage value after mitigation
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                        "Function"      "GatherDamage"
+                        "damage"        "%attack_damage"
+                    }
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_commands.lua"
+                        "Function"      "BreakShield"
+                    }
+                }
+               
+            }
+        }
+    }
+    "tamer_soul_stun"
+    {
+        "BaseClass"                 "ability_datadriven"
+        "AbilityTextureName"        "tamer_stun"
+        "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+        "AbilityUnitDamageType"     "DAMAGE_TYPE_MAGICAL"
+        "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        "AbilityCastRange"          ""
+        "AbilityCooldown"           "15 13 11 9"
+        "AbilityManaCost"           "80 90 100 110"
+        "AbilityDamage"             "120 180 240 300"
+        "AbilityCastPoint"          "0.2"
+        "AnimationPlaybackRate"     "1.22"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"  "FIELD_FLOAT"
+                "stun_duration"  "1.5"
+            }
+            "02"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "radius"    "150 175 200 225"
+            }
+            "03"
+            {
+                "var_type"  "FIELD_INTEGER"
+                "strength_hero" "4 8 12 16"
+            }
+            "04"
+            {
+                "var_type"  "FIELD_FLOAT"
+                "duration"  "2 2.5 3 3.5"
+            }
+            "05"
+            {
+               "var_type"  "FIELD_FLOAT"
+                "slow"      "-25 -30 -35 -40" 
+            }
+            "06"
+            {
+               "var_type"  "FIELD_FLOAT"
+                "slowttp"      "25 30 35 40" 
+            }
+        }
+        "precache"
+        {
+            "particle"  "particles/units/heroes/hero_leshrac/leshrac_split_earth.vpcf"
+            "particle"  "particles/units/heroes/hero_wisp/wisp_ambient.vpcf"
+            "soundfile" "soundevents\game_sounds_heroes\game_sounds_earth_spirit.vsndevts"
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                "Function"      "AddStunModifier"
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_tamer_stun_limit"
+            {
+                "Passive"           "0"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "IsPurgable"        "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+                "ThinkInterval"     "0.05"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/soul_tamer/spirit_checks.lua"
+                        "Function"      "CheckIfMoved"
+                    }
+                }
+            }
+            "modifier_soul_slow"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "1"
+                "IsPurgable"        "0"
+                "Properties"
+                {
+                    "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE" "%slow" 
+                }
+            }
+        }
+    }
+    
+    // Talent: +15 Max Creep Stacks
+    //=================================================================================================================
+    "special_bonus_unique_sobek_1"
+    {
+        // General
+        //-------------------------------------------------------------------------------------------------------------
+        "BaseClass"                     "special_bonus_undefined"
+        "AbilityType"                   "DOTA_ABILITY_TYPE_ATTRIBUTES"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "MaxLevel"  "1"
+        
+        // Special
+        //-------------------------------------------------------------------------------------------------------------
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"                  "FIELD_INTEGER"
+                "value"             "15"
+            }
+        }
+    }
+}

@@ -1,0 +1,289 @@
+"DOTAAbilities"
+{
+    "wave_blink"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityTextureName"            "wave_blink"
+        "ScriptFile"                    ""
+        "MaxLevel"                      "4"
+        "AbilityType"                   ""
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING" 
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+        "AbilityCastRange"              "1500"
+        "AbilityCastPoint"              "0.2"
+        "AnimationPlaybackRate"         "1.3"
+        "AbilityCooldown"               "18 15 12 9"
+        "AbilityManaCost"               "70 80 90 100"
+        "AbilityDamage"                 "100 150 200 250"
+        "AbilityCastAnimation"          "ACT_DOTA_ATTACK_EVENT"
+        "precache"
+        {
+            "soundfile"         "soundevents/game_sounds_heroes/game_sounds_magnataur.vsndevts"
+            "particle"           "particles/units/heroes/hero_magnataur/magnataur_shockwave.vpcf"
+            "particle"          "particles\econ\items\juggernaut\jugg_relentless_sword\juggernaut_relentless_sword_glow.vpcf"
+            "particle"          "particles\units\heroes\hero_faceless_void\faceless_void_dialatedebuf.vpcf"
+            "particle"          "particles/econ/items/magnataur/shock_of_the_anvil/magnataur_shockanvil.vpcf"
+        }
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "stun_duration"         "2.5 2.75 3.0 3.25"
+            }
+            "02"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "speed"                 "1100"
+            }
+            "03"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "distance"              "750 775 800 825"
+                "LinkedSpecialBonus"    "special_bonus_unique_jugg_1"
+            }
+            "04"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "radius"                "150"
+            }
+            "05"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "vision"                "200"
+            }
+            "06"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "vision_duration"        "2"
+            }
+            "07"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "damage_medium2"        "100 200 300 400"
+            }
+            "08"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "damage_max"            "150 300 450 600"
+            }
+        }
+        "OnAbilityPhaseStart"
+        {
+            "FireSound"
+            {
+                "EffectName"    "Hero_Magnataur.ShockWave.Cast"
+                "Target"        "CASTER"
+            }
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/new_hero/wave_blink.lua"
+                "Function"      "wave_projectile"
+
+                "radius"            "%radius"
+                "distance"          "%distance"
+                "speed"             "%speed"
+                "vision"            "%vision"
+                "vision_duration"   "%vision_duration"
+            }
+        }
+        "OnProjectileHitUnit"
+        {
+            "DeleteOnHit"    "0"
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/new_hero/wave_blink.lua"
+                "Function"      "wave_damage"
+
+                "sub_ability_name"  "wave_blink_sub"
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_marked"
+            {
+                "IsPurgable"        "0"
+                "IsBuff"            "0"
+                "IsDebuff"          "1"
+                "IsStunDebuff"      "0"
+                //Purge(bool RemovePositiveBuffs, bool RemoveDebuffs, bool BuffsCreatedThisFrameOnly, bool RemoveStuns, bool RemoveExceptions)"
+                "IsHidden"              "0"
+                "EffectName"            "particles\units\heroes\hero_faceless_void\faceless_void_dialatedebuf.vpcf"
+                "EffectAttachType"      "follow_hitloc"
+            }
+            "modifier_wave_blink"
+            {
+                "Passive"           "0"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                
+            }
+        }
+    }
+
+    "wave_blink_sub"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityTextureName"            "wave_blink_sub"
+        "ScriptFile"                    ""
+        "MaxLevel"                      "4"
+        "AbilityType"                   ""
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_ROOT_DISABLES | DOTA_ABILITY_BEHAVIOR_IMMEDIATE" 
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+        "AnimationPlaybackRate"         "0.8"
+        "AbilityCastRange"              "900"
+        "AbilityCastPoint"              "0"
+        "AbilityCooldown"               "0.1"
+        "AbilityManaCost"               "0"
+        "precache"
+        {
+            "soundfile"         "soundevents/game_sounds_heroes/game_sounds_huskar.vsndevts"
+            "particle"           "particles/units/heroes/hero_magnataur/magnataur_shockwave.vpcf"
+            "particle"          "particles/units/heroes/hero_huskar/huskar_life_break.vpcf"
+            "particle" "particles\econ\courier\courier_trail_lava\courier_trail_lava.vpcf"
+        }
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "stun_duration"         "2.5 2.75 3.0 3.25"
+            }
+            "02"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "speed"                 "900"
+            }
+            "03"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "distance"              "600 650 700 750"
+            }
+            "04"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "radius"                "900"
+            }
+            "05"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "vision"                "200"
+            }
+            "06"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "vision_duration"        "2"
+            }
+            "07"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "max_distance"          "1500"
+            }
+            "08"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "damage_max"            "150 300 450 600"
+            }
+        }
+        "OnSpellStart"
+        {
+            "ActOnTargets"
+            {
+                "Target"
+                {
+                    "Center"    "CASTER"
+                    "Radius"    "1200"
+                    "Teams"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
+                    "Types"     "DOTA_UNIT_TARGET_HERO"
+                }
+                "Action"    
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero/wave_blink.lua"
+                        "Function"      "StartSub"
+                    }
+                    "ApplyMotionController"
+                    // For this: gfycat.com/BraveHideousGiantschnauzer -> check: bit.ly/1KWulqA
+                    {
+                        "Target"         "CASTER"
+                        "ScriptFile"     "heroes/new_hero/wave_blink.lua"
+                        "HorizontalControlFunction" "MoveTo"    
+                    }
+                }
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_hide_ability"
+            {
+                "IsHidden"      "1"
+                "OverrideAnimation"     "ACT_DOTA_ATTACK"
+            }
+            "modifier_cant_walk"
+            {
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+
+                "EffectName"        "particles\econ\courier\courier_trail_lava\courier_trail_lava.vpcf"
+                "EffectAttachType"  "follow_origin"
+                "States"
+                {
+                    "MODIFIER_STATE_DISARMED"           "MODIFIER_STATE_VALUE_ENABLED"
+                }
+            }
+            "modifier_check_stunned"
+            {
+                "Passive"           "1"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "ThinkInterval"     "0.1"
+                
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero/wave_blink.lua"
+                        "Function"      "CheckStunned"
+                    }
+                }
+            }
+            "modifier_check_area"
+            {
+                "Passive"           "1"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "ThinkInterval"     "0.1"
+                "OnRespawn"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero/wave_blink.lua"
+                        "Function"      "Respawn"
+                    }
+                }
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero/wave_blink.lua"
+                        "Function"      "CheckTime"
+                    }
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero/wave_blink.lua"
+                        "Function"      "CheckArea"
+                    }
+                }
+            }
+        }
+    }
+}

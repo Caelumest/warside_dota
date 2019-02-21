@@ -1,0 +1,201 @@
+"DOTAAbilities"
+{
+     "insatiable_anger"
+    {
+        "BaseClass"             "ability_datadriven"
+        "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_NO_TARGET "
+        "AbilityTextureName"    "insatiable_anger"
+        "AbilityCastPoint"              "0.45"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_YES"
+        "AnimationPlaybackRate"         "3"
+        "AbilityCooldown"               "28 26 24 22"
+        "AbilityManaCost"               "60 80 100 120"
+        "AbilityCastAnimation"          "ACT_DOTA_VICTORY"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "health_treshold"   "0.02"
+            }
+            "02"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "stack_bonus"   "20 30 40 50"
+            }
+            "03"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "max_stacks"       "100"
+            }
+            "04"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "lifesteal_buff"    "2 2.3 2.6 3"
+            }
+            "05"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "charges_duration"  "14 16 20 24"
+            }
+            "06"
+            {
+                "var_type"          "FIELD_FLOAT"
+                "stun_multiplier"   "0.045 0.055 0.065 0.075"
+            }
+            "07"
+            {
+                "var_type"          "FIELD_FLOAT"
+                "move_slow"              "-15 -20 -25 -30"
+            }
+            "08"
+            {
+                "var_type"          "FIELD_FLOAT"
+                "slow_duration"     "0.3"
+            }
+            "09"
+            {
+                "var_type"          "FIELD_FLOAT"
+                "bonus_damage"      "3 3.5 4 5"
+            }
+            "10"
+            {
+                "var_type"          "FIELD_FLOAT"
+                "tresh_tooltip"      "2"
+                "LinkedSpecialBonus"    "special_bonus_unique_jugg_2"
+            }
+            "11"
+            {
+                "var_type"          "FIELD_FLOAT"
+                "slow_tooltip"      "15 20 25 30"
+            }
+        }
+            "precache"
+            {
+                "soundfile"         "soundevents/game_sounds_heroes/game_sounds_juggernaut.vsndevts"
+                "soundfile"         "soundevents/game_sounds_heroes/game_sounds_vo_juggernaut.vsndevts"
+                "soundfile"         "soundevents/game_sounds_heroes/game_sounds_slardar.vsndevts"
+                "particle"             "particles\econ\items\legion\legion_overwhelming_odds_ti7\legion_commander_odds_ti7_ambient_mist.vpcf"
+                "particle"              "particles/generic_gameplay/generic_lifesteal.vpcf"
+                "particle" "particles/units/heroes/hero_omniknight/omniknight_degeneration_debuff.vpcf"
+                "particle" "particles\econ\items\juggernaut\jugg_arcana\juggernaut_arcana_v2_trigger.vpcf"
+                "particle" "particles\econ\items\juggernaut\jugg_arcana\juggernaut_arcana_trigger.vpcf"
+                "particle"  "particles\econ\items\juggernaut\jugg_arcana\juggernaut_arcana_trigger_body_glow.vpcf"
+                "particle"  "particles\econ\items\juggernaut\jugg_arcana\juggernaut_arcana_trigger_head.vpcf"
+                "particle"  "particles/econ/items/juggernaut/jugg_arcana/juggernaut_arcana_v2_ambient.vpcf"
+                "particle"  "particles/econ/items/juggernaut/jugg_arcana/juggernaut_arcana_v2_ambient_elec.vpcf"
+                "particle"  "particles/econ/items/juggernaut/jugg_arcana/juggernaut_arcana_v2_ambient_energy.vpcf"
+                "particle"  "particles/econ/items/juggernaut/jugg_arcana/juggernaut_arcana_v2_ambient_ember.vpcf"
+                "particle"  "particles/econ/items/juggernaut/armor_of_the_favorite/juggernaut_favorite_eyes.vpcf"
+            }
+            "OnSpellStart"
+            {
+                "FireSound"
+                {
+                    "EffectName"    "Hero_Juggernaut.ArcanaTrigger"
+                    "Target"        "CASTER"
+                }
+                "RunScript"
+                {
+                    "ScriptFile"    "heroes/new_hero/insatiable_anger.lua"
+                    "Function"      "PlaySound"
+                }
+                "RunScript"
+                {
+                    "ScriptFile"    "heroes/new_hero/insatiable_anger.lua"
+                    "Function"      "WhenActivate"
+                    "stack_modifier"        "modifier_anger_stacks"
+                    "charges_duration"      "%charges_duration"
+                }
+            }
+            "Modifiers"
+            {
+                "modifier_anger_check"
+                {
+                    "Passive"           "1"
+                    "IsHidden"          "1"
+                    "IsDebuff"          "0"
+                    "IsPurgable"        "0"
+                    "OnTakeDamage"
+                    {
+                        "RunScript"
+                        {
+                            "ScriptFile"            "heroes/new_hero/insatiable_anger.lua"
+                            "Function"              "WhenLossHealth"
+                            "stack_modifier"        "modifier_anger_stacks"
+                            "treshold"              "%health_treshold"
+                            "charges_duration"      "%charges_duration"
+                            "Damage"                "%attack_damage"
+                        }
+                    }
+                }
+                "modifier_anger_stacks"
+                {
+                    "Passive"           "0"
+                    "IsHidden"          "0"
+                    "IsDebuff"          "0"
+                    "IsPurgable"        "1"
+                    "Properties"
+                    {
+                        "MODIFIER_PROPERTY_PREATTACK_BONUS_DAMAGE" "%bonus_damage"
+                    }
+                }
+                "modifier_effects"
+                {
+                    "Passive"           "0"
+                    "IsHidden"          "0"
+                    "IsDebuff"          "0"
+                    "IsPurgable"        "0"
+                    "OverrideAnimation"     "ACT_DOTA_LOADOUT_RARE_STATUE"
+                }
+                "modifier_anger_slow"
+                {
+                    "EffectName"        "particles/units/heroes/hero_omniknight/omniknight_degeneration_debuff.vpcf"
+                    "EffectAttachType"  "attach_origin"
+                    "Passive"           "0"
+                    "IsHidden"          "0"
+                    "IsDebuff"          "1"
+                    "IsPurgable"        "1"
+                    "Properties"
+                    {
+                        "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"  "%move_slow"
+                    }
+                }
+                "modifier_check_ult"
+                {
+                    "Passive"       "1"
+                    "IsHidden"      "1"
+                    "IsPurgable"        "0"
+                    "ThinkInterval"     "0.1"
+                    "OnIntervalThink"
+                    {
+                        "RunScript"
+                        {
+                            "ScriptFile"    "heroes/new_hero/insatiable_anger.lua"
+                            "Function"      "CheckStacks"
+                            "stack_modifier"        "modifier_anger_stacks"
+                        }
+                    }
+                }
+                "modifier_anger_onhit"
+                {
+                    "Passive"           "1"
+                    "IsHidden"          "1"
+                    "IsDebuff"          "0"
+                    "OnAttackLanded"
+                    {
+                        "RunScript"
+                        {
+                            "ScriptFile"    "heroes/new_hero/insatiable_anger.lua"
+                            "Function"      "OnHit"
+                            "lifesteal_buff" "%lifesteal_buff"
+                            "stack_modifier"        "modifier_anger_stacks"
+                            "Damage"                "%attack_damage"
+                            "stun_multiplier"                "%stun_multiplier"
+                            "slow_duration"         "%slow_duration"
+                        }
+                    }
+                }
+            }     
+        }
+    }

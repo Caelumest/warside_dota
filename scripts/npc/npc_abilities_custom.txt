@@ -1,8 +1,20 @@
-#base "heroes/new_hero/wave_blink.txt"
-#base "heroes/new_hero/insatiable_anger.txt"
-#base "heroes/new_hero/release_anger.txt"
-#base "heroes/new_hero/pain_wave.txt"
+#base "heroes/krigler/wave_blink.txt"
+#base "heroes/krigler/insatiable_anger.txt"
+#base "heroes/krigler/release_anger.txt"
+#base "heroes/krigler/pain_wave.txt"
+#base "heroes/krigler/talents.txt"
+#base "heroes/casalmar/famine_of_death.txt"
+#base "heroes/casalmar/postponed_karma.txt"
+#base "heroes/casalmar/bloody_fists.txt"
+#base "heroes/casalmar/fertile_soil.txt"
+#base "heroes/new_hero/omen_of_the_assassin.txt"
+#base "heroes/new_hero/art_dash.txt"
+#base "heroes/new_hero/breakpoints.txt"
+#base "heroes/new_hero/instant_reaction.txt"
 #base "heroes/new_hero/talents.txt"
+#base "heroes/soul_tamer/abilities.txt"
+#base "heroes/soul_tamer/talents.txt"
+#base "heroes/sage_ronin/abilities.txt"
 "DOTAAbilities"
 {
     "Version"       "1"
@@ -4129,6 +4141,27 @@
                 "MODIFIER_PROPERTY_STATS_STRENGTH_BONUS" "%bonus_str2" 
             }
         }
+    }
+}
+"test_gestures"
+{
+    "BaseClass"                     "ability_datadriven"
+    "AbilityTextureName"            "ursa_earthshock"
+    "MaxLevel"                      "4"
+    "AbilityType"                   "DOTA_ABILITY_TYPE_BASIC"
+    "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+    "AbilityCooldown"               "0.5"
+    "AbilityCastPoint"              "0"
+    "AbilityCastRange"              "300"
+    "AbilityManaCost"               "10"
+    "AbilityDamage"                 "100 175 250 325"
+    "OnSpellStart"
+    {
+        "RunScript"
+            {
+                "ScriptFile"    "heroes/test_gestures.lua"
+                "Function"      "Test"
+            }
     }
 }
 

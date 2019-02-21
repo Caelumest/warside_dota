@@ -41,19 +41,19 @@ function VoiceResponses:Start()
     -- Create dummy with response modifier to hook to events
     local dummy = CreateUnitByName('npc_dota_thinker', Vector(0,0,0), false, nil, nil, DOTA_TEAM_GOODGUYS)
     local modifier = dummy:AddNewModifier(nil, nil, "modifier_responses", {})
-
-    -- Hook up event handler
     modifier.FireOutput = function(outputName, data) self:FireOutput(outputName, data) end
 
     -- Listen for unit spawns
+    ListenToGameEvent("dota_player_gained_level", function(context, event) self:FireOutput('OnLvlUp', event) end, self)
     ListenToGameEvent("npc_spawned", function(context, event) self:FireOutput('OnUnitSpawn', event) end, self)
+    ListenToGameEvent("player_chat", function(context, event) self:FireOutput('OnPlayerChat', event) end, self)
     ListenToGameEvent("dota_rune_activated_server", function(context, event) self:FireOutput('OnRunePickup', event) end, self)
-    ListenToGameEvent("dota_item_purchased", function(context, event) self:FireOutput('OnItemPurchased', event) end, self)
+    ListenToGameEvent("dota_item_purchased", function(context, event) self:FireOutput('OnItemBought', event) end, self)
+    ListenToGameEvent("dota_inventory_player_got_item", function(context, event) self:FireOutput('GetItemName', event) end, self)
     ListenToGameEvent("dota_item_picked_up", function(context, event) self:FireOutput('OnItemPickup', event) end, self)
     ListenToGameEvent("game_rules_state_change", function(context, event) self:FireOutput('OnGameRulesStateChange', event) end, self)  
     
 end
-
 -- Wrap events in dynamic_wraps
 function VoiceResponses:FireOutput(outputName, data)
     if VoiceResponses[outputName] ~= nil then
@@ -150,11 +150,24 @@ function VoiceResponses:TriggerSoundSpecial(triggerName, special, unit, response
 end
 
 function VoiceResponses:PlaySound(soundName, unit, allChat, global)
-    --print("Playing sound", soundName, allChat, global, unit)
-    if allChat then
+    print("Playing sound", soundName, allChat, global, unit)
+    if allChat and global == true then
+        print("ALLCHAT")
         EmitSoundOn(soundName,unit)
+    elseif global == 1 then
+        print("TRUE GLOBAL")
+        EmitAnnouncerSound(soundName)
+    elseif global == 2 then
+        print("GLOBAL TEAM")
+        EmitAnnouncerSoundForTeam(soundName, unit:GetTeam())
     else
-        EmitAnnouncerSoundForPlayer(soundName,unit:GetPlayerOwnerID())
+        print("ONLY FOR PLAYER")
+        if IsInToolsMode() then
+            pIDForPlayer = unit:GetPlayerOwnerID()
+        else
+            pIDForPlayer = unit:GetPlayerOwnerID() + 1
+        end
+        EmitAnnouncerSoundForPlayer(soundName, pIDForPlayer)
     end
 end
 
@@ -163,40 +176,65 @@ end
 --================================================================================
 function VoiceResponses:OnOrder(order)
     local unitResponses = VoiceResponses.responses[order.unit:GetUnitName()]
-    if unitResponses ~= nil then
+    print("UNITRES", unitResponses)
+    if unitResponses ~= nil and GetKeyValueByHeroName(order.unit:GetUnitName(), "IsCustom") == 1 then
         -- Move order
         if order.order_type == DOTA_UNIT_ORDER_MOVE_TO_POSITION
-          or order.order_type == DOTA_UNIT_ORDER_MOVE_TO_TARGET
-          or order.order_type == DOTA_UNIT_ORDER_ATTACK_MOVE then
-            self:TriggerSound("OnMoveOrder", order.unit, unitResponses)
+          or order.order_type == DOTA_UNIT_ORDER_MOVE_TO_TARGET then
+            if order.unit.moveFlag == nil then
+                order.unit.moveFlag = 0
+            end
+
+            if order.unit.moveFlag == 0 and order.unit:GetUnitName() == "npc_dota_hero_krigler" and order.unit.metCasalmar == nil then
+                order.unit.moveFlag = 1
+                local random = RandomInt(1, 5)
+                local units = FindUnitsInRadius(order.unit:GetTeamNumber(), order.unit:GetAbsOrigin(), nil, 1000, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, FIND_ANY_ORDER, false)
+                for _, unit in pairs(units) do
+                    if unit:GetUnitName() == "npc_dota_hero_casalmar" and random == 1 then
+                        order.unit.metCasalmar = true
+                        print("ACHOCASAMO")
+                    end
+                end
+                print("CASAMO")
+                Timers:CreateTimer(10, function () order.unit.moveFlag = 0 end)
+            end
+
+            if order.unit.metCasalmar == true and order.unit.casalmarFlag == nil then
+                self:TriggerSound("OnMeetCasalmar", order.unit, unitResponses)
+                order.unit.casalmarFlag = 1
+            else
+                self:TriggerSound("OnMoveOrder", order.unit, unitResponses)
+            end
         end
 
-        if order.order_type == DOTA_UNIT_ORDER_PURCHASE_ITEM then
-            print("qqqqqqqqqqqqqqqqqq")
-            local hero = order.unit:GetUnitName()
-            print(hero,"qqqqqqqqqqqqqqqqqq")
-            --local item = EntIndexToHScript(order.ItemEntityIndex)
-            print(item,"qqqqqqqqqqqqqqqqqq")
-
-                self:TriggerSound("Testando", order.itemname, hero, unitResponses)
-        end
 
         -- Attack order
-        if order.order_type == DOTA_UNIT_ORDER_ATTACK_TARGET then
+        if order.order_type == DOTA_UNIT_ORDER_ATTACK_TARGET 
+            or order.order_type == DOTA_UNIT_ORDER_ATTACK_MOVE then
             self:TriggerSound("OnAttackOrder", order.unit, unitResponses)
+            print("ATTACK")
         end
 
         -- Buyback
         if order.order_type == DOTA_UNIT_ORDER_BUYBACK then
             self:TriggerSound("OnBuyback", order.unit, unitResponses)
+            print("BUYBACK")
+            buybackflag = 1
         end
     end
 end
 
 function VoiceResponses:OnUnitDeath(event)
     -- Unit death
+    if reincarnateflag == nil then
+        reincarnateflag = 0
+    end
     local unitResponses = VoiceResponses.responses[event.unit:GetUnitName()]
-    if unitResponses ~= nil and not event.unit:IsIllusion() then
+    if unitResponses ~= nil and not event.unit:IsIllusion() and event.unit:IsReincarnating() then
+        reincarnateflag = 1  
+        self:TriggerSound("OnReincarnate", event.unit, unitResponses)
+        Timers:CreateTimer(7, function () reincarnateflag = 0 end)
+    elseif unitResponses ~= nil and not event.unit:IsIllusion() then
         self:TriggerSound("OnDeath", event.unit, unitResponses)
     end
 
@@ -208,11 +246,43 @@ function VoiceResponses:OnUnitDeath(event)
                 if GetTeamHeroKills(DOTA_TEAM_GOODGUYS) + GetTeamHeroKills(DOTA_TEAM_BADGUYS) == 1 then
                     self:TriggerSound("OnFirstBlood", event.attacker, unitResponses)
                 else
-                    self:TriggerSound("OnHeroKill", event.attacker, unitResponses)
+                    local random = RandomInt(1, 3) --Add a 33% chance to occur
+                    print(random)
+                    if event.attacker:GetUnitName() == "npc_dota_hero_krigler" and random == 3 then
+                        if event.unit:GetUnitName() == "npc_dota_hero_viper" then
+                            self:TriggerSound("OnKillViper", event.attacker, unitResponses)
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_casalmar" then
+                            self:TriggerSound("OnKillCasalmar", event.attacker, unitResponses)
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_omniknight" then
+                            self:TriggerSound("OnKillOmni", event.attacker, unitResponses)
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_skeleton_king" then
+                            self:TriggerSound("OnKillWk", event.attacker, unitResponses)
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_pudge" then
+                            self:TriggerSound("OnKillPudge", event.attacker, unitResponses)
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_alchemist" then
+                            self:TriggerSound("OnKillAlche", event.attacker, unitResponses)
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_sniper" then
+                            self:TriggerSound("OnKillSniper", event.attacker, unitResponses)
+                        elseif event.unit:IsReincarnating() == false then
+                            self:TriggerSound("OnHeroKill", event.attacker, unitResponses)
+                        end
+                    elseif event.unit:IsReincarnating() == false then
+                        self:TriggerSound("OnHeroKill", event.attacker, unitResponses)
+                    end
                 end
             else
                 if event.unit:GetTeam() == event.attacker:GetTeam() then
-                    self:TriggerSound("OnCreepDeny", event.attacker, unitResponses)
+                    if denyFlag == nil then
+                        denyFlag = 0
+                    end
+                    local units = FindUnitsInRadius(event.attacker:GetTeamNumber(), event.unit:GetAbsOrigin(), nil, 1000, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, FIND_ANY_ORDER, false)
+                    for _, unit in pairs(units) do
+                        denyFlag = denyFlag + 1
+                    end
+                    if denyFlag > 0 then
+                        self:TriggerSound("OnCreepDeny", event.attacker, unitResponses)
+                        denyFlag = 0
+                    end
                 else
                     self:TriggerSound("OnCreepKill", event.attacker, unitResponses)
                 end
@@ -227,9 +297,16 @@ function VoiceResponses:OnUnitSpawn(event)
 
     if unitResponses ~= nil and not unit:IsIllusion() then
         -- Check first spawn or not
-        if unit._responseFirstSpawn then
+        if buybackflag == nil then
+            Timers:CreateTimer(5, function () 
+                buybackflag = 0  
+                print("BB FLAG", buybackflag)
+                end)
+        end
+        if unit._responseFirstSpawn == true and buybackflag == 0 and reincarnateflag == 0 then
             self:TriggerSound("OnSpawn", unit, unitResponses)
-        else
+            buybackflag = 0
+        elseif unit._responseFirstSpawn == nil then
             self:TriggerSound("OnFirstSpawn", unit, unitResponses)
             unit._responseFirstSpawn = true
         end
@@ -243,10 +320,17 @@ function VoiceResponses:OnTakeDamage(event)
         local attacker = event.attacker
         if attacker then
             if attacker:IsHero() or attacker:IsTower() then
-                self:TriggerSound("OnTakeDamage", event.unit, unitResponses)
+                if attacker ~= event.unit then
+                    self:TriggerSound("OnTakeDamage", event.unit, unitResponses)
+                end
             end
         end
     end
+end
+
+function VoiceResponses:OnAbilityStart(event)
+    local unitResponses = VoiceResponses.responses[event.unit:GetUnitName()]
+    print("Working ability response")
 end
 
 function VoiceResponses:OnAbilityExecuted(event)
@@ -278,18 +362,53 @@ function VoiceResponses:OnRunePickup(event)
     end
 end
 
-function VoiceResponses:OnItemPurchased(event)
+function VoiceResponses:OnItemBought(event)
     local hero = PlayerResource:GetSelectedHeroEntity(event.PlayerID)
-    local unitResponses = VoiceResponses.responses[hero:GetUnitName()]
-    if unitResponses then
-        self:TriggerSoundSpecial("OnItemPurchased", event.itemname, hero, unitResponses)
+    if GetKeyValueByHeroName(hero:GetUnitName(), "IsCustom") == 1 then
+        print("ASDASDAS",event.PlayerID)
+        local unitResponses = VoiceResponses.responses[hero:GetUnitName()]
+        function VoiceResponses:GetItemName(event)
+            hero.nomeItem = event.itemname
+            print(hero.nomeItem)
+        end
+        if unitResponses and hero.nomeItem then
+            self:TriggerSoundSpecial("OnItemPurchase", hero.nomeItem, hero, unitResponses)
+            hero.nomeItem = nil
+        end
     end
 end
 
+function VoiceResponses:OnPlayerChat(event)
+    local text = event.text
+    local hero = PlayerResource:GetSelectedHeroEntity(event.playerid)
+    local heroname = PlayerResource:GetSelectedHeroName(event.playerid)
+    local unitResponses = VoiceResponses.responses[hero:GetUnitName()]
+
+    if event.teamonly == 1 then
+        teamResponse = "Ally"
+    else
+        teamResponse = "Global"
+    end
+
+    if teamResponse == nil then
+        teamResponse = ""
+    end
+
+    if text:lower() == 'lol' or text:lower() == 'jaja' or text:lower() == 'haha' then
+        suffix = "Laugh"
+    elseif text:lower() == "ty" or text:lower() == "thx" or text:lower() == "thanks" or text:lower() == "vlw" or text:lower() == "obrigado" or text:lower() == "obg" then
+        suffix = "Thanks"
+    end
+    if suffix and GetKeyValueByHeroName(heroname, "IsCustom") == 1 then
+        self:TriggerSound("On"..teamResponse..suffix, hero, unitResponses)
+        suffix = nil
+    end
+end
 
 function VoiceResponses:OnItemPickup(event)
     local hero = PlayerResource:GetSelectedHeroEntity(event.PlayerID)
     local item = EntIndexToHScript(event.ItemEntityIndex)
+    print(event.PlayerID)
     local unitResponses = VoiceResponses.responses[hero:GetUnitName()]
     if unitResponses then
         if item:GetPurchaser() == hero then
@@ -298,8 +417,39 @@ function VoiceResponses:OnItemPickup(event)
     end
 end
 
+function VoiceResponses:OnLvlUp(event)
+    if IsInToolsMode() then 
+        herolvlid = PlayerResource:GetSelectedHeroEntity(event.player-1) 
+    else 
+        herolvlid = PlayerResource:GetSelectedHeroEntity(event.player-2) 
+    end
+    local hero = herolvlid
+    local lvl = event.level
+    if hero then
+        print(event.player)
+        print(hero:GetUnitName(),",", lvl,",",event.player)
+        local unitResponses = VoiceResponses.responses[hero:GetUnitName()]
+        if unitResponses and lvl < 35 then
+            self:TriggerSound("OnLvlUp", hero, unitResponses)
+        end
+    end
+end
+
 function VoiceResponses:OnGameRulesStateChange()
     local state = GameRules:State_Get()
+
+    if state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+        local heroes = HeroList:GetAllHeroes()
+        for _, hero in pairs(heroes) do
+            -- Check if unit has responses
+            local responses = VoiceResponses.responses[hero:GetUnitName()]
+            if responses then
+                self:TriggerSound("OnGameStart", hero, responses)
+                print("AAASDASD")
+            end
+        end
+        
+    end
 
     if state >= DOTA_GAMERULES_STATE_POST_GAME then
         -- Figure out winner

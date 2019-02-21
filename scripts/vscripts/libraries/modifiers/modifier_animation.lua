@@ -15,7 +15,7 @@ local _CODE_TO_ANIMATION_TRANSLATE = {
   [12] = "lightning",
   [13] = "juggle_gesture",
   [14] = "favor",
-  [15] = "arcana_style",
+  [15] = "forcestaff_friendly",
 }
 
 function modifier_animation:OnCreated(keys) 

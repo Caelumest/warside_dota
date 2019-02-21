@@ -2,6 +2,8 @@
 {
     maps             "dota"
     "IsPlayable"         "1"
+    "HeroGuidesSupported"       "1"
+    "ShouldForceDefaultGuide"   "1"
     "dota"
     {
         "MaxPlayers"  "10"

@@ -1,0 +1,138 @@
+"DOTAAbilities"
+{
+     "bloody_fists"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_DONT_CANCEL_CHANNEL | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+        "AbilityTextureName"            "bloody_fists"
+        "AbilityCastPoint"              "0"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+        "AnimationPlaybackRate"         "2"
+        "AbilityCooldown"               "5 5 5 5"
+        "AbilityManaCost"               "0"
+        "AbilityCastAnimation"          "ACT_DOTA_VICTORY"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "health_mult"   "0.02 0.025 0.03 0.035"
+            }
+            "02"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "health_mult_tooltip"   "2 2.5 3 3.5"
+                "LinkedSpecialBonus"    "special_bonus_unique_casalmar_bloody_fists"
+            }
+            "03"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "health_lost_tooltip"   "2 2.5 3 3.5"
+                "LinkedSpecialBonus"    "special_bonus_unique_casalmar_bloody_fists"
+            }
+        }
+        "precache"
+        {
+            "soundfile" ""
+            "particle"  "particles\units\heroes\hero_bloodseeker\bloodseeker_bloodrage.vpcf"
+        }
+        "OnSpellStart"
+        {
+            "ApplyModifier"
+            {
+                "ModifierName"  "modifier_bloody_fists"
+                "Target"        "CASTER"
+            }
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/casalmar/bloody_fists.lua"
+                "Function"      "SwapAbilities"
+            }
+        }
+        "OnOwnerDied"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/casalmar/bloody_fists.lua"
+                "Function"      "OnDied"
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_bloody_fists"
+            {
+                "Passive"           "0"
+                "IsHidden"          "0"
+                "IsDebuff"          "0"
+                "IsPurgable"        "0"
+                "EffectName"        "particles\units\heroes\hero_bloodseeker\bloodseeker_bloodrage.vpcf"
+                "EffectAttachType"  "attach_origin"
+                "OnAttackLanded"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/casalmar/bloody_fists.lua"
+                        "Function"      "OnHit"
+                    }
+                }
+                "ThinkInterval"  "0.1"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/casalmar/bloody_fists.lua"
+                        "Function"      "DrainHealth"
+                    }
+                }
+            }
+        }     
+    }
+
+    "deactivate_bloody_fists"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_DONT_CANCEL_CHANNEL | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+        "AbilityTextureName"            "deactivate_bloody_fists"
+        "AbilityCastPoint"              "0"
+        "SpellImmunityType"             ""
+        "MaxLevel"                      "1"
+        "AnimationPlaybackRate"         "2"
+        "AbilityCooldown"               "0"
+        "AbilityManaCost"               "0"
+        "AbilityCastAnimation"          "ACT_DOTA_VICTORY"
+        "precache"
+        {
+            "soundfile" ""
+            "particle"  ""
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/casalmar/bloody_fists.lua"
+                "Function"      "SwapAbilities"
+            }
+        }
+    }
+
+    "special_bonus_unique_casalmar_bloody_fists"
+    {
+        // General
+        //-------------------------------------------------------------------------------------------------------------
+        "BaseClass"                     "special_bonus_undefined"
+        "AbilityType"                   "DOTA_ABILITY_TYPE_ATTRIBUTES"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "MaxLevel"                      "1"
+        
+        // Special
+        //-------------------------------------------------------------------------------------------------------------
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"                  "FIELD_FLOAT"
+                "value"                     "1.5"
+            }
+        }
+    }
+}

@@ -1,0 +1,144 @@
+"DOTAAbilities"
+{
+     "art_dash"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_POINT_TARGET | DOTA_ABILITY_BEHAVIOR_ROOT_DISABLES | DOTA_ABILITY_BEHAVIOR_DIRECTIONAL | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+        "AbilityTextureName"            "art_dash"
+        "AbilityType"                   "DOTA_ABILITY_TYPE_BASIC"
+        "AbilityCastPoint"              "0"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_PHYSICAL"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_YES"
+        "AnimationPlaybackRate"         "1"
+        "AbilityCastRange"              "500 550 600 650"
+        "AbilityCastRangeBuffer"        "500"
+        "AbilityCooldown"               "11 9 7 5"
+        "AbilityManaCost"               "80"
+        "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "duration"      "10"
+            }
+            "02"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "damage_bonus"  "500"
+            }
+            "03"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "atkGatherAOE"  "250"
+            }
+            "03"
+            {
+                "var_type"      "FIELD_INTEGER"
+                "speed"         "1350"
+            }
+            "04"
+            {
+                "var_type"      "FIELD_INTEGER"
+                "dash_range"    "500 550 600 650"
+            }
+        }
+        "precache"
+        {
+            "particle"      "particles/units/heroes/hero_pangolier/pangolier_heartpiercer_cast_blood.vpcf"
+            "particle"      "particles/units/heroes/hero_pangolier/pangolier_swashbuckler_dash.vpcf"
+            "soundfile"     "soundevents/game_sounds_heroes/game_sounds_pangolier.vsndevts"
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/new_hero_2/art_dash.lua"
+                "Function"      "CheckInitialPos"
+            }
+            "ApplyMotionController"
+            {
+                "Target"                    "CASTER"
+                "ScriptFile"                "heroes/new_hero_2/art_dash.lua"
+                "HorizontalControlFunction" "MoveTo"    
+            }
+            "FireSound"
+            {
+                "EffectName"    "Hero_Pangolier.Swashbuckle.Cast"
+                "Target"        "CASTER"
+            }
+        }
+        "Modifiers"
+        {   
+
+            "modifier_dash_stop_caster"
+            {
+                "Passive"           "0"
+                "IsPurgable"        "0"
+                "IsBuff"            "1"
+                "IsDebuff"          "0"
+                "IsStunDebuff"      "0"
+                "IsHidden"          "1"
+                "States"
+                {
+                    "MODIFIER_STATE_STUNNED"   "MODIFIER_STATE_VALUE_ENABLED"
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero_2/art_dash.lua"
+                        "Function"      "OnDestroyed"
+                    }
+                }
+            }
+            "modifier_check_extra_dash"
+            {
+                "Passive"           "1"
+                "IsPurgable"        "0"
+                "IsBuff"            "1"
+                "IsDebuff"          "0"
+                "IsStunDebuff"      "0"
+                "IsHidden"          "1"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+                "ThinkInterval"     "0.1"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero_2/art_dash.lua"
+                        "Function"      "CheckTalent"
+                    }
+                }
+            }
+            "modifier_andrax_extra_dash"
+            {
+                "Passive"           "0"
+                "IsPurgable"        "0"
+                "IsBuff"            "1"
+                "IsDebuff"          "0"
+                "IsStunDebuff"      "0"
+                "IsHidden"          "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+            }
+            "modifier_andrax_extra_dash_cooldown"
+            {
+                "Passive"           "0"
+                "IsPurgable"        "0"
+                "IsBuff"            "1"
+                "IsDebuff"          "0"
+                "IsStunDebuff"      "0"
+                "IsHidden"          "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero_2/art_dash.lua"
+                        "Function"      "GiveExtraDash"
+                    }
+                }
+            }
+        }
+    }
+}

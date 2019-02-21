@@ -1,0 +1,95 @@
+"Portraits"
+{
+	"Version"		"1"
+	"PreferModelNames"		"1"
+	"DefaultActivity"		"ACT_DOTA_CAPTURE"
+	"CannotChangeActivity"		"1"
+	
+	"models/heroes/krigler/juggernaut.vmdl"
+	{
+		"PortraitLightPosition"		"61.33 -27.93 246.25"
+		"PortraitLightAngles"		"89.25 172.13 0.00"
+		"PortraitLightFOV"		"61"
+		"PortraitLightDistance"		"202"
+		"PortraitLightColor"		"246 254 246"
+		"PortraitShadowColor"		"48 48 48"
+		"PortraitShadowScale"		"5.000000"
+		"PortraitAmbientColor"		"61 28 28"
+		"PortraitAmbientScale"		"5.000000"
+		"PortraitSpecularColor"		"121 174 84"
+		"PortraitBackgroundColor1"		"0.100000 0.100000 0.100000"
+		"PortraitBackgroundColor2"		"0.250000 0.250000 0.250000"
+		"PortraitBackgroundColor3"		"0.500000 0.500000 0.500000"
+		"PortraitBackgroundColor4"		"0.700000 0.700000 0.700000"
+		"PortraitBackgroundTexture"		"materials/vgui/hud/heroportraits/portraitbackground_forest_two.vmat"
+		"PortraitLightScale"		"1.400000"
+		"PortraitGroundShadowScale"		"1.500000"
+		"PortraitAmbientDirection"		"-4.830 -5.890 -7.350"
+		"PortraitAnimationActivity"		"ACT_DOTA_IDLE"
+		"cameras"
+		{
+			"default"
+			{
+				"PortraitPosition"		"880.45 -275.42 240.49"
+				"PortraitAngles"		"8.46 161.60 355.00"
+				"PortraitFOV"		"5"
+			}
+		}
+	}
+	"models/heroes/casalmar/undying_flesh_golem.vmdl"
+	{
+		"PortraitLightPosition"		"216.20 222.46 466.35"
+		"PortraitLightAngles"		"48.42 239.86 0.00"
+		"PortraitLightFOV"		"69"
+		"PortraitLightDistance"		"378"
+		"PortraitLightColor"		"214 234 254"
+		"PortraitShadowColor"		"38 38 38"
+		"PortraitShadowScale"		"4.625000"
+		"PortraitAmbientColor"		"56 56 56"
+		"PortraitAmbientScale"		"5.000000"
+		"PortraitSpecularColor"		"251 74 84"
+		"PortraitBackgroundTexture"		"materials/vgui/hud/heroportraits/portraitbackground_graveyard.vmat"
+		"PortraitParticle"		"particles/units/heroes/hero_undying/undying_fg_portrait.vpcf"
+		"PortraitLightScale"		"2.000000"
+		"PortraitGroundShadowScale"		"1.500000"
+		"PortraitAmbientDirection"		"-76.030 -78.600 -29.750"
+		"PortraitAnimationActivity"		"ACT_DOTA_IDLE"
+		"cameras"
+		{
+			"default"
+			{
+				"PortraitPosition"		"194.90 62.44 309.53"
+				"PortraitAngles"		"18.86 199.79 0.00"
+				"PortraitFOV"		"23"
+			}
+		}
+	}
+"models/heroes/soul_tamer/arc_warden.vmdl"
+	{
+		"PortraitLightPosition"		"216.20 222.46 466.35"
+		"PortraitLightAngles"		"48.42 239.86 0.00"
+		"PortraitLightFOV"		"69"
+		"PortraitLightDistance"		"378"
+		"PortraitLightColor"		"214 234 254"
+		"PortraitShadowColor"		"38 38 38"
+		"PortraitShadowScale"		"4.625000"
+		"PortraitAmbientColor"		"56 56 56"
+		"PortraitAmbientScale"		"5.000000"
+		"PortraitSpecularColor"		"251 74 84"
+		"PortraitBackgroundTexture"		"materials/portraits_card/portrait_backgrounds/drow.vmat"
+		"PortraitParticle"		"particles/units/heroes/hero_juggernaut/juggernaut_portrait.vpcf"
+		"PortraitLightScale"		"2.000000"
+		"PortraitGroundShadowScale"		"1.500000"
+		"PortraitAmbientDirection"		"-76.030 -78.600 -29.750"
+		"PortraitAnimationActivity"		"ACT_DOTA_IDLE"
+		"cameras"
+		{
+			"default"
+			{
+				"PortraitPosition"		"194.90 62.44 309.53"
+				"PortraitAngles"		"18.86 199.79 0.00"
+				"PortraitFOV"		"23"
+			}
+		}
+	}
+}

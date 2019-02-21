@@ -1,0 +1,199 @@
+"AndraxResponses"
+{
+    "OnMoveOrder"
+    {
+        "Cooldown"    "6"
+
+        "Sounds"
+        {
+            "andrax_move"          "1"
+        }
+    }
+    "OnAttackOrder"
+    {
+        "Cooldown"    "6"
+
+        "Sounds"
+        {
+            "andrax_attack"           "1"
+        }
+    }
+    "OnFirstSpawn"
+    {
+        "Priority"  "2"
+        "Delay"     "1.5"
+        "Sounds"
+        {
+            "andrax_spawn"      "1"
+        }
+    }
+    "OnSpawn"
+    {
+        "Priority"  "2"
+        "Delay"     "1.5"
+        "Cooldown"  "6"
+        "Sounds"
+        {
+            "andrax_respawn"       "1"
+        }
+    }
+    "OnBuyback"
+    {
+        "Priority"  "2"
+        "AllChat"   "1"
+        "Delay"     "1"
+        "Global"    "1"
+        "Cooldown"  "6"
+        "Sounds"
+        {
+            "andrax_respawn"       "1"
+        }
+    }
+    "OnLvlUp"
+    {   
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "Delay"     "1.5"
+
+        "Sounds"
+        {
+            "andrax_lvlup"      "1"
+        }
+    }
+    "OnFirstBlood"
+    {
+        "Priority"  "3"
+        "Allchat"   "1"
+        "Global"    "1"
+        "Delay"     "2"
+
+        "Sounds"
+        {
+            "andrax_kill"      "1"
+        }
+    }
+    "OnHeroKill"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "2"
+
+        "Sounds"
+        {
+            "andrax_kill"      "1"
+        }
+
+    }
+    "OnItemPickup"
+    {
+         "item_aegis"
+        {
+            "Priority"  "2"
+            "Delay"     "1"
+            "Global"    "1"
+            "Sounds"
+            {
+                "andrax_aegis"     "1"
+            }
+        }
+    }
+    "OnCreepDeny"
+    {
+        "Priority"  "1"
+        "Cooldown"  "20"
+        "AllChat"   "1"
+
+        "Sounds"
+        {
+            "andrax_deny"      "1"
+        }
+    }
+    "OnCreepKill"
+    {
+        "Priority"  "1"
+        "Delay"     "0.5"
+        "Cooldown"  "20"
+
+        "Sounds"
+        {
+            "andrax_lasthit"       "1"
+        }
+    }
+    "OnDoubleDamageRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "andrax_rune_dd"      "1"
+        }
+    }
+
+    "OnHasteRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "andrax_rune_haste"      "1"
+        }
+    }
+
+    "OnIllusionRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "andrax_rune_ilu"      "1"
+        }
+    }
+
+    "OnInvisibilityRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "andrax_rune_inv"      "1"
+        }
+    }
+
+    "OnRegenRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "andrax_rune_regen"      "1"
+        }
+    }
+
+    "OnBountyRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "andrax_rune_bounty"      "1"
+        }
+    }
+    
+    "OnArcaneRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "andrax_rune_arcane"      "1"
+        }
+    }
+}

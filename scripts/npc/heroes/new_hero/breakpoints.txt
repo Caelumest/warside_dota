@@ -1,0 +1,139 @@
+"DOTAAbilities"
+{
+     "andrax_breakpoints"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "AbilityTextureName"            "breakpoints"
+        "AbilityType"                   "DOTA_ABILITY_TYPE_BASIC"
+        "AbilityCastPoint"              "0"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_YES"
+        "AnimationPlaybackRate"         "0"
+        "AbilityCastRange"              "0"
+        "AbilityCooldown"               "0"
+        "AbilityManaCost"               "0"
+        "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "duration"      "6 7 8 9"
+                "LinkedSpecialBonus"        "special_bonus_unique_andrax_break_dur"
+            }
+            "02"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "degen"         "-0.5 -1 -1.5 -2"
+            }
+            "03"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "regen"         "0.5 1 1.5 2"
+            }
+            "04"
+            {
+                "var_type"      "FIELD_FLOAT"
+                "armor_reduce"  "-0.4 -0.6 -0.8 -1"
+            }
+        }
+        "precache"
+        {
+            "particle"      "particles/units/heroes/hero_pangolier/pangolier_heartpiercer_cast_blood.vpcf"
+            "particle"      "particles/units/heroes/hero_pangolier/pangolier_swashbuckler_dash.vpcf"
+            "soundfile"     "soundevents/game_sounds_heroes/game_sounds_pangolier.vsndevts"
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/new_hero_2/art_dash.lua"
+                "Function"      "CheckInitialPos"
+            }
+            "ApplyMotionController"
+            {
+                "Target"                    "CASTER"
+                "ScriptFile"                "heroes/new_hero_2/art_dash.lua"
+                "HorizontalControlFunction" "MoveTo"    
+            }
+            "FireSound"
+            {
+                "EffectName"    "Hero_Pangolier.Swashbuckle"
+                "Target"        "CASTER"
+            }
+        }
+        "Modifiers"
+        {   
+
+            "modifier_breakpoints_passive"
+            {
+                "Passive"           "1"
+                "IsPurgable"        "0"
+                "IsBuff"            "1"
+                "IsDebuff"          "0"
+                "IsStunDebuff"      "0"
+                "IsHidden"          "1"
+                "OnAttackLanded"
+                // "%attack_damage" is set to the damage value before mitigation
+                {
+                    "ActOnTargets"
+                    {
+                        "Target"
+                        {
+                            "Center"    "TARGET"
+                            "Teams"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
+                            "Types"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+                        }
+                    
+                        "Action"    
+                        {
+                            "RunScript"
+                            {
+                                "ScriptFile"    "heroes/new_hero_2/breakpoints.lua"
+                                "Function"      "OnHit"
+                                "mod_debuff"    "modifier_breakpoints_stacks"
+                            }
+                        }
+                    }
+                }
+            }
+            "modifier_breakpoints_stacks"
+            {
+                "Passive"           "0"
+                "IsPurgable"        "1"
+                "IsBuff"            "0"
+                "IsDebuff"          "1"
+                "IsStunDebuff"      "0"
+                "IsHidden"          "0"
+                "EffectName"        "particles/units/heroes/hero_terrorblade/terrorblade_metamorphosis.vpcf"
+                "EffectAttachType"  "attach_hitloc"
+                "Properties"
+                {
+                    "MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS" "%armor_reduce"
+                    "MODIFIER_PROPERTY_HEALTH_REGEN_CONSTANT" "%degen"
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/new_hero_2/breakpoints.lua"
+                        "Function"      "OnDestroyed"
+                    }
+                }
+            }
+            "modifier_breakpoints_stacks_regen_caster"
+            {
+                "Passive"           "0"
+                "IsPurgable"        "1"
+                "IsBuff"            "1"
+                "IsDebuff"          "0"
+                "IsStunDebuff"      "0"
+                "IsHidden"          "0"
+                "Properties"
+                {
+                    "MODIFIER_PROPERTY_HEALTH_REGEN_CONSTANT" "%regen"
+                }
+            }
+        }
+    }
+}

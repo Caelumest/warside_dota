@@ -1,0 +1,11 @@
+"DOTAFullBodyRightSidePortraitInfo"
+{
+	"npc_dota_hero_casalmar"
+	{
+		"UnitAngles" "0 -40 0"
+	}
+	"npc_dota_hero_krigler"
+	{
+		"UnitAngles" "-30 -80 0"
+	}
+}

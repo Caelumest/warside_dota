@@ -1,0 +1,409 @@
+"CasalmarResponses"
+{
+    "OnMoveOrder"
+    {
+        "Cooldown"    "6"
+
+        "Sounds"
+        {
+            "undying_undying_big_move_01"          "1"
+            "undying_undying_big_move_02"          "1"
+            "undying_undying_big_move_03"          "1"
+            "undying_undying_big_move_04"          "1"
+            "undying_undying_big_move_05"          "1"
+            "undying_undying_big_move_06"          "1"
+            "undying_undying_big_move_07"          "1"
+            "undying_undying_big_move_08"          "1"
+            "undying_undying_big_move_09"          "1"
+            "undying_undying_big_move_10"          "1"
+            "undying_undying_big_move_11"          "1"
+            "undying_undying_big_move_12"          "1"
+            "undying_undying_big_move_13"          "1"
+            "undying_undying_big_move_15"          "1"
+            "undying_undying_big_move_16"          "1"
+            "undying_undying_big_move_17"          "1"
+            "undying_undying_big_move_18"          "1"
+            "undying_undying_big_move_19"          "1"
+            "undying_undying_big_move_20"          "1"
+        }
+    }
+
+    "OnAttackOrder"
+    {
+        "Cooldown"    "6"
+
+        "Sounds"
+        {
+            "undying_undying_big_attack_01"    "1"
+            "undying_undying_big_attack_02"    "1"
+            "undying_undying_big_attack_03"    "1"
+            "undying_undying_big_attack_04"    "1"
+            "undying_undying_big_attack_05"    "1"
+            "undying_undying_big_attack_06"    "1"
+            "undying_undying_big_attack_07"    "1"
+            "undying_undying_big_attack_08"    "1"
+            "undying_undying_big_attack_09"    "1"
+            "undying_undying_big_attack_10"    "1"
+            "undying_undying_big_attack_11"    "1"
+            "undying_undying_big_attack_12"    "1"
+            "undying_undying_big_attack_13"    "1"
+            "undying_undying_big_attack_14"    "1"
+            "undying_undying_big_attack_15"    "1"
+            "undying_undying_big_attack_16"    "1"
+            "undying_undying_big_attack_17"    "1"
+            "undying_undying_big_attack_18"    "1"
+            "undying_undying_big_attack_19"    "1"
+        }
+    }
+
+    "OnTakeDamage"
+    {
+        "Priority"  "1"
+        "Cooldown"  "20"
+
+        "Sounds"
+        {
+            "undying_undying_big_pain_01"  "1"
+            "undying_undying_big_pain_02"  "1"
+            "undying_undying_big_pain_03"  "1"
+            "undying_undying_big_pain_04"  "1"
+            "undying_undying_big_pain_05"  "1"
+            "undying_undying_big_pain_06"  "1"
+            "undying_undying_big_pain_07"  "1"
+            "undying_undying_big_pain_08"  "1"
+            "undying_undying_big_pain_09"  "1"
+            "undying_undying_big_pain_10"  "1"
+            "undying_undying_big_pain_11"  "1"
+            "undying_undying_big_pain_12"  "1"
+            "undying_undying_big_pain_13"  "1"
+            "undying_undying_big_pain_14"  "1"
+            "undying_undying_big_pain_15"  "1"
+            "undying_undying_big_pain_16"  "1"
+            "undying_undying_big_pain_17"  "1"
+            "undying_undying_big_pain_18"  "1"
+            "undying_undying_big_pain_19"  "1"
+            "undying_undying_big_pain_20"  "1"
+            "undying_undying_big_pain_21"  "1"
+
+        }
+    }
+    "OnReincarnate"
+    {
+        "Priority"      "3"
+        "AllChat"       "1"
+        "Sounds"
+        {
+            "undying_undying_big_respawn_11"  "1"
+        }
+    }
+    "OnDeath"
+    {
+        "Priority"  "2"
+        "AllChat"   "1"
+        "Sounds"
+        {
+            "undying_undying_big_death_01" "1"
+            "undying_undying_big_death_02" "1"
+            "undying_undying_big_death_03" "1"
+            "undying_undying_big_death_04" "1"
+            "undying_undying_big_death_05" "1"
+            "undying_undying_big_death_06" "1"
+            "undying_undying_big_death_07" "1"
+            "undying_undying_big_death_08" "1"
+            "undying_undying_big_death_09" "1"
+            "undying_undying_big_death_10" "1"
+            "undying_undying_big_death_11" "1"
+            "undying_undying_big_death_12" "1"
+        }
+    }
+    "OnBuyback"
+    {
+        "Priority"  "2"
+        "AllChat"   "1"
+        "Delay"     "1"
+        "Global"    "1"
+        "Cooldown"  "6"
+        "Sounds"
+        {
+            "undying_undying_big_respawn_01"       "1"
+            "undying_undying_big_respawn_02"       "1"
+            "undying_undying_big_respawn_03"       "1"
+            "undying_undying_big_respawn_04"       "1"
+            "undying_undying_big_respawn_05"       "1"
+            "undying_undying_big_respawn_06"       "1"
+            "undying_undying_big_respawn_07"       "1"
+            "undying_undying_big_respawn_08"       "1"
+            "undying_undying_big_respawn_09"       "1"
+            "undying_undying_big_respawn_10"       "1"
+            "undying_undying_big_respawn_11"       "1"
+            "undying_undying_big_respawn_12"       "1"
+        }
+    }
+    "OnSpawn"
+    {
+        "Priority"  "2"
+        "Delay"     "1.5"
+        "Cooldown"  "6"
+        "Sounds"
+        {
+            "undying_undying_big_respawn_01"       "1"
+            "undying_undying_big_respawn_02"       "1"
+            "undying_undying_big_respawn_03"       "1"
+            "undying_undying_big_respawn_04"       "1"
+            "undying_undying_big_respawn_05"       "1"
+            "undying_undying_big_respawn_06"       "1"
+            "undying_undying_big_respawn_07"       "1"
+            "undying_undying_big_respawn_08"       "1"
+            "undying_undying_big_respawn_09"       "1"
+            "undying_undying_big_respawn_10"       "1"
+            "undying_undying_big_respawn_11"       "1"
+            "undying_undying_big_respawn_12"       "1"
+        }
+    }
+    "OnFirstSpawn"
+    {
+        "Priority"  "2"
+        "Delay"     "1.5"
+        "Sounds"
+        {
+            "undying_undying_big_spawn_01"      "1"
+            "undying_undying_big_spawn_02"      "1"
+            "undying_undying_big_spawn_03"      "1"
+            "undying_undying_big_spawn_04"      "1"
+            "undying_undying_big_spawn_05"      "1"
+        }
+    }
+
+    "OnHeroKill"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "2"
+
+        "Sounds"
+        {
+            "undying_undying_big_kill_01"      "1"
+            "undying_undying_big_kill_02"      "1"
+            "undying_undying_big_kill_03"      "1"
+            "undying_undying_big_kill_04"      "1"
+            "undying_undying_big_kill_05"      "1"
+            "undying_undying_big_kill_06"      "1"
+            "undying_undying_big_kill_07"      "1"
+            "undying_undying_big_kill_08"      "1"
+            "undying_undying_big_kill_09"      "1"
+            "undying_undying_big_kill_10"      "1"
+            "undying_undying_big_kill_11"      "1"
+            "undying_undying_big_kill_12"      "1"
+            "undying_undying_big_kill_13"      "1"
+        }
+    }
+
+    "OnFirstBlood"
+    {
+        "Priority"  "2"
+        "AllChat"   "1"
+        "Global"    "1"
+        "Delay"     "1"
+
+        "Sounds"
+        {
+            "undying_undying_big_firstblood_01"      "1"
+        }
+    }
+
+    "OnCreepKill"
+    {
+        "Priority"  "1"
+        "Delay"     "0.5"
+        "Cooldown"  "10"
+
+        "Sounds"
+        {
+            "undying_undying_big_lasthit_01"       "1"
+            "undying_undying_big_lasthit_02"       "1"
+            "undying_undying_big_lasthit_03"       "1"
+            "undying_undying_big_lasthit_04"       "1"
+            "undying_undying_big_lasthit_05"       "1"
+            "undying_undying_big_lasthit_06"       "1"
+            "undying_undying_big_lasthit_07"       "1"
+            "undying_undying_big_lasthit_08"       "1"
+            "undying_undying_big_lasthit_09"       "1"
+            "undying_undying_big_lasthit_10"      "1"
+        }
+    }
+
+    "OnCreepDeny"
+    {
+        "Priority"  "1"
+        "Cooldown"  "20"
+        "Allchat"   "1"
+
+        "Sounds"
+        {
+            "undying_undying_big_deny_01"      "1"
+            "undying_undying_big_deny_02"      "1"
+            "undying_undying_big_deny_03"      "1"
+            "undying_undying_big_deny_04"      "1"
+            "undying_undying_big_deny_05"      "1"
+            "undying_undying_big_deny_06"      "1"
+            "undying_undying_big_deny_07"      "1"
+            "undying_undying_big_deny_08"      "1"
+            "undying_undying_big_deny_09"      "1"
+            "undying_undying_big_deny_10"      "1"
+            "undying_undying_big_deny_11"      "1"
+            "undying_undying_big_deny_12"      "1"
+            "undying_undying_big_deny_13"      "1"
+            "undying_undying_big_deny_14"      "1"
+            "undying_undying_big_deny_15"      "1"
+            "undying_undying_big_deny_16"      "1"
+            "undying_undying_big_deny_17"      "1"
+            "undying_undying_big_deny_18"      "1"
+            "undying_undying_big_deny_19"      "1"
+        }
+    }
+
+    // Ability casts
+    "OnAbilityCast"
+    {
+
+    }
+
+    // Item pickup
+    "OnItemPickup"
+    {
+         "item_aegis"
+        {
+            "Priority"  "2"
+            "Delay"     "1"
+            "Sounds"
+            {
+                "undying_undying_big_immort_01"     "1"
+                "undying_undying_big_immort_02"     "1"
+                "undying_undying_big_items_13"      "1"
+            }
+        }
+    }
+
+    // Item purchases
+    "OnItemPurchase"
+    {
+        "item_stout_mail"
+        {
+            "Delay"     "1"
+            "Sounds"
+            {
+                "undying_undying_big_itemmoderate_02"    "1"
+            }
+        }
+
+        "item_ultimate_scepter"
+        {
+            "Delay"     "1"
+            "Sounds"
+            {
+                "undying_undying_big_scepter_01"      "1"
+                "undying_undying_big_scepter_02"      "1"
+            }
+        }
+    }
+
+    "OnVictory"
+    {
+        "Priority"  "2"
+        "Delay" "10"
+        "Sounds"
+        {
+            "undying_undying_big_win_01"      "1"
+            "undying_undying_big_win_02"      "1"
+            "undying_undying_big_win_03"      "1"
+            "undying_undying_big_win_04"      "1"
+            "undying_undying_big_win_05"      "1"
+        }
+    }
+
+    "OnDefeat"
+    {
+        "Priority"  "2"
+        "Delay" "10"
+        "Sounds"
+        {
+            "undying_undying_big_lose_01"      "1"
+            "undying_undying_big_lose_02"      "1"
+            "undying_undying_big_lose_03"      "1"
+            "undying_undying_big_lose_04"      "1"
+        }
+    }
+
+    "OnDoubleDamageRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "undying_undying_big_doubdam_01"      "1"
+            "undying_undying_big_doubdam_02"      "1"
+        }
+    }
+
+    "OnHasteRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "undying_undying_big_haste_01"      "1"
+            "undying_undying_big_haste_02"      "1"
+        }
+    }
+
+    "OnIllusionRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "undying_undying_big_illus_01"      "1"
+            "undying_undying_big_illus_02"      "1"
+        }
+    }
+
+    "OnInvisibilityRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "undying_undying_big_invis_01"      "1"
+            "undying_undying_big_invis_02"      "1"
+        }
+    }
+
+    "OnRegenRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "undying_undying_big_regen_01"      "1"
+            "undying_undying_big_regen_02"      "1"
+        }
+    }
+
+    "OnBountyRune"
+    {
+        "Priority"  "2"
+        "Cooldown"  "300"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "undying_undying_big_lasthit_05"       "1"
+        }
+    }
+}
