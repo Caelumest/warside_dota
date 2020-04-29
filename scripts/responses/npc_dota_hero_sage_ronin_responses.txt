@@ -1,0 +1,448 @@
+"Sage_RoninResponses"
+{
+    "OnMoveOrder"
+    {
+        "Cooldown"    "8"
+
+        "Sounds"
+        {
+            "sage_ronin_move"          "1"
+        }
+    }
+    "OnAttackOrder"
+    {
+        "Cooldown"    "8"
+
+        "Sounds"
+        {
+            "sage_ronin_attack"           "1"
+        }
+    }
+    "OnFirstSpawn"
+    {
+        "Priority"  "2"
+        "Delay"     "1.5"
+        "Sounds"
+        {
+            "sage_ronin_first_spawn"      "1"
+        }
+    }
+    "OnHeroKill"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_kill"      "1"
+        }
+
+    }
+    "OnAllyThanks"
+    {
+        "Priority"  "2"
+        "Cooldown"  "10"
+        "Global"    "2"
+        "Sounds"
+        {
+            "sage_ronin_thanks"      "1"
+        }
+    }
+    "OnGlobalThanks"
+    {
+        "Priority"  "2"
+        "Cooldown"  "10"
+        "Global" "1"
+        "Sounds"
+        {
+            "sage_ronin_thanks"      "1"
+        }
+    }
+    "OnAllyLaugh"
+    {
+        "Priority"  "2"
+        "Cooldown"  "10"
+        "Global"    "2"
+        "Sounds"
+        {
+            "sage_ronin_laugh"      "1"
+        }
+    }
+    "OnGlobalLaugh"
+    {
+        "Priority"  "2"
+        "Cooldown"  "10"
+        "Global" "1"
+        "Sounds"
+        {
+            "sage_ronin_laugh"      "1"
+        }
+    }
+    "OnDeath"
+    {
+        "Priority"  "2"
+        "AllChat"   "1"
+        "Sounds"
+        {
+            "sage_ronin_death" "1"
+        }
+    }
+    "OnGameStart"
+    {
+        "Priority"  "3"
+        "Delay"     "1"
+
+        "Sounds"
+        {
+            "sage_ronin_battle_begin"      "1"
+        }
+    }
+    "OnCreepDeny"
+    {
+        "Priority"  "1"
+        "Cooldown"  "20"
+        "AllChat"   "1"
+
+        "Sounds"
+        {
+            "sage_ronin_deny"      "1"
+        }
+    }
+    "OnCreepKill"
+    {
+        "Priority"  "1"
+        "Delay"     "0.5"
+        "Cooldown"  "20"
+
+        "Sounds"
+        {
+            "sage_ronin_lasthit"       "1"
+        }
+    }
+    "OnBuyback"
+    {
+        "Priority"  "2"
+        "AllChat"   "1"
+        "Delay"     "1"
+        "Global"    "1"
+        "Cooldown"  "6"
+        "Sounds"
+        {
+            "sage_ronin_respawn"       "1"
+        }
+    }
+    "OnSpawn"
+    {
+        "Priority"  "2"
+        "Delay"     "1.5"
+        "Cooldown"  "6"
+        "Sounds"
+        {
+            "sage_ronin_respawn"       "1"
+        }
+    }
+    "OnTakeDamage"
+    {
+        "Priority"  "1"
+        "Cooldown"  "20"
+        "Sounds"
+        {
+            "sage_ronin_pain"  "1"
+        }
+    }
+    "OnFirstBlood"
+    {
+        "Priority"  "3"
+        "Allchat"   "1"
+        "Global"    "1"
+        "Delay"     "2"
+
+        "Sounds"
+        {
+            "sage_ronin_first_blood"      "1"
+        }
+    }
+    "OnItemPickup"
+    {
+         "item_aegis"
+        {
+            "Priority"  "2"
+            "Delay"     "1"
+            "Global"    "1"
+            "Sounds"
+            {
+                "sage_ronin_aegis_pick"     "1"
+            }
+        }
+    }
+    "OnReincarnate"
+    {
+        "Priority"  "3"
+        "AllChat"   "1"
+        "Sounds"
+        {
+            "sage_ronin_reincarnate" "1"
+        }
+    }
+    "OnKillLightHeroes"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_light"      "1"
+        }
+    }
+    "OnKillTwins"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_twins"      "1"
+        }
+    }
+    "OnKillAntimage"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_antimage"      "1"
+        }
+    }
+    "OnKillJuggernaut"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_juggernaut"      "1"
+        }
+    }
+    "OnKillDarker"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_darker"      "1"
+        }
+    }
+    "OnKillShapeshifter"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_shapeshifter"      "1"
+        }
+    }
+    "OnKillEmber"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_ember"      "1"
+        }
+    }
+    "OnKillSky"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_skywrath"      "1"
+        }
+    }
+    "OnKillDemon"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_demon"      "1"
+        }
+    }
+    "OnKillSven"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_sven"      "1"
+        }
+    }
+    "OnKillOracle"
+    {
+        "Priority"  "2"
+        "Cooldown"  "5"
+        "AllChat"   "1"
+        "Delay"     "3"
+
+        "Sounds"
+        {
+            "sage_ronin_rival_oracle"      "1"
+        }
+    }
+    "OnLvlUp"
+    {
+        "Priority"  "2"
+        "Cooldown"  "10"
+        "Delay"     "1.5"
+
+        "Sounds"
+        {
+            "sage_ronin_lvlup"      "1"
+        }
+    }
+    "OnVictory"
+    {
+        "Priority"  "2"
+        "Delay" "8"
+        "Sounds"
+        {
+            "sage_ronin_victory"      "1"
+        }
+    }
+    "OnDefeat"
+    {
+        "Priority"  "2"
+        "Delay" "8"
+        "Sounds"
+        {
+            "sage_ronin_defeat"      "1"
+        }
+    }
+    "OnDoubleDamageRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "sage_ronin_dd"      "1"
+        }
+    }
+
+    "OnHasteRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "sage_ronin_haste"      "1"
+        }
+    }
+
+    "OnIllusionRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "sage_ronin_ilu"      "1"
+        }
+    }
+
+    "OnInvisibilityRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "sage_ronin_inv"      "1"
+        }
+    }
+
+    "OnRegenRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "sage_ronin_regen"      "1"
+        }
+    }
+
+    "OnBountyRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "sage_ronin_bounty"      "1"
+        }
+    }
+    
+    "OnArcaneRune"
+    {
+        "Priority"  "2"
+        "Global" "2"
+        "Delay" "0.5"
+        "Sounds"
+        {
+            "sage_ronin_arcane"      "1"
+        }
+    }
+    "OnMeetZeus"
+    {
+        "Priority"  "2"
+        "AllChat"   "1"
+        "Delay"     "0.5"
+
+        "Sounds"
+        {
+            "sage_ronin_meet_zeus"      "1"
+        }
+    }
+    "OnMeetSkywrath"
+    {
+        "Priority"  "2"
+        "AllChat"   "1"
+        "Delay"     "0.5"
+
+        "Sounds"
+        {
+            "sage_ronin_meet_skywrath"      "1"
+        }
+    }
+}

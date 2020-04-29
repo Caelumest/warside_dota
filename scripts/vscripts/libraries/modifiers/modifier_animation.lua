@@ -14,8 +14,10 @@ local _CODE_TO_ANIMATION_TRANSLATE = {
   [11] = "wardstaff",
   [12] = "lightning",
   [13] = "juggle_gesture",
-  [14] = "favor",
+  [14] = "ti8",
   [15] = "forcestaff_friendly",
+  [16] = "forcestaff_friendly",
+  [17] = "jog",
 }
 
 function modifier_animation:OnCreated(keys) 

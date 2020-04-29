@@ -18,7 +18,6 @@ function WarsideDotaGameMode:OnGameStateChanged()
       "npc_dota_hero_tidehunter",
       "npc_dota_hero_razor",
       "npc_dota_hero_legion_commander",
-      "npc_dota_hero_dragon_knight",
       "npc_dota_hero_lone_druid",
       "npc_dota_hero_keeper_of_the_light",
       "npc_dota_hero_monkey_king"}
@@ -27,6 +26,7 @@ function WarsideDotaGameMode:OnGameStateChanged()
       "npc_dota_hero_axe",
       "npc_dota_hero_skywrath_mage",
       "npc_dota_hero_nevermore",
+      "npc_dota_hero_dragon_knight",
       "npc_dota_hero_pudge",
       "npc_dota_hero_phantom_assassin",
       "npc_dota_hero_skeleton_king",
@@ -112,11 +112,18 @@ function WarsideDotaGameMode:OnGameStateChanged()
             print("Adding bots in empty slots")
             local delay = 0
             local ids = 1
-            for i=1, 5 do
+            nextBotId = totalradiant
+            
               Timers:CreateTimer(HERO_SELECTION_TIME, function ()
+            for i=1, 5 do    
                 local botsToRadiant = 5 - totalradiant
                 local botsToDire = 5 - totaldire
+                
                 if botsToRadiant > 0 then
+                  if not heroTimerPicker then
+                    heroTimerPicker = 0
+                  end
+                  Timers:CreateTimer(heroTimerPicker, function ()
                   print("TOTAL IF", totalplayers)
                   while nomebot == nil or nomebot==PlayerResource:GetSelectedHeroName(0) or nomebot==PlayerResource:GetSelectedHeroName(1) or nomebot==PlayerResource:GetSelectedHeroName(2) or nomebot==PlayerResource:GetSelectedHeroName(3) or nomebot==PlayerResource:GetSelectedHeroName(4) or nomebot==PlayerResource:GetSelectedHeroName(5) or nomebot==PlayerResource:GetSelectedHeroName(6) or nomebot==PlayerResource:GetSelectedHeroName(7) or nomebot==PlayerResource:GetSelectedHeroName(8) or nomebot==PlayerResource:GetSelectedHeroName(9) do
                     randomNum = RandomInt(0,#workingBots)
@@ -125,11 +132,18 @@ function WarsideDotaGameMode:OnGameStateChanged()
                     nomebot = workingBots[randomNum]
                   end
                   print("Nomebot outside while",nomebot)
-                  Tutorial:AddBot(nomebot, "","", true)
+                    Tutorial:AddBot(nomebot, "","", true)
+                    PlayerResource:SetGold(nextBotId, starting_Gold, false);
+                    nextBotId = nextBotId + 1
+                  end)
+                  
+                    print("nextBotId", nextBotId)
+                  heroTimerPicker = heroTimerPicker + 4
                   totalradiant = totalradiant + 1
                   print("Total radiant:", totalradiant)
                 end
                 if botsToDire > 0 then
+                  Timers:CreateTimer(heroTimerPicker, function ()
                   print("TOTAL IF", totalplayers)
                   while nomebot == nil or nomebot==PlayerResource:GetSelectedHeroName(0) or nomebot==PlayerResource:GetSelectedHeroName(1) or nomebot==PlayerResource:GetSelectedHeroName(2) or nomebot==PlayerResource:GetSelectedHeroName(3) or nomebot==PlayerResource:GetSelectedHeroName(4) or nomebot==PlayerResource:GetSelectedHeroName(5) or nomebot==PlayerResource:GetSelectedHeroName(6) or nomebot==PlayerResource:GetSelectedHeroName(7) or nomebot==PlayerResource:GetSelectedHeroName(8) or nomebot==PlayerResource:GetSelectedHeroName(9) do
                     randomNum = RandomInt(0,#workingBots)
@@ -140,16 +154,21 @@ function WarsideDotaGameMode:OnGameStateChanged()
          
                   print("Nomebot outside while",nomebot)
                   Tutorial:AddBot(nomebot, "","", false)
+                  PlayerResource:SetGold(nextBotId, starting_Gold, false);
+                    nextBotId = nextBotId + 1
+                  end)
+                  heroTimerPicker = heroTimerPicker + 4
                   totaldire = totaldire + 1
                   print("Total dire:", totaldire)
                 end
                 delay = delay + 2
+             end   
               end)
-            end
+            
             print("Players total",totalplayers)
             for helper=0,9 do
               print(helper,"<< Num  Hero>>",PlayerResource:GetSelectedHeroName(helper))
-         
+              --PlayerResource:SetGold(helper, starting_Gold, false);
             end
             --GameRules:GetGameModeEntity():SetBotThinkingEnabled(true)
             --SendToServerConsole("dota_bot_populate")

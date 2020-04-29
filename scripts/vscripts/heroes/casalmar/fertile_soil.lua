@@ -29,7 +29,7 @@ function fertile_soil:OnSpellStart()
 			formation_delay = 0
 		else
 			-- Cast sound
-			caster:EmitSound("Hero_Jeremy.RedMistArena.Start")
+			caster:EmitSound("Hero_Casalmar.Arena.Start")
 		end
 
 		-- Formation particle
@@ -48,9 +48,9 @@ function fertile_soil:OnSpellStart()
 			caster:EmitSound("Hero_Tusk.IceShards")
 			-- Sound talent adjustments
 			if caster:FindAbilityByName("special_bonus_unique_casalmar_arena_duration") and caster:FindAbilityByName("special_bonus_unique_casalmar_arena_duration"):GetLevel() > 0 then
-				caster:EmitSound("Hero_Jeremy.RedMistArena.Erupt.Long")
+				caster:EmitSound("Hero_Casalmar.Arena.Erupt.Long")
 			else
-				caster:EmitSound("Hero_Jeremy.RedMistArena.Erupt")
+				caster:EmitSound("Hero_Casalmar.Arena.Erupt")
 			end
 		end)
 		-- self:SetActivated(false)
@@ -309,7 +309,7 @@ function modifier_troy_the_arena_check_position:kineticize(caster, target, abili
 				should_stun = 1,
 				duration = 0.6,
 			}
-			target:EmitSound("Hero_Jeremy.RedMistArena.Knockback")
+			target:EmitSound("Hero_Casalmar.Arena.Knockback")
 			target:RemoveModifierByName("modifier_knockback")
 			target:AddNewModifier(caster, ability, "modifier_knockback", knockbackTable)
 			target:AddNewModifier(caster, ability, "modifier_troy_the_arena_knockback", {duration = wall_hit_duration})
@@ -330,7 +330,7 @@ function modifier_troy_the_arena_check_position:kineticize(caster, target, abili
 				should_stun = 1,
 				duration = 0.6,
 			}
-			target:EmitSound("Hero_Jeremy.RedMistArena.Knockback")
+			target:EmitSound("Hero_Casalmar.Arena.Knockback")
 			target:RemoveModifierByName("modifier_knockback")
 			target:AddNewModifier(caster, ability, "modifier_knockback", knockbackTable)
 			target:AddNewModifier(caster, ability, "modifier_troy_the_arena_knockback", {duration = wall_hit_duration})

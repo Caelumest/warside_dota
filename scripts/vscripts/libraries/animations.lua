@@ -68,7 +68,10 @@ local _ANIMATION_TRANSLATE_TO_CODE = {
   wardstaff = 11,
   lightning = 12,
   juggle_gesture = 13,
+  ti8 = 14,
   forcestaff_friendly = 15,
+  chase = 16,
+  jog = 17,
 }
 
 function StartAnimation(unit, table)

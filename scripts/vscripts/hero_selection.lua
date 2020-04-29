@@ -545,7 +545,8 @@ function HeroSelection:AssignHero(player_id, hero_name, dev_command)
 --		local has_repicked = PlayerResource:CustomGetHasRepicked(player_id)
 
 --		local initial_gold = tonumber(CustomNetTables:GetTableValue("game_options", "initial_gold")["1"]) or 600
-		local initial_gold = 600
+		if not starting_Gold then starting_Gold = 600 end
+		local initial_gold = starting_Gold
 
 --		if has_repicked and has_randomed then
 			PlayerResource:SetGold(player_id, initial_gold +100, false)
@@ -630,20 +631,6 @@ function HeroSelection:CustomHeroAttachments(hero)
 		hero.weapon:SetRenderColor(200, 200, 200)
 	end
 
-	if hero_name == "casalmar" then
-		hero:SetRenderColor(155, 146, 80)
-	end
-
-	if hero_name == "andrax" then
-		hero.weapon = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/heroes/pangolier/pangolier_weapon.vmdl"})
-		hero.weapon:FollowEntity(hero, true)
-		hero.head = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/heroes/pangolier/pangolier_head.vmdl"})
-		hero.head:FollowEntity(hero, true)
-		hero.armor = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/heroes/pangolier/pangolier_armor.vmdl"})
-		hero.armor:FollowEntity(hero, true)
-		AddAnimationTranslate(hero, "walk")
-	end
-
 	if hero_name == "soul_tamer" then
     AddAnimationTranslate(hero, "walk")
     if not hero.soul then
@@ -672,31 +659,6 @@ function HeroSelection:CustomHeroAttachments(hero)
       ability:ApplyDataDrivenModifier(hero, hero, "modifier_soul_check_distance", {})
     end
   end
-
-	if hero_name == "krigler" then
-	AddAnimationTranslate(hero, "walk")
-      AddAnimationTranslate(hero, "arcana")
-      hero.weapon = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/heroes/krigler/jugg_sword.vmdl"})
-      hero.weapon:FollowEntity(hero, true)
-      hero.weapon:SetRenderColor(200, 200, 200)
-      hero.head = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/heroes/krigler/jugg_mask.vmdl"})
-      hero.head:FollowEntity(hero, true)
-      hero.head:SetRenderColor(200, 200, 200)
-      hero.pants = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/items/juggernaut/bladesrunner_legs/bladesrunner_legs.vmdl"})
-      hero.pants:FollowEntity(hero, true)
-      hero:AddNewModifier(hero, nil, "modifier_krigler_effects", {})
-  end
-	  if hero_name == "sage_ronin" then
-		  AddAnimationTranslate(hero, "walk")
-	      hero.weapon = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/heroes/krigler/jugg_sword.vmdl"})
-	      hero.weapon:FollowEntity(hero, true)
-	      hero.weapon:SetRenderColor(200, 200, 200)
-	      hero.head = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/heroes/krigler/jugg_mask.vmdl"})
-	      hero.head:FollowEntity(hero, true)
-	      hero.head:SetRenderColor(200, 200, 200)
-	      hero.pants = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/items/juggernaut/bladesrunner_legs/bladesrunner_legs.vmdl"})
-	      hero.pants:FollowEntity(hero, true)
-	  end
 
 	if hero_name == "lathaal" then
 		hero.weapon = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/items/meepo/the_family_values_weapon/the_family_values_weapon.vmdl"})

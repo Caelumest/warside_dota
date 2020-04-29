@@ -1,7 +1,9 @@
+LinkLuaModifier("modifier_dummy_projectile_sound", "modifiers/modifier_dummy_projectile_sound.lua", LUA_MODIFIER_MOTION_NONE)
 function wave_projectile (event)
 	caster	= event.caster
 	local ability	= event.ability
 	local maxDist = event.distance
+	local target = ability:GetCursorPosition()
 	main_ability = caster:FindAbilityByName("wave_blink")
 	sub_ability = caster:FindAbilityByName("wave_blink_sub")
 	local radius			= event.radius
@@ -41,7 +43,17 @@ function wave_projectile (event)
 		iVisionRadius		= visionRadius,
 		iVisionTeamNumber	= caster:GetTeamNumber(),
 	} )
-	EmitSoundOn( "Hero_Magnataur.ShockWave.Particle", caster )
+	target.z = 0
+	local caster_point = caster:GetAbsOrigin()
+	caster_point.z = 0
+	local velocity = caster:GetForwardVector() * speed
+	local wave_duration = maxDist / speed
+	local point_difference_normalized = (target - caster_point):Normalized()
+	local wave_velocity_per_frame = velocity * .05
+	wave_dummy_unit = CreateUnitByName("npc_dota_creature_spirit_vessel", caster:GetAbsOrigin(), false, caster, caster, caster:GetTeam())
+	wave_dummy_unit.velocity_per_frame = velocity * .05
+	wave_dummy_unit:AddNewModifier(caster, ability, "modifier_dummy_projectile_sound", {duration = wave_duration, distance = maxDist, endTime = endTime, velocity_per_frame = wave_velocity_per_frame, frames = 0.05})
+	EmitSoundOn( "Hero_Magnataur.ShockWave.Particle", wave_dummy_unit )
 end
 
 function wave_damage( keys )
@@ -60,6 +72,7 @@ function wave_damage( keys )
 		EmitSoundOn( "Hero_Magnataur.ShockWave.Target", target )
 	end
 	if target:IsHero() then
+		wave_dummy_unit:RemoveSelf()
 		caster:RemoveModifierByName("modifier_hide_ability")
 		EmitSoundOn( "Hero_Magnataur.Attack.Anvil", target )
 		ProjectileManager:DestroyLinearProjectile( projID )
@@ -84,7 +97,15 @@ function StartSub()
     main_ability:ApplyDataDrivenModifier(caster, target, "modifier_wave_blink", {})
     sub_ability:ApplyDataDrivenModifier(caster, caster, "modifier_cant_walk", {})
     StartAnimation(caster, {duration=1, activity=ACT_DOTA_FLAIL, rate=1, translate="forcestaff_friendly"})
-    Timers:CreateTimer(0.3, function () FreezeAnimation(caster, 4) end)
+    Timers:CreateTimer(0.3, function () 
+    	if caster:HasModifier("modifier_cant_walk") then
+    		FreezeAnimation(caster, 4)
+    	else
+    		UnfreezeAnimation(caster)
+	    	AddAnimationTranslate(caster, "walk")
+      		AddAnimationTranslate(caster, "arcana")
+      	end
+    end)
     EmitSoundOn("Hero_Huskar.Life_Break", caster)
     caster:SetForwardVector(target:GetAbsOrigin())
     -- Motion Controller Data
@@ -194,6 +215,7 @@ function CheckArea()
 		local distance = (target_loc - caster_loc):Length2D()
 		if caster:HasModifier("modifier_hide_ability") == false then
 			caster:RemoveModifierByName("modifier_cant_walk")
+
 		    --EndAnimation(caster)
 		end
 		if talent:GetLevel() > 0 then

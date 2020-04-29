@@ -229,6 +229,7 @@ function VoiceResponses:OnUnitDeath(event)
     if reincarnateflag == nil then
         reincarnateflag = 0
     end
+    --event.unit:StopSound
     local unitResponses = VoiceResponses.responses[event.unit:GetUnitName()]
     if unitResponses ~= nil and not event.unit:IsIllusion() and event.unit:IsReincarnating() then
         reincarnateflag = 1  
@@ -248,21 +249,23 @@ function VoiceResponses:OnUnitDeath(event)
                 else
                     local random = RandomInt(1, 3) --Add a 33% chance to occur
                     print(random)
-                    if event.attacker:GetUnitName() == "npc_dota_hero_krigler" and random == 3 then
-                        if event.unit:GetUnitName() == "npc_dota_hero_viper" then
+                    if random == 3 then
+                        if event.unit:GetUnitName() == "npc_dota_hero_viper" and event.attacker:GetUnitName() == "npc_dota_hero_krigler" then
                             self:TriggerSound("OnKillViper", event.attacker, unitResponses)
-                        elseif event.unit:GetUnitName() == "npc_dota_hero_casalmar" then
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_casalmar" and event.attacker:GetUnitName() == "npc_dota_hero_krigler" then
                             self:TriggerSound("OnKillCasalmar", event.attacker, unitResponses)
-                        elseif event.unit:GetUnitName() == "npc_dota_hero_omniknight" then
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_omniknight" and event.attacker:GetUnitName() == "npc_dota_hero_krigler" then
                             self:TriggerSound("OnKillOmni", event.attacker, unitResponses)
-                        elseif event.unit:GetUnitName() == "npc_dota_hero_skeleton_king" then
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_skeleton_king" and event.attacker:GetUnitName() == "npc_dota_hero_krigler" then
                             self:TriggerSound("OnKillWk", event.attacker, unitResponses)
-                        elseif event.unit:GetUnitName() == "npc_dota_hero_pudge" then
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_pudge" and event.attacker:GetUnitName() == "npc_dota_hero_krigler" then
                             self:TriggerSound("OnKillPudge", event.attacker, unitResponses)
-                        elseif event.unit:GetUnitName() == "npc_dota_hero_alchemist" then
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_alchemist" and event.attacker:GetUnitName() == "npc_dota_hero_krigler" then
                             self:TriggerSound("OnKillAlche", event.attacker, unitResponses)
-                        elseif event.unit:GetUnitName() == "npc_dota_hero_sniper" then
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_sniper" and event.attacker:GetUnitName() == "npc_dota_hero_krigler" then
                             self:TriggerSound("OnKillSniper", event.attacker, unitResponses)
+                        elseif event.unit:GetUnitName() == "npc_dota_hero_keeper_of_the_light" or event.unit:GetUnitName() == "npc_dota_hero_wisp" or event.unit:GetUnitName() == "npc_dota_hero_chen" and event.attacker:GetUnitName() == "npc_dota_hero_sage_ronin" then
+                            self:TriggerSound("OnKillLightHeroes", event.attacker, unitResponses)
                         elseif event.unit:IsReincarnating() == false then
                             self:TriggerSound("OnHeroKill", event.attacker, unitResponses)
                         end
@@ -383,25 +386,26 @@ function VoiceResponses:OnPlayerChat(event)
     local hero = PlayerResource:GetSelectedHeroEntity(event.playerid)
     local heroname = PlayerResource:GetSelectedHeroName(event.playerid)
     local unitResponses = VoiceResponses.responses[hero:GetUnitName()]
+    if unitResponses then
+        if event.teamonly == 1 then
+            teamResponse = "Ally"
+        else
+            teamResponse = "Global"
+        end
 
-    if event.teamonly == 1 then
-        teamResponse = "Ally"
-    else
-        teamResponse = "Global"
-    end
+        if teamResponse == nil then
+            teamResponse = ""
+        end
 
-    if teamResponse == nil then
-        teamResponse = ""
-    end
-
-    if text:lower() == 'lol' or text:lower() == 'jaja' or text:lower() == 'haha' then
-        suffix = "Laugh"
-    elseif text:lower() == "ty" or text:lower() == "thx" or text:lower() == "thanks" or text:lower() == "vlw" or text:lower() == "obrigado" or text:lower() == "obg" then
-        suffix = "Thanks"
-    end
-    if suffix and GetKeyValueByHeroName(heroname, "IsCustom") == 1 then
-        self:TriggerSound("On"..teamResponse..suffix, hero, unitResponses)
-        suffix = nil
+        if text:lower() == 'lol' or text:lower() == 'jaja' or text:lower() == 'haha' then
+            suffix = "Laugh"
+        elseif text:lower() == "ty" or text:lower() == "thx" or text:lower() == "thanks" or text:lower() == "vlw" or text:lower() == "obrigado" or text:lower() == "obg" then
+            suffix = "Thanks"
+        end
+        if suffix and GetKeyValueByHeroName(heroname, "IsCustom") == 1 then
+            self:TriggerSound("On"..teamResponse..suffix, hero, unitResponses)
+            suffix = nil
+        end
     end
 end
 

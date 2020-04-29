@@ -2,17 +2,17 @@ function WarsideDotaGameMode:ToggleStartingGold(event)
   local startingGold = event.startingGold
   
   if tostring(startingGold) == 'GoldOption1' then
-    starting_Gold = 600 - 600
+    starting_Gold = 600
   elseif tostring(startingGold) == 'GoldOption2' then
-    starting_Gold = 1000 - 600
+    starting_Gold = 1000
   elseif tostring(startingGold) == 'GoldOption3' then
-    starting_Gold = 1400 - 600
+    starting_Gold = 1400
   elseif tostring(startingGold) == 'GoldOption4' then
-    starting_Gold = 1800 - 600
+    starting_Gold = 1800
   elseif tostring(startingGold) == 'GoldOption5' then
-    starting_Gold = 2200 - 600
+    starting_Gold = 2200
   end
-  GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>" .. starting_Gold + 600 .."</font>", 2, 1)
+  GameRules:SendCustomMessage("Starting Gold = <font color='#0F0'>" .. starting_Gold .."</font>", 2, 1)
   print("START",starting_Gold)
 end
 
@@ -20,15 +20,15 @@ function WarsideDotaGameMode:ToggleMultiplierGold(event)
   local multiplierGold = event.multiplierGold
 
   if tostring(multiplierGold) == 'MultiplierOption1' then
-    multiplier_Gold = 0
-  elseif tostring(multiplierGold) == 'MultiplierOption2' then
     multiplier_Gold = 1
-  elseif tostring(multiplierGold) == 'MultiplierOption3' then
+  elseif tostring(multiplierGold) == 'MultiplierOption2' then
     multiplier_Gold = 2
-  elseif tostring(multiplierGold) == 'MultiplierOption4' then
+  elseif tostring(multiplierGold) == 'MultiplierOption3' then
     multiplier_Gold = 3
+  elseif tostring(multiplierGold) == 'MultiplierOption4' then
+    multiplier_Gold = 4
   end
-  GameRules:SendCustomMessage("Gold Multiplier = <font color='#0F0'>" .. multiplier_Gold + 1 .."x</font>", 2, 1)
+  GameRules:SendCustomMessage("Gold Multiplier = <font color='#0F0'>" .. multiplier_Gold .."x</font>", 2, 1)
   print("MULT",multiplier_Gold)
 end
 
@@ -36,15 +36,15 @@ function WarsideDotaGameMode:ToggleMultiplierExp(event)
   local multiplierExp = event.multiplierExp
   
   if tostring(multiplierExp) == 'ExpOption1' then
-    multiplier_Exp = 0
-  elseif tostring(multiplierExp) == 'ExpOption2' then
     multiplier_Exp = 1
-  elseif tostring(multiplierExp) == 'ExpOption3' then
+  elseif tostring(multiplierExp) == 'ExpOption2' then
     multiplier_Exp = 2
-  elseif tostring(multiplierExp) == 'ExpOption4' then
+  elseif tostring(multiplierExp) == 'ExpOption3' then
     multiplier_Exp = 3
+  elseif tostring(multiplierExp) == 'ExpOption4' then
+    multiplier_Exp = 4
   end
-  GameRules:SendCustomMessage("EXP Multiplier = <font color='#0F0'>" .. multiplier_Exp + 1 .."x</font>", 2, 1)
+  GameRules:SendCustomMessage("EXP Multiplier = <font color='#0F0'>" .. multiplier_Exp .."x</font>", 2, 1)
   print("MAMAMAMAMAMA",multiplier_Exp)
 end
 

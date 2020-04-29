@@ -1,5 +1,43 @@
 "DOTAAbilities"
 {
+    "ronin_precaches"
+    {
+        "BaseClass"                 "ability_datadriven"
+        "AbilityTextureName"        ""
+
+        "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+        "AbilityType"               "DOTA_ABILITY_TYPE_BASIC"
+        "precache"
+        {
+            "model"     "models/items/juggernaut/fire_of_the_exiled_ronin/fire_of_the_exiled_ronin.vmdl"
+            "model"     "models/items/dragon_knight/oblivion_blazer_head/oblivion_blazer_head.vmdl"
+            "model"     "models/items/juggernaut/dc_legsupdate5/dc_legsupdate5.vmdl"
+            "model"     "models/items/juggernaut/thousand_faces_vest/thousand_faces_vest.vmdl"
+            "soundfile" "soundevents/voscripts/game_sounds_vo_sage_ronin.vsndevts"
+            "soundfile" "soundevents/game_sounds_heroes/game_sounds_sage_ronin.vsndevts"
+        }
+        "Modifiers"
+        {
+            "modifier_ronin_check_injured"
+            {
+                "Passive"           "1"
+                "IsHidden"          "1"
+                "IsPurgable"        "0"
+                "IsDebuff"          "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+        
+                "ThinkInterval"  "0.1"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                        "Function"      "CheckIfInjured"
+                    }
+                }
+            }
+        }
+    }
     "ronin_dash"
     {
         "BaseClass"                 "ability_datadriven"
@@ -10,22 +48,19 @@
         "AbilityType"               "DOTA_ABILITY_TYPE_BASIC"
         "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
         "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
-        "SpellImmunityType"         "SPELL_IMMUNITY_ENEMIES_YES"
+        "SpellImmunityType"         "SPELL_IMMUNITY_ENEMIES_NO"
         "AbilityCastRange"          "250"
         "AbilityCastPoint"          "0"
-        "AbilityCooldown"           "0.5"
-        "AbilityManaCost"           "10"
+        "AbilityCooldown"           "2 1.4 0.8 0.2"
+        "AbilityManaCost"           "25"
 
         "AbilityCastAnimation"      "ACT_DOTA_CAST_ABILITY_1"
 
         "precache"
         {
             "particle"  "particles/ui_mouseactions/range_finder_tower_aoe_ring.vpcf"
-            "particle"  "particles/units/heroes/hero_troy/troy_arena_lava.vpcf"
-            "soundfile" "gsoundevents/game_sounds_heroes/game_sounds_earth_jeremy.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_earth_spirit.vsndevts"
+            "particle"  "particles\units\heroes\hero_brewmaster\brewmaster_windwalk.vpcf"
             "soundfile" "soundevents/game_sounds_heroes/game_sounds_brewmaster.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_tusk.vsndevts"
         }
 
         "AbilitySpecial"
@@ -33,19 +68,20 @@
             "01"
             {
                 "var_type"              "FIELD_FLOAT"
-                "speed"                 "800"
+                "speed"                 "1000"
             }
             "02"
             {
                 "var_type"              "FIELD_INTEGER"
-                "target_cooldown"       "8 7 6 5"  //Needs to be an integer value for particle purposes on the .lua file
+                "target_cooldown"       "9 8 7 6"  //Needs to be an integer value for particle purposes on the .lua file
+                "LinkedSpecialBonus"        "special_bonus_unique_sage_ronin_3"
+
             }
             "03"
             {
                 "var_type"              "FIELD_FLOAT"
-                "duration"              "6.0"
-                "LinkedSpecialBonus"    "special_bonus_troy_arena_duration"
-            }
+                "damage"                "30 50 70 90"
+            }   
         }
         "OnSpellStart"
         {
@@ -66,12 +102,25 @@
             "modifier_ronin_dash"
             {
                 "Passive"           "0"
-                "IsHidden"          "0"
+                "IsHidden"          "1"
                 "IsDebuff"          "0"
+                "IsPurgable"        "0"
+                "EffectName"        "particles/status_fx/status_effect_forcestaff.vpcf"
+                "EffectAttachType"  "attach_origin"
+                "StatusEffectName"     "particles/status_fx/status_effect_forcestaff.vpcf"        
+                "StatusEffectPriority"  "15"
                 "States"
                 {
                     "MODIFIER_STATE_STUNNED"   "MODIFIER_STATE_VALUE_ENABLED"
                     "MODIFIER_STATE_DISARMED"   "MODIFIER_STATE_VALUE_ENABLED"
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_dash.lua"
+                        "Function"      "OnDestroy"
+                    }
                 }
             }
             "modifier_ronin_dash_count"
@@ -79,6 +128,23 @@
                 "Passive"           "0"
                 "IsHidden"          "0"
                 "IsDebuff"          "0"
+                "IsPurgable"        "1"
+            }
+            "modifier_ronin_dash_check_mana"
+            {
+                "Passive"           "1"
+                "IsHidden"          "1"
+                "IsDebuff"          "0"
+                "IsPurgable"        "0"
+                "ThinkInterval"     "0.01"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_dash.lua"
+                        "Function"      "CheckCurrentMana"
+                    }
+                }
             }
             "modifier_ronin_dash_target"
             {
@@ -86,6 +152,7 @@
                 "IsHidden"          "0"
                 "IsDebuff"          "1"
                 "ThinkInterval"     "1"
+                "IsPurgable"        "0"
                 "OnCreated"
                 {
                     "RunScript"
@@ -124,18 +191,15 @@
         "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
         "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
         "SpellImmunityType"         "SPELL_IMMUNITY_ENEMIES_YES"
-        "AbilityCooldown"           "5"
+        "AbilityCooldown"           "5.5"
         "AbilityCastPoint"          "0"
-        "AbilityManaCost"           "0"
+        "HasScepterUpgrade"         "1"
+        "AbilityManaCost"           "20"
 
         "precache"
         {
-            "particle"  "particles/units/heroes/hero_invoker/invoker_tornado.vpcf"
-            "particle"  "particles/ui_mouseactions/range_finder_tower_aoe_ring.vpcf"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_leshrac.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_earth_spirit.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_brewmaster.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_tusk.vsndevts"
+            "particle" "particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal.vpcf"
+            "soundfile" "soundevents/game_sounds_heroes/game_sounds_sage_ronin.vsndevts"
         }
 
         "AbilitySpecial"
@@ -143,7 +207,7 @@
             "01"
             {
                 "var_type"              "FIELD_FLOAT"
-                "cooldown"              "5"
+                "cooldown"              "5.5"
             }
             "02"
             {
@@ -153,8 +217,45 @@
             "03"
             {
                 "var_type"              "FIELD_FLOAT"
-                "bonus_damage"          "10 20 30 40"
+                "bonus_damage"          "20 30 40 50"
+                "LinkedSpecialBonus"    "special_bonus_unique_sage_ronin_1"
             }
+            "04"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "melee_distance"        "250"
+            }
+            "05"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "charge_duration"       "6.5"
+            }
+            "06"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "tornado_duration"      "6.5"
+                "LinkedSpecialBonus"    "special_bonus_unique_sage_ronin_4"
+            }
+            "07"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "tornado_stun_duration" "1"
+            }
+            "08"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "cd_reduct"             "1.4"
+            } 
+            "09"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "crit_bonus_scepter"    "180"
+            } 
+            "10"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "cd_reduct_scepter"     "1.8"
+            } 
         }
     }
     "ronin_puncture_tornado"
@@ -168,18 +269,16 @@
         "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
         "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
         "SpellImmunityType"         "SPELL_IMMUNITY_ENEMIES_YES"
-        "AbilityCooldown"           "5"
+        "AbilityCooldown"           "5.5"
         "AbilityCastPoint"          "0"
-        "AbilityManaCost"           "0"
+        "AbilityManaCost"           "20"
 
         "precache"
         {
-            "particle"  "particles/units/heroes/hero_invoker/invoker_tornado.vpcf"
-            "particle"  "particles/ui_mouseactions/range_finder_tower_aoe_ring.vpcf"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_leshrac.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_earth_spirit.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_brewmaster.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_tusk.vsndevts"
+            "particle" "particles\econ\items\invoker\invoker_ti6\invoker_tornado_ti6.vpcf"
+            "particle" "particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal.vpcf"
+            "particle"  "particles/units/heroes/hero_windrunner/windrunner_windrun.vpcf"
+            "soundfile" "soundevents/game_sounds_heroes/game_sounds_sage_ronin.vsndevts"
         }
 
         "AbilitySpecial"
@@ -187,7 +286,7 @@
             "01"
             {
                 "var_type"              "FIELD_FLOAT"
-                "cooldown"              "5"
+                "cooldown"              "5.5"
             }
             "02"
             {
@@ -197,8 +296,45 @@
             "03"
             {
                 "var_type"              "FIELD_FLOAT"
-                "bonus_damage"          "10 20 30 40"
+                "bonus_damage"          "20 30 40 50"
+                "LinkedSpecialBonus"    "special_bonus_unique_sage_ronin_1"
             }
+            "04"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "melee_distance"        "250"
+            }
+            "05"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "charge_duration"       "6.5"
+            }
+            "06"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "tornado_duration"      "6.5"
+                "LinkedSpecialBonus"    "special_bonus_unique_sage_ronin_4"
+            }
+            "07"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "tornado_stun_duration" "1"
+            } 
+            "08"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "cd_reduct"             "1.4"
+            } 
+            "09"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "crit_bonus_scepter"    "180"
+            } 
+            "10"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "cd_reduct_scepter"     "1.8"
+            } 
         }
     }
     "ronin_air_slash"
@@ -206,42 +342,40 @@
         "BaseClass"                 "ability_datadriven"
         "ScriptFile"                "heroes/sage_ronin/ronin_puncture_tornado.lua"
         "AbilityTextureName"        "ronin_air_slash"
-
+        "AbilityUnitDamageType"     "DAMAGE_TYPE_MAGICAL"
         "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
         "AbilityType"               "DOTA_ABILITY_TYPE_ULTIMATE"
         "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
-        "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO"
         "SpellImmunityType"         "SPELL_IMMUNITY_ENEMIES_YES"
-        "AbilityCooldown"           "5"
+        "AbilityCooldown"           "80 60 40"
         "AbilityCastPoint"          "0"
-        "AbilityManaCost"           "0"
+        "AbilityCastRange"          "900"
+        "AbilityDamage"             "300 450 600"
+        "AbilityManaCost"           "150 200 250"
 
         "precache"
         {
-            "particle"  "particles/units/heroes/hero_invoker/invoker_tornado.vpcf"
-            "particle"  "particles/ui_mouseactions/range_finder_tower_aoe_ring.vpcf"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_leshrac.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_earth_spirit.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_brewmaster.vsndevts"
-            "soundfile" "soundevents/game_sounds_heroes/game_sounds_tusk.vsndevts"
+            "particle"  "particles\units\heroes\hero_elder_titan\elder_titan_echo_stomp.vpcf"
+            "particle"  "particles/units/heroes/hero_ember_spirit/ember_spirit_sleightoffist_trail.vpcf"
         }
 
         "AbilitySpecial"
         {
             "01"
             {
-                "var_type"              "FIELD_FLOAT"
-                "cooldown"              "5"
+                "var_type"              "FIELD_INTEGER"
+                "find_radius"            "900"
             }
             "02"
             {
                 "var_type"              "FIELD_INTEGER"
-                "radius"                "350"
+                "sub_find_radius"       "400"
             }
             "03"
             {
-                "var_type"              "FIELD_FLOAT"
-                "bonus_damage"          "10 20 30 40"
+                "var_type"              "FIELD_INTEGER"
+                "damage_bonus"          "100 175 250"
             }
         }
         "OnSpellStart"
@@ -250,6 +384,12 @@
             {
                 "ScriptFile"    "heroes/sage_ronin/ronin_air_slash.lua"
                 "Function"      "PerformAirSlash"
+            }
+            "ApplyModifier"
+            {
+                "ModifierName"  "modifier_air_invul_caster"
+                "Target"        "CASTER"
+                "Duration"      "2"
             }
         }
         "OnUpgrade"
@@ -262,10 +402,25 @@
         }
         "Modifiers"
         {
+            "modifier_air_animation"
+            {
+                "IsHidden"      "1"
+                "OverrideAnimation"     "ACT_DOTA_ATTACK_TAUNT"
+            }
+            "modifier_air_invul_caster"
+            {
+                "IsHidden"          "1"
+                "IsPurgable"        "0"
+                "States"
+                {
+                    "MODIFIER_STATE_INVULNERABLE"   "MODIFIER_STATE_VALUE_ENABLED"
+                }
+            }
             "modifier_air_slash_checker"
             {
                 "Passive"           "1"
-                "IsHidden"          "0"
+                "IsHidden"          "1"
+                "IsPurgable"        "0"
                 "IsDebuff"          "0"
         
                 "ThinkInterval"  "0.01"
@@ -278,11 +433,25 @@
                     }
                 }
             }
+            "modifier_air_slash_dummy"
+            {
+                "States"
+                {
+                    "MODIFIER_STATE_STUNNED"   "MODIFIER_STATE_VALUE_ENABLED"
+                    "MODIFIER_STATE_INVULNERABLE" "MODIFIER_STATE_VALUE_ENABLED"
+                    "MODIFIER_STATE_NO_HEALTH_BAR" "MODIFIER_STATE_VALUE_ENABLED"
+                    "MODIFIER_STATE_UNSELECTABLE"   "MODIFIER_STATE_VALUE_ENABLED"
+                    "MODIFIER_STATE_COMMAND_RESTRICTED" "MODIFIER_STATE_VALUE_ENABLED"
+                    "MODIFIER_STATE_NOT_ON_MINIMAP" "MODIFIER_STATE_VALUE_ENABLED"
+                }
+            }
+
             "modifier_air_slash_debuff"
             {
                 "Passive"           "0"
                 "IsHidden"          "0"
                 "IsDebuff"          "0"
+                "IsPurgable"        "0"
                 "ThinkInterval"  "0.01"
                 "OnCreated"
                 {
@@ -316,15 +485,207 @@
             "modifier_air_slash_gesture"
             {
                 "Passive"           "0"
-                "IsHidden"          "0"
+                "IsHidden"          "1"
+                "IsPurgable"        "0"
                 "IsDebuff"          "0"
                 "OverrideAnimation" "ACT_DOTA_FLAIL"
             }
             "modifier_air_slash_can_slash"
             {
                 "Passive"           "0"
-                "IsHidden"          "0"
+                "IsHidden"          "1"
+                "IsPurgable"        "0"
                 "IsDebuff"          "0"
+            }
+        }
+    }
+    "ronin_flux"
+    {
+        "BaseClass"                 "ability_datadriven"
+        "AbilityTextureName"        "ronin_flux"
+        //"AbilityUnitDamageType"     "DAMAGE_TYPE_MAGICAL"
+        "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_AUTOCAST"
+        "AbilityType"               "DOTA_ABILITY_TYPE_BASIC"
+        //"AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        //"AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO"
+        "SpellImmunityType"         "SPELL_IMMUNITY_ENEMIES_YES"
+        "AbilityCooldown"           "0"
+        "AbilityCastPoint"          "0"
+        //"AbilityDamage"             "300 400 500"
+        "AbilityManaCost"           "0"
+
+        "precache"
+        {
+            "particle" "particles/econ/items/invoker/invoker_ti6/invoker_tornado_ti6.vpcf"
+            "particle" "particles/econ/items/juggernaut/jugg_sword_script/jugg_weapon_glow_variation_script.vpcf"
+            "soundfile" "soundevents/game_sounds_heroes/game_sounds_brewmaster.vsndevts" 
+        }
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "distance_needed"       "4000 3400 2800 2200"
+                "LinkedSpecialBonus"    "special_bonus_unique_sage_ronin_2"
+            }
+            "02"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "lifesteal"             "25"
+            }
+            "03"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "dmg_bonus"             "35"
+            }
+            "04"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "buff_duration"         "6"
+            }
+            "05"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "bonus_per_kill"        "2"
+            }
+        }
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                "Function"      "StartFlux"
+            }
+        }
+        "OnUpgrade"
+        {
+            "RunScript"
+            {
+                "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                "Function"      "SetActive"
+            }
+        }
+        "Modifiers"
+        {
+            "modifier_ronin_flux"
+            {
+                "Passive"           "1"
+                "IsPurgable"        "0"
+                "IsBuff"            "1"
+                "IsDebuff"          "0"
+                "IsHidden"          "1"
+                "IsStunDebuff"      "0"
+                "ThinkInterval"     "0.1"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+                "OnIntervalThink"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                        "Function"      "CheckDistance"
+                    }
+                }
+                "OnAttack"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                        "Function"      "OnAttackLanded"
+                    }
+                }
+                "OnHeroKilled"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                        "Function"      "OnHeroKill"
+                    }
+                }
+            }
+            "modifier_ronin_flux_stacks"
+            {
+                "Passive"           "1"
+                "IsPurgable"        "0"
+                "IsBuff"            "1"
+                "IsDebuff"          "0"
+                "IsStunDebuff"      "0"
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                        "Function"      "RemoveSwordEffects"
+                    }
+                }
+            }
+            "modifier_ronin_flux_buff"
+            {
+                "Passive"           "0"
+                "IsPurgable"        "1"
+                "IsBuff"            "1"
+                "IsDebuff"          "0"
+                "IsStunDebuff"      "0"
+                "Properties"
+                {
+                    "MODIFIER_PROPERTY_DAMAGEOUTGOING_PERCENTAGE" "%dmg_bonus"
+                }
+                "OnCreated"
+                {
+                    "FireEffect"
+                    {
+                        "EffectName"        "particles\units\heroes\hero_brewmaster\brewmaster_windwalk.vpcf"
+                        "EffectAttachType"  "attach_origin"
+                        "Target"            "CASTER"
+                    }
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                        "Function"      "AttachEffects"
+                    }
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                        "Function"      "RemoveEffects"
+                    }
+                }
+                "OnAttackLanded"
+                {
+                    "ActOnTargets"
+                    {
+                        "Target"
+                        {
+                            "Center"    "TARGET"
+                            "Teams"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
+                            "Types"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+                        }
+                    
+                        "Action"    
+                        {
+                            "Lifesteal"
+                            {
+                                "Target"            "ATTACKER"
+                                "LifestealPercent"  "%lifesteal"
+                            }
+                        }
+                    }
+                }
+            }
+            "modifier_flux_bonus_kills"
+            {
+                "Passive"           "0"
+                "IsPurgable"        "0"
+                "IsBuff"            "1"
+                "IsDebuff"          "0"
+                "IsStunDebuff"      "0"
+                "Attributes"        "MODIFIER_ATTRIBUTE_PERMANENT"
+                "Properties"
+                {
+                    "MODIFIER_PROPERTY_DAMAGEOUTGOING_PERCENTAGE" "2"
+                }
             }
         }
     }

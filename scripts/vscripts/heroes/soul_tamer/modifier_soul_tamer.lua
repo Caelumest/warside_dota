@@ -35,6 +35,7 @@ end
 
 function modifier_soul_tamer:DeclareFunctions()
     return {MODIFIER_PROPERTY_MOVESPEED_ABSOLUTE,
+    		MODIFIER_PROPERTY_FIXED_DAY_VISION,
 }
 end
 
@@ -42,13 +43,24 @@ function modifier_soul_tamer:GetModifierMoveSpeed_Absolute()
 	if self:GetParent():GetUnitName() == "npc_dota_creature_spirit_vessel" then
 		local caster = self:GetParent():GetOwner()
 		local talent = caster:FindAbilityByName("special_bonus_unique_tamer_5")
-		print("MOVESPEED", self:GetParent():GetBaseMoveSpeed() + talent:GetSpecialValueFor("value"))
-	    return 700 + talent:GetSpecialValueFor("value")
+	    return 800 + talent:GetSpecialValueFor("value")
 	else
 		local caster = self:GetParent()
 		local talent = caster:FindAbilityByName("special_bonus_unique_tamer_5")
-		print("MOVESPEED", self:GetParent():GetBaseMoveSpeed() + talent:GetSpecialValueFor("value"))
-	    return 700 + talent:GetSpecialValueFor("value")
+	    return 800 + talent:GetSpecialValueFor("value")
 	end
 end
 
+
+--[[function modifier_soul_tamer:GetFixedDayVision()
+	if self:GetParent():GetUnitName() == "npc_dota_creature_spirit_vessel" then
+		local caster = self:GetParent():GetOwner()
+		if not caster:IsAlive() then
+			print("MORTO", self:GetParent():GetCurrentVisionRange());
+			return 0;
+		else
+			print("VIVO", self:GetParent():GetCurrentVisionRange());
+			return 20000;
+		end
+	end
+end]]

@@ -8,8 +8,8 @@
         "AbilityTextureName"        "tamer_move"
         "MaxLevel"                      "1"
         "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_POINT"
-        "AbilityCastRange"          "800"
-        "AbilityCooldown"           "3"
+        "AbilityCastRange"          "900"
+        "AbilityCooldown"           "1"
         "AbilityCastAnimation"      "ACT_DOTA_CAST_ABILITY_1"
         "AnimationPlaybackRate"     "1.4"
         "AbilityCastPoint"          "0.1"
@@ -170,8 +170,8 @@
         "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
         "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO"
         "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_FRIENDLY"
-        "AbilityCastRange"          "800"
-        "AbilityCooldown"           "3"
+        "AbilityCastRange"          "900"
+        "AbilityCooldown"           "1"
         "AbilityCastAnimation"      "ACT_DOTA_CAST_ABILITY_1"
         "AnimationPlaybackRate"     "1.4"
         "AbilityCastPoint"          "0.1"
@@ -301,7 +301,7 @@
         "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO"
         "AbilityCastRange"          "500 550 600"
         "AbilityCastAnimation"      "ACT_DOTA_TELEPORT_END"
-        "AbilityCooldown"           "120 110 100"
+        "AbilityCooldown"           "100"
         "HasScepterUpgrade"         "1"
         "AbilityCastPoint"          "0.8"
         "AnimationPlaybackRate"     "0.6"
@@ -312,12 +312,12 @@
             "01"
             {
                 "var_type"  "FIELD_INTEGER"
-                "damage"    "40 80 120"
+                "damage"    "70 110 150"
             }
             "02"
             {
                 "var_type"      "FIELD_INTEGER"
-                "pull_speed"    "100 150 200"
+                "pull_speed"    "170 190 210"
             }
             "03"
             {
@@ -327,7 +327,7 @@
             "04"
             {
                 "var_type"  "FIELD_FLOAT"
-                "duration"  "4 4.5 5"
+                "duration"  "4.5 5 5.5"
             }
             "05"
             {
@@ -502,7 +502,7 @@
             "01"
             {
                 "var_type"  "FIELD_INTEGER"
-                "damage"    "150 220 290 360"
+                "damage"    "120 200 280 360"
                 "LinkedSpecialBonus" "special_bonus_unique_sobek_1"
             }
             "02"
@@ -693,7 +693,7 @@
         "AbilityCastRange"          ""
         "AbilityCooldown"           "15 13 11 9"
         "AbilityManaCost"           "80 90 100 110"
-        "AbilityDamage"             "120 180 240 300"
+        "AbilityDamage"             "110 180 250 320"
         "AbilityCastPoint"          "0.2"
         "AnimationPlaybackRate"     "1.22"
 
@@ -707,7 +707,7 @@
             "02"
             {
                 "var_type"  "FIELD_INTEGER"
-                "radius"    "150 175 200 225"
+                "radius"    "170 200 230 260"
             }
             "03"
             {
@@ -717,17 +717,17 @@
             "04"
             {
                 "var_type"  "FIELD_FLOAT"
-                "duration"  "2 2.5 3 3.5"
+                "duration"  "4"
             }
             "05"
             {
                "var_type"  "FIELD_FLOAT"
-                "slow"      "-25 -30 -35 -40" 
+                "slow"      "-35 -40 -45 -50" 
             }
             "06"
             {
                "var_type"  "FIELD_FLOAT"
-                "slowttp"      "25 30 35 40" 
+                "slowttp"      "35 40 45 50" 
             }
         }
         "precache"
@@ -773,29 +773,6 @@
                 {
                     "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE" "%slow" 
                 }
-            }
-        }
-    }
-    
-    // Talent: +15 Max Creep Stacks
-    //=================================================================================================================
-    "special_bonus_unique_sobek_1"
-    {
-        // General
-        //-------------------------------------------------------------------------------------------------------------
-        "BaseClass"                     "special_bonus_undefined"
-        "AbilityType"                   "DOTA_ABILITY_TYPE_ATTRIBUTES"
-        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"
-        "MaxLevel"  "1"
-        
-        // Special
-        //-------------------------------------------------------------------------------------------------------------
-        "AbilitySpecial"
-        {
-            "01"
-            {
-                "var_type"                  "FIELD_INTEGER"
-                "value"             "15"
             }
         }
     }

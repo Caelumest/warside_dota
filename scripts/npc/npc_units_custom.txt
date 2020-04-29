@@ -128,7 +128,7 @@
 		// Bounds
 		//----------------------------------------------------------------
 		"RingRadius"				"50"
-		"HealthBarOffset"			"170"
+		"HealthBarOffset"			"0"
 
 		// Bounty
 		//----------------------------------------------------------------
@@ -144,16 +144,16 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1100"		// Base health.
-		"StatusHealthRegen"			"1.5"		// Health regeneration rate.
-		"StatusMana"				"400"			// Base mana.
-		"StatusManaRegen"			"2.0"		// Mana regeneration rate.		
+		"StatusHealth"				"1"		// Base health.
+		"StatusHealthRegen"			"0"		// Health regeneration rate.
+		"StatusMana"				"1"			// Base mana.
+		"StatusManaRegen"			"0"		// Mana regeneration rate.		
 		"HasInventory"        		"0" // This KV must be added in units file only 
 		
 		// Vision
 		//----------------------------------------------------------------
-		"VisionDaytimeRange"		"200"		// Range of vision during day light.
-		"VisionNighttimeRange"		"200"		// Range of vision at night time.
+		"VisionDaytimeRange"		"0"		// Range of vision during day light.
+		"VisionNighttimeRange"		"0"		// Range of vision at night time.
 
 		// Team
 		//----------------------------------------------------------------
@@ -173,7 +173,7 @@
 	"npc_dota_hero_krigler"
   {
     "BaseClass"                 "npc_dota_hero"
-    "HeroID"                    "128"
+    "HeroID"                    "228"
     "Model"                    	"models/heroes/krigler/juggernaut.vmdl"
     "SoundSet"                  "Hero_Juggernaut"
     "IsCustom"					"1"
@@ -189,7 +189,7 @@
 
     "AttackCapabilities"        "DOTA_UNIT_CAP_MELEE_ATTACK"
     "AttackRange"               "150"
-    "AttackAnimationPoint"      "0.33"
+    "AttackAnimationPoint"      "0"
     "AttackSpeedActivityModifiers"
     {
       "fast"    "170"
@@ -260,7 +260,7 @@
   "npc_dota_hero_casalmar"
 	{
 		"BaseClass"					"npc_dota_hero"         // Hero to override
-		"HeroID"                    "129"
+		"HeroID"                    "159"
 		"IsCustom"                  "1"
 		"DisableWearables"          "1"
 		"precache"
@@ -503,7 +503,7 @@
     "IsCustom"					"1"
     "IsDisabled"				"0"
     "ModelScale"				"1"
-    "VoiceFile"					"soundevents/voscripts/game_sounds_vo_krigler.vsndevts"
+    "VoiceFile"					"soundevents/voscripts/game_sounds_vo_soul_tamer.vsndevts"
     "GameSoundsFile"            "soundevents/game_sounds_heroes/game_sounds_arc_warden.vsndevts"
     "Portrait"					"materials/vgui/hud/heroportraits/portrait_juggernaut"
 
@@ -525,7 +525,7 @@
     "precache"
 	{
 		"soundfile"         "soundevents/game_sounds_heroes/game_sounds_arc_warden.vsndevts"
-		"soundfile"    	    "soundevents/voscripts/game_sounds_vo_krigler.vsndevts"
+		"soundfile"    	    "soundevents/voscripts/game_sounds_vo_soul_tamer.vsndevts"
 		"model"				"models/heroes/krigler/jugg_mask.vmdl"
         "model"				"models/heroes/krigler/jugg_sword.vmdl"
         "model"				"models/items/juggernaut/bladesrunner_legs/bladesrunner_legs.vmdl"
@@ -587,13 +587,13 @@
   {
     "BaseClass"                 "npc_dota_hero"
     "HeroID"                    "132"
-    "Model"                    	"models/heroes/juggernaut/juggernaut.vmdl"
+    "Model"                    	"models/heroes/sage_ronin/juggernaut.vmdl"
     "SoundSet"                  "Hero_Juggernaut"
     "IsCustom"					"1"
     "IsDisabled"				"0"
     "ModelScale"				".93"
-    "VoiceFile"					"soundevents/voscripts/game_sounds_vo_krigler.vsndevts"
-    "GameSoundsFile"            "soundevents/game_sounds_heroes/game_sounds_krigler.vsndevts"
+    "VoiceFile"					"soundevents/voscripts/game_sounds_vo_sage_ronin.vsndevts"
+    "GameSoundsFile"            "soundevents/game_sounds_heroes/game_sounds_juggernaut.vsndevts"
     "Portrait"					"materials/vgui/hud/heroportraits/portrait_juggernaut"
 
     "MovementCapabilities"    "DOTA_UNIT_CAP_MOVE_GROUND"
@@ -609,47 +609,53 @@
       "faster"  "275"
       "fastest" "350"
     }
-	"AttackDamageMin"			"28"
-	"AttackDamageMax"			"32"
-	"AttackRate"				"1.63"
+    "precache"
+	{
+		"soundfile"         "soundevents/voscripts/game_sounds_vo_sage_ronin.vsndevts"
+		"soundfile"         "soundevents/game_sounds_heroes/game_sounds_sage_ronin.vsndevts"
+	}
+	"AttackDamageMin"			"27"
+	"AttackDamageMax"			"33"
+	"AttackRate"				"1.71"
 
-	"ArmorPhysical"				"-1.6"
+	"ArmorPhysical"				"-0.7"
 	"MagicalResistance" 		"25"
-	"StatusHealthRegen"			"1.6"
-	"StatusManaRegen"			"0.7"
+	"StatusHealthRegen"			"-0.6"
+	"StatusManaRegen"			"0"
 
 	"Role"						"Carry,Disabler,Jungler,Initiator,Durable,Escape"
 	"Rolelevels"				"2,2,1,2,1,1"
 	"Team"						"Bad"
-	"MovementSpeed"				"290"
+	"MovementSpeed"				"295"
 
 	"AttributePrimary"			"DOTA_ATTRIBUTE_AGILITY"
-	"AttributeBaseStrength"		"22"
-	"AttributeStrengthGain"		"1.9"
-	"AttributeBaseAgility"		"24"
-	"AttributeAgilityGain"		"3.0"
-	"AttributeBaseIntelligence"	"15"
-	"AttributeIntelligenceGain"	"1.4"
+	"AttributeBaseStrength"		"20"
+	"AttributeStrengthGain"		"2"
+	"AttributeBaseAgility"		"23"
+	"AttributeAgilityGain"		"2.7"
+	"AttributeBaseIntelligence"	"17"
+	"AttributeIntelligenceGain"	"1.5"
 
     "HealthBarOffset"       	"190"
 
     "RingRadius"                "60"
 
-    "Ability3"					"ronin_dash"
-	"Ability1"					"ronin_puncture"
-	"Ability2"					"generic_hidden"
+    "Ability1"					"ronin_puncture"
+	"Ability2"					"ronin_flux"
+	"Ability3"					"ronin_dash"
 	"Ability4"					"ronin_puncture_tornado"
 	"Ability5"					"generic_hidden"
 	"Ability6"					"ronin_air_slash"
+	"Ability9"					"ronin_precaches"
 
-    "Ability10"					"special_bonus_cleave_15"
-    "Ability11"					"special_bonus_strength_8"
-    "Ability12"					"special_bonus_unique_jugg_1"
-    "Ability13"					"special_bonus_agility_10"
-    "Ability14"					"special_bonus_hp_400"
-	"Ability15"					"special_bonus_unique_jugg_2"
-	"Ability16"					"special_bonus_strength_40"
-	"Ability17"					"special_bonus_unique_jugg_3"
+    "Ability10"					"special_bonus_movement_speed_20"
+	"Ability11"					"special_bonus_agility_10"
+	"Ability12"					"special_bonus_unique_sage_ronin_1"
+	"Ability13"					"special_bonus_unique_sage_ronin_3"
+	"Ability14"					"special_bonus_unique_sage_ronin_4"
+	"Ability15"					"special_bonus_unique_sage_ronin_2"
+	"Ability16"					"special_bonus_attack_speed_60"
+	"Ability17"					"special_bonus_magic_resistance_35"
     
 
     "CombatClassAttack"     "DOTA_COMBAT_CLASS_ATTACK_HERO"

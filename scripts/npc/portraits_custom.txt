@@ -64,7 +64,35 @@
 			}
 		}
 	}
-"models/heroes/soul_tamer/arc_warden.vmdl"
+	"models/heroes/soul_tamer/arc_warden.vmdl"
+	{
+		"PortraitLightPosition"		"216.20 222.46 466.35"
+		"PortraitLightAngles"		"48.42 239.86 0.00"
+		"PortraitLightFOV"		"69"
+		"PortraitLightDistance"		"378"
+		"PortraitLightColor"		"214 234 254"
+		"PortraitShadowColor"		"38 38 38"
+		"PortraitShadowScale"		"4.625000"
+		"PortraitAmbientColor"		"56 56 56"
+		"PortraitAmbientScale"		"5.000000"
+		"PortraitSpecularColor"		"251 74 84"
+		"PortraitBackgroundTexture"		"materials/portraits_card/portrait_backgrounds/drow.vmat"
+		"PortraitParticle"		"particles/units/heroes/hero_juggernaut/juggernaut_portrait.vpcf"
+		"PortraitLightScale"		"2.000000"
+		"PortraitGroundShadowScale"		"1.500000"
+		"PortraitAmbientDirection"		"-76.030 -78.600 -29.750"
+		"PortraitAnimationActivity"		"ACT_DOTA_IDLE"
+		"cameras"
+		{
+			"default"
+			{
+				"PortraitPosition"		"194.90 62.44 309.53"
+				"PortraitAngles"		"18.86 199.79 0.00"
+				"PortraitFOV"		"23"
+			}
+		}
+	}
+	"models/heroes/sage_ronin/juggernaut.vmdl"
 	{
 		"PortraitLightPosition"		"216.20 222.46 466.35"
 		"PortraitLightAngles"		"48.42 239.86 0.00"

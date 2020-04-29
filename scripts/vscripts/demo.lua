@@ -1,6 +1,6 @@
 function WarsideDotaGameMode:SetupDemoMode()
 	-- require("utility_functions")
-	GameRules:GetGameModeEntity():SetFixedRespawnTime( 4 )
+	--GameRules:GetGameModeEntity():SetFixedRespawnTime( 4 )
 	-- GameMode:SetBotThinkingEnabled( true ) -- the ConVar is currently disabled in C++
 	-- Set bot mode difficulty: can try GameMode:SetCustomGameDifficulty( 1 )
 	GameRules:SetPreGameTime( 0 )

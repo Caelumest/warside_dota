@@ -1,0 +1,170 @@
+// Dota Heroes File
+// NOTE: This isn't for creating new heroes, this is for taking a currently existing hero as a template and overriding
+// the specified key-value combinations.  Use override_hero <hero_to_override> for this.
+"DOTAHeroes"
+{
+	"npc_dota_hero_keeper_of_the_light"
+	{
+		"Enabled"					"1"
+		"override_hero"				"npc_dota_hero_keeper_of_the_light"
+		"Ability1"					"keeper_guardian_blessing"
+		"Ability2"					"keeper_light_armor"
+		"Ability3"					"keeper_amplify_magic"
+		"Ability6"					"spirit_form"
+		"Ability5"					"remove_spirit_form"
+		"Ability4"					"illuminate_datadriven"
+		"Ability7"					"keeper_blinding"
+		"Ability8"					"keeper_roar"
+		"Ability9"					"illuminate_end_datadriven"
+
+		"AttributePrimary"			"DOTA_ATTRIBUTE_INTELLECT"
+		"Ability13"					"special_bonus_cooldown_reduction_10"
+		"Ability14"					"special_bonus_magic_resistance_30"
+		"Ability15"					"special_bonus_gold_income_20"
+		"Ability16"					"special_bonus_attack_damage_100"
+		"Ability17"					"special_bonus_hp_400"
+		
+	}
+	"npc_dota_hero_custom"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"     "npc_dota_hero"
+		"DisableWearables"      "1"
+		"Enabled"               "0"
+		"HeroID"        "140"
+	}
+	"npc_dota_hero_lone_druid"
+	{
+		"override_hero"				"npc_dota_hero_lone_druid"
+		"Ability1"					"lone_savagery"
+		"Ability2"					"lone_heritage"
+		"Ability3"					"lone_loneliness"
+		"Ability6"					"lone_true_form"
+		"Ability5"					"lone_taunt"
+		"Ability4"					"lone_clap"
+		"Ability7"					"lone_roar"
+		"Ability8"					"lone_druid_remove_true_form"
+
+		"Ability10"					"special_bonus_hp_150"
+		"Ability12"					"special_bonus_attack_damage_30"
+		"Ability13"					"special_bonus_armor_6"
+		"Ability14"					"special_bonus_magic_resistance_20"
+		"Ability15"					"special_bonus_movement_speed_40"
+		"Ability16"					"special_bonus_hp_regen_25"
+		"Ability17"					"special_bonus_unique_lone_1"
+
+		"AttributePrimary"			"DOTA_ATTRIBUTE_STRENGTH"
+		"AttributeBaseStrength"		"21"
+		"AttributeStrengthGain"		"2.8"
+		"AttributeBaseIntelligence"	"16"
+		"AttributeIntelligenceGain"	"1.7"
+		"AttributeBaseAgility"		"19"
+		"AttributeAgilityGain"		"2"
+		"AttackRate"				"1.6"
+	}
+	"npc_dota_hero_monkey_king"
+	{
+		"Enabled"					"1"
+		"override_hero"				"npc_dota_hero_monkey_king"
+
+		"Ability4"					"mk_staff" //2
+		"Ability5"					"mk_distraction"//2
+		"Ability1"					"mk_knockup"//1
+		"Ability6"					"mk_sage_form"//1
+		"Ability7"					"mk_doppleganger"//2
+		"Ability2"					"mana_break_datadriven"//1
+		"Ability3"					"mk_mkb"//1
+		"Ability8"					"remove_mk_sage_form"//2
+
+		"Ability10"					"special_bonus_strength_7"
+		"Ability12"					"special_bonus_hp_200"
+		"Ability13"					"special_bonus_agility_10"
+		"Ability14"					"special_bonus_armor_6"
+		"Ability15"					"special_bonus_unique_mk_1"
+		"Ability16"					"special_bonus_cooldown_reduction_20"
+		"Ability17"					"special_bonus_unique_mk_2"
+
+		"AttributePrimary"			"DOTA_ATTRIBUTE_AGILITY"
+		
+
+	}
+	"npc_dota_hero_dragon_knight"
+	{
+		"AttachWearables"
+		{
+		    "Wearable1" 
+		    { "ItemDef" "63" }
+		    "Wearable2" 
+		    { "ItemDef" "64" }
+		    "Wearable3" 
+		    { "ItemDef" "65" }
+		    "Wearable4" 
+		    { "ItemDef" "66" }
+		    "Wearable5" 
+		    { "ItemDef" "67" }
+		    "Wearable6" 
+		    { "ItemDef" "68" }
+		}
+		"Enabled"					"1"
+		"override_hero"			"npc_dota_hero_dragon_knight"
+		"Ability1"					"dk_intimidate"
+		"Ability2"					"dk_shield_push"
+		"Ability3"					"dk_fire_sword"
+		"Ability6" 					"dk_dragon_form" 
+		"Ability5" 					"remove_dk_dragon_form"
+		"Ability4"					"dk_pull"
+		"Ability7"					"dk_breathe_fire"
+		"Ability8"					"dk_dragon_blood" 
+
+		"Ability10"					"special_bonus_mp_200"
+		"Ability11"					"special_bonus_mp_regen_3"
+		"Ability15"					"special_bonus_unique_dk_1" //10 right
+		"Ability17"					"special_bonus_unique_dk_2"
+		"AttributePrimary"			"DOTA_ATTRIBUTE_STRENGTH"
+		"AttributeAgilityGain"		"2.2"
+		"AttributeStrengthGain"		"2.7"
+		"AttributeIntelligenceGain"	"2.1"
+	}
+	"npc_dota_hero_legion_commander"
+	{
+	// General
+	//----------------------------------------------------------------
+	"override_hero"				"npc_dota_hero_legion_commander"
+
+	// Abilities
+	//---------------------------------------------------------------- 
+	"Ability1"					"legion_desintegrate" 
+	"Ability2"					"legion_courage" 
+	"Ability3"					"legion_expose_weakness"
+	"Ability6" 					"legion_demon_form" 
+	"Ability5" 					"remove_legion_demon_form"
+	"Ability4"					"legion_imprecise_smash"
+	"Ability7"					"legion_crit"
+	"Ability8"					"demon_blood"
+	"Ability9"					"legion_desintegrate_talent"
+
+	"Ability15"					"special_bonus_agility_15"
+	"Ability11"					"special_bonus_hp_regen_6"
+	"Ability13"					"special_bonus_magic_resistance_20"
+	"Ability16"					"special_bonus_all_stats_15"
+	"Ability17"					"special_bonus_unique_legion_1"
+	"Ability14"					"special_bonus_lifesteal_15"
+	
+	// Armor
+	//----------------------------------------------------------------
+	//"ArmorPhysical"				"0"
+
+	// Attributes
+	//----------------------------------------------------------------
+	"AttributePrimary"			"DOTA_ATTRIBUTE_AGILITY"
+	"AttributeAgilityGain"		"2.3"
+	"AttributeStrengthGain"		"2.1"
+	"AttributeIntelligenceGain"	"1.7"
+	
+	// Bounty
+	//----------------------------------------------------------------
+	//"BountyGoldMin"				"38.0"
+	//"BountyGoldMax"				"54.0"
+	}
+}

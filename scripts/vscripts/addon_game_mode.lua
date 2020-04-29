@@ -2,6 +2,10 @@
 require("lib.keyvalues")
 require("lib.timers")
 require("lib.responses")
+require("heroes/sage_ronin/sage_ronin_responses")
+require("heroes/new_hero/krigler_responses")
+require("heroes/new_hero_2/andrax_responses")
+require("heroes/casalmar/casalmar_responses")
 
 require("libraries/animations")
 require("libraries/attachments")
@@ -17,6 +21,7 @@ end
 require("libraries/options_menu") --Loads the menu options
 require("hero_selection")
 require("constants")
+require("libraries/tables")
 --------------------------------------------------------------------------------
 --Runs the script to add bots when turned on at options menu. 
 --Needs to be below OnGameStateChanged
@@ -35,10 +40,47 @@ function Precache(context)
 	PrecacheUnitByNameSync("npc_dota_hero_lone_druid", context)
 	PrecacheUnitByNameSync("npc_dota_hero_keeper_of_the_light", context)
 	PrecacheUnitByNameSync("npc_dota_hero_krigler",context)
-	PrecacheUnitByNameSync("npc_dota_hero_juggernaut",context)
+
+	--Bot Units
 	PrecacheUnitByNameSync("npc_dota_hero_casalmar",context)
 	PrecacheUnitByNameSync("npc_dota_hero_andrax",context)
 	PrecacheUnitByNameSync("npc_dota_hero_soul_tamer",context)
+	PrecacheUnitByNameSync("npc_dota_hero_sage_ronin",context)
+	PrecacheUnitByNameSync("npc_dota_hero_gravitum",context)
+	PrecacheUnitByNameSync("npc_dota_hero_axe",context)
+	PrecacheUnitByNameSync("npc_dota_hero_skywrath_mage",context)
+	PrecacheUnitByNameSync("npc_dota_hero_nevermore",context)
+	PrecacheUnitByNameSync("npc_dota_hero_pudge",context)
+	PrecacheUnitByNameSync("npc_dota_hero_phantom_assassin",context)
+	PrecacheUnitByNameSync("npc_dota_hero_skeleton_king",context)
+	PrecacheUnitByNameSync("npc_dota_hero_lina",context)
+	PrecacheUnitByNameSync("npc_dota_hero_luna",context)
+	PrecacheUnitByNameSync("npc_dota_hero_bloodseeker",context)
+	PrecacheUnitByNameSync("npc_dota_hero_lion",context)
+	PrecacheUnitByNameSync("npc_dota_hero_oracle",context)
+	PrecacheUnitByNameSync("npc_dota_hero_tiny",context)
+	PrecacheUnitByNameSync("npc_dota_hero_bane",context)
+	PrecacheUnitByNameSync("npc_dota_hero_bristleback",context)
+	PrecacheUnitByNameSync("npc_dota_hero_crystal_maiden",context)
+	PrecacheUnitByNameSync("npc_dota_hero_dazzle",context)
+	PrecacheUnitByNameSync("npc_dota_hero_chaos_knight",context)
+	PrecacheUnitByNameSync("npc_dota_hero_death_prophet",context)
+	PrecacheUnitByNameSync("npc_dota_hero_drow_ranger",context)
+	PrecacheUnitByNameSync("npc_dota_hero_earthshaker",context)
+	PrecacheUnitByNameSync("npc_dota_hero_jakiro",context)
+	PrecacheUnitByNameSync("npc_dota_hero_kunkka",context)
+	PrecacheUnitByNameSync("npc_dota_hero_necrolyte",context)
+	PrecacheUnitByNameSync("npc_dota_hero_sven",context)
+	PrecacheUnitByNameSync("npc_dota_hero_lich",context)
+	PrecacheUnitByNameSync("npc_dota_hero_juggernaut",context)
+	PrecacheUnitByNameSync("npc_dota_hero_omniknight",context)
+	PrecacheUnitByNameSync("npc_dota_hero_sand_king",context)
+	PrecacheUnitByNameSync("npc_dota_hero_sniper",context)
+	PrecacheUnitByNameSync("npc_dota_hero_vengefulspirit",context)
+	PrecacheUnitByNameSync("npc_dota_hero_viper",context)
+	PrecacheUnitByNameSync("npc_dota_hero_warlock",context)
+	PrecacheUnitByNameSync("npc_dota_hero_zuus",context)
+	PrecacheUnitByNameSync("npc_dota_hero_witch_doctor",context)
 	--Items
 	PrecacheItemByNameSync("item_aether_core", context)
   	PrecacheItemByNameSync("item_stout_mail", context)
@@ -52,15 +94,19 @@ function Precache(context)
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_jeremy.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_juggernaut.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_undying.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/game_sounds_heroes/game_sounds_sage_ronin.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/voscripts/game_sounds_vo_undying.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/voscripts/game_sounds_vo_krigler.vsndevts", context )
 	PrecacheResource( "soundfile", "soundevents/voscripts/game_sounds_vo_andrax.vsndevts", context )
+	PrecacheResource( "soundfile", "soundevents/voscripts/game_sounds_vo_sage_ronin.vsndevts", context )
 	--Precache things we know we'll use.  Possible file types include (but not limited to):
 	PrecacheResource( "model", "*.vmdl", context )
 	PrecacheResource( "soundfile", "*.vsndevts", context )
 	PrecacheResource( "particle", "*.vpcf", context )
 	PrecacheResource( "particle_folder", "particles/folder", context )
+	LinkLuaModifier("modifier_destroy_illusions_wearables", "modifiers/modifier_destroy_illusions_wearables.lua", LUA_MODIFIER_MOTION_NONE )
 	LinkLuaModifier("modifier_hide_hero", "modifiers/modifier_hide_hero.lua", LUA_MODIFIER_MOTION_NONE )
+	LinkLuaModifier("modifier_sage_ronin_responses", "heroes/sage_ronin/modifier_sage_ronin_responses.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_command_restricted", "modifiers/modifier_command_restricted.lua", LUA_MODIFIER_MOTION_NONE )
 end
 
@@ -87,45 +133,65 @@ end
 --------------------------------------------------------------------------------
 function WarsideDotaGameMode:InitGameMode()
 	print("Loaded Warside Dota")
-	VoiceResponses:Start()
-	VoiceResponses:RegisterUnit("npc_dota_hero_krigler", "scripts/responses/krigler_responses.txt")
-	VoiceResponses:RegisterUnit("npc_dota_hero_andrax", "scripts/responses/andrax_responses.txt")
+
 	GameRules:SetPreGameTime(PRE_GAME_TIME)
-	-- Link modifiers
-	-- Listen to game events
-	--WarsideDotaGameMode:SetHUDVisible(5, false)
-	if IsInToolsMode() then
-		require("demo")
-		self:SetupDemoMode()
-	end
 	GameRules:GetGameModeEntity():SetUseDefaultDOTARuneSpawnLogic(true)
-	GameRules:SetCustomGameSetupTimeout(60)
+
 	ListenToGameEvent("player_chat", Dynamic_Wrap(self, 'OnPlayerChat'), self)
 	GameRules:GetGameModeEntity():SetExecuteOrderFilter(Dynamic_Wrap(self, 'OrderFilter'), self)
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( WarsideDotaGameMode, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "entity_killed", Dynamic_Wrap( WarsideDotaGameMode, "OnEntityKilled" ), self )
+	--ListenToGameEvent("player_chat", Dynamic_Wrap( WarsideDotaGameMode, "OnChat" ), self)
 	GameRules:GetGameModeEntity():SetUseCustomHeroLevels ( true )
 	GameRules:SetSameHeroSelectionEnabled(true)
+	GameRules:GetGameModeEntity():SetModifyGoldFilter(Dynamic_Wrap(WarsideDotaGameMode, "GoldFilter"), self)
+	GameRules:GetGameModeEntity():SetModifyExperienceFilter(Dynamic_Wrap(WarsideDotaGameMode, "ExpFilter"), self)
+
 	Convars:RegisterCommand("chip_toggle_hud", Dynamic_Wrap(self, 'ToggleHUD'), "", 0)
 	LinkLuaModifier("modifier_command_restricted", "modifiers/modifier_command_restricted.lua", LUA_MODIFIER_MOTION_NONE )
 	LinkLuaModifier("modifier_activatable", "scripts/vscripts/modifiers/modifier_activatable.lua", LUA_MODIFIER_MOTION_NONE)
-	require("libraries/xp_table")
+	GameRules:GetGameModeEntity():SetCustomHeroMaxLevel(35)
+	GameRules:GetGameModeEntity():SetFreeCourierModeEnabled(true)
+	GameRules:GetGameModeEntity():SetCustomXPRequiredToReachNextLevel(XP_PER_LEVEL_TABLE)
+	if IsInToolsMode() then
+		require("demo")
+		self:SetupDemoMode()
+	end
 end
 
 ---------------------------------------------------------------------------
 -- Event: OnEntityKilled
 ---------------------------------------------------------------------------
 function WarsideDotaGameMode:OnEntityKilled( event )
-    local killedUnit = EntIndexToHScript( event.entindex_killed )
-    local attacker = EntIndexToHScript( event.entindex_attacker )
+	local killedUnit = EntIndexToHScript( event.entindex_killed )
+	if killedUnit:IsIllusion() then
+		RemoveCustomIllusions(killedUnit)
+	end
+	if event.entindex_attacker then
+		local attacker = EntIndexToHScript( event.entindex_attacker )
 
-    MultiplyGoldXp(killedUnit, attacker)
+		if killedUnit:IsRealHero() and not killedUnit:IsReincarnating() then
+		    print("Hero has been killed")   
+		    if killedUnit:HasModifier("modifier_necrolyte_reapers_scythe_respawn_time") then
+		    	killedUnit:SetTimeUntilRespawn(RESPAWN_PER_LEVEL_TABLE[killedUnit:GetLevel()] + 15 * attacker:FindAbilityByName("necrolyte_reapers_scythe"):GetLevel())
+		    else
+				killedUnit:SetTimeUntilRespawn(RESPAWN_PER_LEVEL_TABLE[killedUnit:GetLevel()])
+			end
+		end
+	end
+end
 
-    if killedUnit:IsRealHero() and killedUnit:GetLevel() > 25 and killedUnit:IsReincarnating() == false then
-        print("Hero has been killed")   
-        print(attacker:GetLevel())
-    	killedUnit:SetTimeUntilRespawn(100)
-    end
+function WarsideDotaGameMode:GoldFilter(keys)
+	if not multiplier_Gold then multiplier_Gold = 1 end
+	keys.gold = keys.gold * multiplier_Gold + (multiplier_Gold * (GameRules:GetGameTime()/275))
+	return true
+end
+
+
+function WarsideDotaGameMode:ExpFilter(keys)
+	if not multiplier_Exp then multiplier_Exp = 1 end
+	keys.experience = keys.experience * multiplier_Exp
+	return true
 end
 
 --------------------------------------------------------------------------------
@@ -134,13 +200,17 @@ end
 function WarsideDotaGameMode:OnNPCSpawned( event )
 	spawnedUnit = EntIndexToHScript( event.entindex )
 	if spawnedUnit:IsIllusion() then
-		CheckForIllusionsInnate(spawnedUnit)
+		--CheckForIllusionsInnate(spawnedUnit)
+		if spawnedUnit:GetName() == "npc_dota_hero" then
+			spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_destroy_illusions_wearables", {})
+		end
 	end
 	if spawnedUnit:GetUnitName() == "npc_dota_hero_custom" then
 		spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_hide_hero", {})
 	end
+	CheckForInnates(spawnedUnit)
 	if spawnedUnit:IsRealHero() and not spawnedUnit:IsClone() and not spawnedUnit:IsIllusion() and spawnedUnit:GetUnitName() ~= "npc_dota_hero_custom" and spawnedUnit:GetUnitName() ~= "npc_dota_creature_spirit_vessel" then
-		CheckForInnates(spawnedUnit)
+		
 		if IsInToolsMode() and spawnedUnit.toolsmodeflag == nil then
 			if spawnedUnit:HasRoomForItem("item_blink", true, true) then
 		   		local dagger = CreateItem("item_blink", spawnedUnit, spawnedUnit)
@@ -161,21 +231,6 @@ function WarsideDotaGameMode:OnNPCSpawned( event )
 			Timers:CreateTimer(0.1, function()
 				if spawnedUnit:IsIllusion() then return end
 				if spawnedUnit:GetUnitName() ~= DUMMY_HERO then
-					-- if IsDonator(npc:GetPlayerID()) then
-					-- 	Timers:CreateTimer(2.0, function()
-					-- 		local steam_id = tostring(PlayerResource:GetSteamID(npc:GetPlayerID()))
-					-- 		if steam_id == "76561198015161808" then
-					-- 			DonatorCompanion(npc:GetPlayerID(), "npc_chp_donator_companion_cookies")
-					-- 		elseif steam_id == "76561198014254115" then
-					-- 			DonatorCompanion(npc:GetPlayerID(), "npc_chp_donator_companion_icefrog")
-					-- 		elseif steam_id == "76561198014254115" then
-					-- 			DonatorCompanion(npc:GetPlayerID(), "npc_chp_donator_companion_suthernfriend")
-					-- 		else -- replace seekling by players choice stored in DB
-					-- 			DonatorCompanion(npc:GetPlayerID(), "npc_chp_donator_companion_seekling")
-					-- 		end
-					-- 	end)
-					-- end
-
 					return
 				else
 					local time_elapsed = 0
@@ -185,10 +240,8 @@ function WarsideDotaGameMode:OnNPCSpawned( event )
 							spawnedUnit:AddEffects(EF_NODRAW)
 							if spawnedUnit:GetTeamNumber() == DOTA_TEAM_GOODGUYS then
 								PlayerResource:SetCameraTarget(spawnedUnit:GetPlayerOwnerID(), GoodCamera)
-								--FindClearSpaceForUnit(npc, GoodCamera:GetAbsOrigin(), false)
 							else
 								PlayerResource:SetCameraTarget(spawnedUnit:GetPlayerOwnerID(), BadCamera)					
-								--FindClearSpaceForUnit(npc, BadCamera:GetAbsOrigin(), false)
 							end
 						end
 						if time_elapsed < 0.9 then
@@ -234,10 +287,13 @@ local castOrders = {
 
 function WarsideDotaGameMode:OrderFilter(order)
 	local target_unit = nil
+	local ability = nil
 	if order.entindex_target ~= 0 then
 		target_unit = EntIndexToHScript(order.entindex_target)
 	end
-
+	if order.entindex_ability ~= 0 then
+		ability = EntIndexToHScript(order.entindex_ability)
+	end
 	-- Check for activatable modifier
 	if order.queue == 0 and activationOrders[order.order_type] and target_unit ~= nil then
 		if target_unit.FindModifierByName then
@@ -278,6 +334,16 @@ function WarsideDotaGameMode:OrderFilter(order)
 		local unit = EntIndexToHScript(order.units["0"])
 		--The Arena
 		if castOrders[order.order_type] then
+
+			if ability:GetAbilityName() == "gravitum_dynamic_attraction" then
+				local caster = ability:GetCaster()
+				local stacks = caster:GetModifierStackCount("modifier_dynamic_attraction_stacks", caster)
+				print(caster.attraction_stacks <= 2, target_unit == caster)
+				if caster.attraction_stacks <= 2 and target_unit == caster then
+					
+				end
+			end
+
 			local arena_modifier = unit:FindModifierByName("modifier_troy_the_arena_check_position")
 			if arena_modifier and arena_modifier:GetAbility() and arena_modifier.target_point then
 				local radius = arena_modifier:GetAbility():GetSpecialValueFor("radius")

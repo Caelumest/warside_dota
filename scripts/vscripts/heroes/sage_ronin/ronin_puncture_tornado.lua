@@ -1,4 +1,7 @@
 LinkLuaModifier("modifier_ronin_puncture_tornado", "heroes/sage_ronin/ronin_puncture_tornado.lua", LUA_MODIFIER_MOTION_NONE)
+LinkLuaModifier("modifier_ronin_puncture_tornado", "heroes/sage_ronin/ronin_puncture.lua", LUA_MODIFIER_MOTION_NONE)
+LinkLuaModifier("modifier_dummy_projectile_sound", "modifiers/modifier_dummy_projectile_sound.lua", LUA_MODIFIER_MOTION_NONE)
+LinkLuaModifier("modifier_tornado_on_hit", "heroes/sage_ronin/ronin_puncture_tornado.lua", LUA_MODIFIER_MOTION_NONE)
 
 ronin_puncture_tornado = ronin_puncture_tornado or class({})
 
@@ -37,19 +40,24 @@ function ronin_puncture_tornado:OnSpellStart()
 	local ability = caster:FindAbilityByName("ronin_puncture")
 	local stacks = caster:GetModifierStackCount("modifier_ronin_hit_count", caster)
 	ability.spinTornado = true
-	ability.projDistance = 800
-	ability.effectName = "particles/units/heroes/hero_invoker/invoker_tornado.vpcf"
+	ability.projDistance = 900
+	ability.effectName = "particles/econ/items/invoker/invoker_ti6/invoker_tornado_ti6.vpcf"
 	ability.projVelocity = 800
 	ability.tornadoReady = true
+	local tornado_duration = ability.projDistance / ability.projVelocity
+	--caster:FindAbilityByName("ronin_air_slash"):ApplyDataDrivenModifier(caster, tornado_dummy_unit, "modifier_air_slash_dummy", {})
 	caster:RemoveModifierByName("modifier_ronin_hit_count")
-	caster:SwapAbilities("ronin_puncture", "ronin_puncture_tornado", true, false)
-	ability:StartCooldown(self:GetCooldownTimeRemaining())
-	ability:SetLevel(self:GetLevel())
-    self:SetHidden(true)
-    ability:SetHidden(false)
+	caster:RemoveModifierByName("modifier_ronin_puncture_tornado")
+	--EmitSoundOn("Hero_Ronin.Puncture_Tornado_Cast", caster);
 	if not caster:HasModifier("modifier_ronin_dash") then
 		caster:AddNewModifier(caster, ability, "modifier_puncture_states", {duration = 0.2})
-		caster:StartGestureWithPlaybackRate(ACT_DOTA_ATTACK_EVENT, 2)
+		EmitSoundOn("sage_ronin_puncture_third_hit", caster)
+		--caster:StartGestureWithPlaybackRate(ACT_DOTA_ATTACK_EVENT, 2)
+		RemoveAnimationTranslate(caster)
+		StartAnimation(caster, {duration=0.3, activity=ACT_DOTA_ATTACK_EVENT, rate=1.5, translate="ti8"})
+		--EndAnimation(caster)
+		AddAnimationTranslate(caster, "walk")
+		AddAnimationTranslate(caster, "odachi")
 		caster:SetForwardVector((Vector(target.x, target.y, caster:GetAbsOrigin().z) - caster:GetAbsOrigin()):Normalized())
 		Timers:CreateTimer(0.15, function ()  
 			if caster:IsAlive() then
@@ -66,17 +74,29 @@ function ronin_puncture_tornado:OnSpellStart()
 			        iUnitTargetTeam     = DOTA_UNIT_TARGET_TEAM_ENEMY,
 			        iUnitTargetFlags    = DOTA_UNIT_TARGET_FLAG_NONE,
 			        iUnitTargetType     = DOTA_UNIT_TARGET_BASIC + DOTA_UNIT_TARGET_HERO,
-			        fExpireTime         = GameRules:GetGameTime() + 0.9,
+			        fExpireTime         = GameRules:GetGameTime() + tornado_duration,
 			        bDeleteOnHit        = false,
 			        vVelocity           = caster:GetForwardVector() * ability.projVelocity,
 			        bProvidesVision     = true,
 			        iVisionRadius       = 0,
 			        iVisionTeamNumber   = caster:GetTeamNumber(),
 			    } )
+				target.z = 0
+				local caster_point = caster:GetAbsOrigin()
+				caster_point.z = 0
+				local velocity = caster:GetForwardVector() * ability.projVelocity
+				local point_difference_normalized = (target - caster_point):Normalized()
+				local tornado_velocity_per_frame = velocity * 0.05
+				print("TORNADOVELOCITY", tornado_velocity_per_frame)
+				local tornado_dummy_unit = CreateUnitByName("npc_dota_creature_spirit_vessel", caster:GetAbsOrigin(), false, caster, caster, caster:GetTeam())
+				tornado_dummy_unit.velocity_per_frame = velocity * 0.05
+				tornado_dummy_unit:AddNewModifier(caster, ability, "modifier_dummy_projectile_sound", {duration = tornado_duration, distance = ability.projDistance, velocity_per_frame = tornado_velocity_per_frame, frames = 0.05})
+				EmitSoundOn("Hero_Ronin.Puncture_Tornado_Projectile", tornado_dummy_unit);
 			end
     	end)
 	else
 		ability.spinInQueue = true
+		--ability:EndCooldown()
 	end
 end
 
@@ -84,16 +104,17 @@ function ronin_puncture_tornado:OnProjectileHit(target)
 	local caster = self:GetCaster()
 	local ability = caster:FindAbilityByName("ronin_puncture")
 	local stacks = caster:GetModifierStackCount("modifier_ronin_hit_count", caster)
-	EmitSoundOn("Hero_Leshrac.Lightning_Storm", target);
+	EmitSoundOn("Hero_Ronin.Puncture_Tornado_Hit", target);
+	caster:AddNewModifier(caster, ability, "modifier_tornado_on_hit", {duration = 0.01})
 	caster:PerformAttack(target, true, true, true, true, false, false, true)
     if target then
     	local knockbackTable = {
 				center_x = target:GetAbsOrigin().x,
 				center_y = target:GetAbsOrigin().y,
 				center_z = target:GetAbsOrigin().z,
-				knockback_duration = 1,
+				knockback_duration = ability:GetSpecialValueFor("tornado_stun_duration"),
 				knockback_distance = 0,
-				knockback_height = 400,
+				knockback_height = 300,
 				should_stun = 1,
 				duration = 1,
 			}
@@ -102,68 +123,41 @@ function ronin_puncture_tornado:OnProjectileHit(target)
 	end
 end
 
-modifier_ronin_puncture_tornado = class({})
+modifier_tornado_on_hit = class({})
 
-function modifier_ronin_puncture_tornado:IsHidden()
+function modifier_tornado_on_hit:IsHidden()
 	return false
 end
 
-function modifier_ronin_puncture_tornado:IsPassive()
-	return true
+function modifier_tornado_on_hit:IsPassive()
+	return false
 end
 
-function modifier_ronin_puncture_tornado:IsPermanent()
-	return true
+function modifier_tornado_on_hit:IsPermanent()
+	return false
 end
 
-function modifier_ronin_puncture_tornado:OnCreated()
-	local caster = self:GetParent()
-	local ability = self:GetAbility()
-	ability.cooldown = ability:GetSpecialValueFor("cooldown")
-	self.interval = 0.01
-	self:StartIntervalThink(self.interval)
+function modifier_tornado_on_hit:DeclareFunctions()
+    return {MODIFIER_PROPERTY_TRANSLATE_ATTACK_SOUND,
+			MODIFIER_PROPERTY_BASEATTACK_BONUSDAMAGE,
+		MODIFIER_PROPERTY_PREATTACK_CRITICALSTRIKE}
 end
 
-function modifier_ronin_puncture_tornado:OnDestroy()
-	local caster = self:GetParent()
-	local ability = self:GetAbility()
+function modifier_tornado_on_hit:GetModifierBaseAttack_BonusDamage()
+	local caster = self:GetCaster()
+	local bonusDmg = self:GetAbility():GetSpecialValueFor("bonus_damage")
+	return bonusDmg + caster:GetTalentValue("special_bonus_unique_sage_ronin_1")
 end
 
-function modifier_ronin_puncture_tornado:OnIntervalThink()
-	local caster = self:GetParent()
-	local ability = self:GetAbility()
-	local stacks = caster:GetModifierStackCount("modifier_ronin_hit_count", caster)
+function modifier_tornado_on_hit:GetAttackSound()
+	return "None"
+end
 
-	ability.cooldown = ability:GetSpecialValueFor("cooldown") - (caster:GetIncreasedAttackSpeed())
-
-	if caster:HasModifier("modifier_ronin_dash") then
-		ability.behavior = DOTA_ABILITY_BEHAVIOR_NO_TARGET + DOTA_ABILITY_BEHAVIOR_IMMEDIATE + DOTA_ABILITY_BEHAVIOR_IGNORE_PSEUDO_QUEUE
+function modifier_tornado_on_hit:GetModifierPreAttack_CriticalStrike()
+	local caster = self:GetCaster()
+	if caster:HasScepter() then
+		return self:GetAbility():GetSpecialValueFor("crit_bonus_scepter")
 	else
-		ability.behavior = DOTA_ABILITY_BEHAVIOR_POINT
+		return 0
 	end
-
-	if ability.spinInQueue == true and not caster:HasModifier("modifier_ronin_dash") then
-		caster:AddNewModifier(caster, ability, "modifier_puncture_states", {duration = 0.2})
-		StartAnimation(caster, {duration=0.2, activity=ACT_DOTA_OVERRIDE_ABILITY_1, rate=1})
-		local units = FindUnitsInRadius( caster:GetTeam(), caster:GetOrigin(), nil, 250, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP, 0, 0, false )
-	    for _,enemy in pairs( units ) do
-	        caster:PerformAttack(enemy, true, true, true, true, false, false, true)
-	        if target then
-		    	local knockbackTable = {
-						center_x = target:GetAbsOrigin().x,
-						center_y = target:GetAbsOrigin().y,
-						center_z = target:GetAbsOrigin().z,
-						knockback_duration = 1,
-						knockback_distance = 0,
-						knockback_height = 400,
-						should_stun = 1,
-						duration = 1,
-					}
-				target:RemoveModifierByName("modifier_knockback")
-				target:AddNewModifier(caster, ability, "modifier_knockback", knockbackTable) 
-			end
-	    end
-		ability.spinInQueue = nil
-	end
-
 end

@@ -5,10 +5,24 @@ function CheckDistance(keys)
     local ab_push_soul = caster:FindAbilityByName("tamer_push_area")
     local ab_target_soul = caster:FindAbilityByName("tamer_target_soul")
     local ab_shield = caster:FindAbilityByName("tamer_shield_target")
-    ability.distance = 1000
+    ability.distance = 1100
     if caster:HasModifier("modifier_item_aether_lens") then
-        ability.distance = 1250
+        ability.distance = 1350
     end
+
+    if not ability.helperParticle and not caster:HasModifier("modifier_soul_follow_caster") and caster:IsAlive() then
+        ability.helperParticle = ParticleManager:CreateParticleForTeam("particles/ui_mouseactions/range_finder_tower_aoe_ring.vpcf", PATTACH_ABSORIGIN_FOLLOW, caster, caster:GetTeam())
+        ParticleManager:SetParticleControlEnt(ability.helperParticle, 0, caster, PATTACH_ABSORIGIN_FOLLOW, "attach_origin", caster:GetAbsOrigin(), true)
+        ParticleManager:SetParticleControlEnt(ability.helperParticle, 2, caster, PATTACH_ABSORIGIN_FOLLOW, "attach_origin", caster:GetAbsOrigin(), true)
+        ParticleManager:SetParticleControl(ability.helperParticle, 3, Vector(ability.distance, 0, 0))
+        ParticleManager:SetParticleControl(ability.helperParticle, 4, Vector(150, 150, 220))
+    elseif caster:HasModifier("modifier_soul_follow_caster") or not caster:IsAlive() then
+        if ability.helperParticle then
+            ParticleManager:DestroyParticle(ability.helperParticle, true)
+        end
+        ability.helperParticle = nil
+    end
+
     if caster.soul.hasParticle == false then
         if caster.soul.particle_soul then
             ParticleManager:DestroyParticle(caster.soul.particle_soul, false)
@@ -267,12 +281,13 @@ function CheckDeath(keys)
     ab_push_soul:SetActivated(true)
     caster.soul.hasParticle = false
     caster:RemoveModifierByName("modifier_soul_follow_caster")
-    caster.soul:Kill(nil, caster.soul)
+    --caster.soul:Kill(caster.soul, caster.soul)
 end
 
 function CheckRespawn(keys)
     local caster = keys.caster
     local ability = keys.ability
+    caster.soul:Kill(caster.soul, caster.soul)
     caster.soul = CreateUnitByName("npc_dota_creature_spirit_vessel", caster:GetAbsOrigin(), true, caster, caster, caster:GetTeamNumber())
     caster.soul:AddNewModifier(caster, nil, "modifier_soul_tamer", {})
     caster.soul:SetAbsOrigin(Vector(0,0,0)) --Just to trigger the follow caster modifier
@@ -305,9 +320,11 @@ function CastPush(caster, ability)
         target:AddNewModifier(caster, ability, "modifier_knockback", knockbackTable)
         Timers:CreateTimer(knockduration, function () ability:ApplyDataDrivenModifier(caster, target, "modifier_soul_root", {duration = duration}) end)
         local distance = caster.soul:GetRangeToUnit(target)
-        local dmg = damage / distance * 100
-        if dmg > damage or dmg < 1 then
+        local dmg = damage / distance * 130
+        if dmg > damage then
             ApplyDamage({victim = target, attacker = caster, damage = damage, damage_type = ability:GetAbilityDamageType()})
+        elseif dmg <= (damage / 2) then
+            ApplyDamage({victim = target, attacker = caster, damage = (damage / 2), damage_type = ability:GetAbilityDamageType()})
         else
             ApplyDamage({victim = target, attacker = caster, damage = dmg, damage_type = ability:GetAbilityDamageType()})
         end
