@@ -100,7 +100,7 @@
 		"SoundSet"					"n_creep_Melee"
 		"GameSoundsFile"			"soundevents/game_sounds_creeps.vsndevts"
 		"Level"						"1"
-		"ModelScale" 				"0.6"
+		"ModelScale" 				"0"
 
 		// Abilities
 		//----------------------------------------------------------------
@@ -111,7 +111,8 @@
 
 		// Armor
 		//----------------------------------------------------------------
-		"ArmorPhysical"				"1"			// Physical protection.
+		"ArmorPhysical"				"999"			// Physical protection.
+		"MagicalResistance" 		"120"
 
 		// Attack
 		//----------------------------------------------------------------
@@ -127,7 +128,8 @@
 
 		// Bounds
 		//----------------------------------------------------------------
-		"RingRadius"				"50"
+		"BoundsHullName"			"DOTA_HULL_SIZE_SIEGE"
+		"RingRadius"				"1"
 		"HealthBarOffset"			"0"
 
 		// Bounty
@@ -144,8 +146,8 @@
 
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"1"		// Base health.
-		"StatusHealthRegen"			"0"		// Health regeneration rate.
+		"StatusHealth"				"9999"		// Base health.
+		"StatusHealthRegen"			"500"		// Health regeneration rate.
 		"StatusMana"				"1"			// Base mana.
 		"StatusManaRegen"			"0"		// Mana regeneration rate.		
 		"HasInventory"        		"0" // This KV must be added in units file only 
@@ -173,8 +175,8 @@
 	"npc_dota_hero_krigler"
   {
     "BaseClass"                 "npc_dota_hero"
-    "HeroID"                    "228"
-    "Model"                    	"models/heroes/krigler/juggernaut.vmdl"
+    "HeroID"                    "158"
+    "Model"                    	"models/heroes/krigler/juggernaut_arcana.vmdl"
     "SoundSet"                  "Hero_Juggernaut"
     "IsCustom"					"1"
     "IsDisabled"				"0"
@@ -587,11 +589,11 @@
   {
     "BaseClass"                 "npc_dota_hero"
     "HeroID"                    "132"
-    "Model"                    	"models/heroes/sage_ronin/juggernaut.vmdl"
+    "Model"                    	"models/heroes/yasuo.vmdl"
     "SoundSet"                  "Hero_Juggernaut"
     "IsCustom"					"1"
     "IsDisabled"				"0"
-    "ModelScale"				".93"
+    "ModelScale"				"0.8"
     "VoiceFile"					"soundevents/voscripts/game_sounds_vo_sage_ronin.vsndevts"
     "GameSoundsFile"            "soundevents/game_sounds_heroes/game_sounds_juggernaut.vsndevts"
     "Portrait"					"materials/vgui/hud/heroportraits/portrait_juggernaut"
@@ -626,22 +628,22 @@
 	"Role"						"Carry,Disabler,Jungler,Initiator,Durable,Escape"
 	"Rolelevels"				"2,2,1,2,1,1"
 	"Team"						"Bad"
-	"MovementSpeed"				"295"
+	"MovementSpeed"				"290"
 
 	"AttributePrimary"			"DOTA_ATTRIBUTE_AGILITY"
 	"AttributeBaseStrength"		"20"
-	"AttributeStrengthGain"		"2"
+	"AttributeStrengthGain"		"2.2"
 	"AttributeBaseAgility"		"23"
-	"AttributeAgilityGain"		"2.7"
+	"AttributeAgilityGain"		"2.9"
 	"AttributeBaseIntelligence"	"17"
-	"AttributeIntelligenceGain"	"1.5"
+	"AttributeIntelligenceGain"	"1.8"
 
     "HealthBarOffset"       	"190"
 
     "RingRadius"                "60"
 
     "Ability1"					"ronin_puncture"
-	"Ability2"					"ronin_flux"
+	"Ability2"					"ronin_wind_wall"
 	"Ability3"					"ronin_dash"
 	"Ability4"					"ronin_puncture_tornado"
 	"Ability5"					"generic_hidden"

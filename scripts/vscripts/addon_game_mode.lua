@@ -22,6 +22,8 @@ require("libraries/options_menu") --Loads the menu options
 require("hero_selection")
 require("constants")
 require("libraries/tables")
+require("internal/filters")
+softRequire("filters")
 --------------------------------------------------------------------------------
 --Runs the script to add bots when turned on at options menu. 
 --Needs to be below OnGameStateChanged
@@ -108,12 +110,16 @@ function Precache(context)
 	LinkLuaModifier("modifier_hide_hero", "modifiers/modifier_hide_hero.lua", LUA_MODIFIER_MOTION_NONE )
 	LinkLuaModifier("modifier_sage_ronin_responses", "heroes/sage_ronin/modifier_sage_ronin_responses.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_command_restricted", "modifiers/modifier_command_restricted.lua", LUA_MODIFIER_MOTION_NONE )
+	LinkLuaModifier("modifier_wind_wall_dummy_invulnerability", "heroes/sage_ronin/ronin_wind_wall.lua", LUA_MODIFIER_MOTION_NONE)
 end
 
 --------------------------------------------------------------------------------
 -- Create the game mode
 --------------------------------------------------------------------------------
+
 function Activate()
+	_G.TestHit = 0
+	FireGameEvent("addon_game_mode_activate",nil)
 	GameRules:SetCustomGameTeamMaxPlayers(1, 5)
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS,5)
 	GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, 5)
@@ -127,6 +133,10 @@ function Activate()
 	GameRules.GameMode = WarsideDotaGameMode()
 	GameRules.GameMode:InitGameMode()
 end
+
+ListenToGameEvent("addon_game_mode_activate", function()
+	print( "Dota Butt Template is loaded." )
+end, nil)
 
 --------------------------------------------------------------------------------
 -- GameEvent: InitGameMode
@@ -284,6 +294,10 @@ local castOrders = {
 	[DOTA_UNIT_ORDER_CAST_TARGET_TREE] = true,
 	[DOTA_UNIT_ORDER_CAST_RUNE] = true,
 }
+local attackOrder = {
+	[DOTA_UNIT_ORDER_ATTACK_TARGET] = true,
+	[DOTA_UNIT_ORDER_ATTACK_MOVE] = true,
+}
 
 function WarsideDotaGameMode:OrderFilter(order)
 	local target_unit = nil
@@ -294,6 +308,7 @@ function WarsideDotaGameMode:OrderFilter(order)
 	if order.entindex_ability ~= 0 then
 		ability = EntIndexToHScript(order.entindex_ability)
 	end
+
 	-- Check for activatable modifier
 	if order.queue == 0 and activationOrders[order.order_type] and target_unit ~= nil then
 		if target_unit.FindModifierByName then
@@ -328,21 +343,87 @@ function WarsideDotaGameMode:OrderFilter(order)
 			end
 		end
 	end
-
 	-- Check for modifier
 	for key, unit_index in pairs(order.units) do
 		local unit = EntIndexToHScript(order.units["0"])
-		--The Arena
-		if castOrders[order.order_type] then
 
-			if ability:GetAbilityName() == "gravitum_dynamic_attraction" then
-				local caster = ability:GetCaster()
-				local stacks = caster:GetModifierStackCount("modifier_dynamic_attraction_stacks", caster)
-				print(caster.attraction_stacks <= 2, target_unit == caster)
-				if caster.attraction_stacks <= 2 and target_unit == caster then
-					
+		------------------YASUO ANIMATIONS-----------------
+		if unit:IsAlive() then
+			if order and (order.order_type == DOTA_UNIT_ORDER_MOVE_TO_POSITION or order.order_type == DOTA_UNIT_ORDER_MOVE_TO_TARGET or order.order_type == DOTA_UNIT_ORDER_ATTACK_TARGET or order.order_type == DOTA_UNIT_ORDER_PICKUP_ITEM or order.order_type == DOTA_UNIT_ORDER_PICKUP_RUNE or order.order_type == DOTA_UNIT_ORDER_ATTACK_MOVE or order.order_type == DOTA_UNIT_ORDER_CAST_POSITION) and unit:GetUnitName() == "npc_dota_hero_sage_ronin" then
+				local pos = Vector(order["position_x"], order["position_y"], order["position_z"])
+				unit:RemoveGesture(ACT_IDLE_ANGRY_MELEE)
+				unit.lastClickedPos = pos
+				if unit.isFast and unit:HasModifier("modifier_rune_haste") then
+					AddAnimationTranslate(unit, "run_fast")
+				elseif unit.isFast then 
+					AddAnimationTranslate(unit, "run")
+				else
+					AddAnimationTranslate(unit, "walk")
+				end
+				if (unit.isIdle == nil or unit.isIdle == true) and unit.cancelPuncture == nil then
+					if not unit.isFast then
+						print("ERA PRA IR")
+						StartAnimation(unit, {duration=1, activity=ACT_IDLETORUN, rate=1})
+					elseif unit.isFast and not unit:HasModifier("modifier_rune_haste") then
+						StartAnimation(unit, {duration=1, activity=ACT_DEPLOY_IDLE, rate=1})
+					end
+				end
+				unit.isIdle = false
+
+				unit:RemoveGesture(ACT_RUNTOIDLE)
+				if unit.cancelPuncture then
+					unit.cancelPuncture = false
 				end
 			end
+
+			
+			if (order.order_type == DOTA_UNIT_ORDER_HOLD_POSITION or order.order_type == DOTA_UNIT_ORDER_STOP) and unit:GetUnitName() == "npc_dota_hero_sage_ronin" and unit.isIdle == false then
+				unit:RemoveGesture(ACT_IDLETORUN)
+				unit:RemoveGesture(ACT_DEPLOY_IDLE)
+				unit:RemoveGesture(ACT_GESTURE_MELEE_ATTACK1)
+				unit:RemoveGesture(ACT_GESTURE_MELEE_ATTACK2)
+				if unit.isAggressive then
+					RemoveAnimationTranslate(unit)
+					unit.isAggressive = false
+
+					if unit:GetIdealSpeed() >= 400 then
+						if unit:HasModifier("modifier_rune_haste") then
+							RemoveAnimationTranslate(unit)
+					        AddAnimationTranslate(unit, "run_fast")
+						else
+							RemoveAnimationTranslate(unit)
+					        AddAnimationTranslate(unit, "run")
+						end
+				        unit.isFast = true
+				    elseif unit:GetIdealSpeed() < 400 then
+				    	RemoveAnimationTranslate(unit)
+						AddAnimationTranslate(unit, "walk")	
+						unit.isFast = nil
+				    end
+					StartAnimation(unit, {duration=5.5, activity=ACT_IDLE_ANGRY_MELEE, rate=1})
+				else
+					StartAnimation(unit, {duration=0.75, activity=ACT_RUNTOIDLE, rate=1})
+				end
+				unit.isIdle = true
+			end
+		end
+		------------------------------------------------------------------------------------
+
+		--The Arena
+		if castOrders[order.order_type] or order.order_type == DOTA_UNIT_ORDER_CAST_NO_TARGET then
+			if target_unit ~= nil and _G.WIND_WALL_TEAM ~= nil and target_unit:GetUnitName() ~= "npc_dota_creature_spirit_vessel" and unit:GetTeamNumber() ~= target_unit:GetTeamNumber() then
+				local units = FindUnitsInLine(unit:GetTeamNumber(), unit:GetAbsOrigin(), target_unit:GetAbsOrigin(), nil, 10, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP, DOTA_UNIT_TARGET_FLAG_INVULNERABLE)
+
+				for _,target in pairs( units ) do
+					if target:GetUnitName() == "npc_dota_creature_spirit_vessel" and target:HasModifier("modifier_wind_wall_dummy") and _G.TestHit <= 0 and unit:GetTeamNumber() ~= target:GetTeamNumber() then
+						order.entindex_target = target:entindex()
+						return true
+					end
+				end
+			end
+		end
+		if castOrders[order.order_type] then
+
 
 			local arena_modifier = unit:FindModifierByName("modifier_troy_the_arena_check_position")
 			if arena_modifier and arena_modifier:GetAbility() and arena_modifier.target_point then
@@ -508,6 +589,7 @@ end
 
 function WarsideDotaGameMode:DamageFilter(filterTable)
     local damage = filterTable["damage"] --Post reduction
+    print("damagefilter ",dump(filterTable))
     local ability
     if filterTable["entindex_inflictor_const"] ~= nil then
 	    ability = EntIndexToHScript( filterTable["entindex_inflictor_const"] )

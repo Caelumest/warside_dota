@@ -35,6 +35,22 @@
                         "Function"      "CheckIfInjured"
                     }
                 }
+                "OnAttackStart"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                        "Function"      "OnAttackStarted"
+                    }
+                }
+                "OnAttackLanded"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_flux.lua"
+                        "Function"      "OnAttackStarted"
+                    }
+                }
             }
         }
     }
@@ -51,7 +67,7 @@
         "SpellImmunityType"         "SPELL_IMMUNITY_ENEMIES_NO"
         "AbilityCastRange"          "250"
         "AbilityCastPoint"          "0"
-        "AbilityCooldown"           "2 1.4 0.8 0.2"
+        "AbilityCooldown"           "2 1.4 0.8 0.1"
         "AbilityManaCost"           "25"
 
         "AbilityCastAnimation"      "ACT_DOTA_CAST_ABILITY_1"
@@ -61,6 +77,8 @@
             "particle"  "particles/ui_mouseactions/range_finder_tower_aoe_ring.vpcf"
             "particle"  "particles\units\heroes\hero_brewmaster\brewmaster_windwalk.vpcf"
             "soundfile" "soundevents/game_sounds_heroes/game_sounds_brewmaster.vsndevts"
+            "particle" "particles\econ\items\windrunner\windrunner_ti6\windrunner_spell_powershot_channel_ti6_shock_cloud.vpcf"
+            "particle" "particles/units/heroes/hero_brewmaster/brewmaster_windwalk_sparks.vpcf"
         }
 
         "AbilitySpecial"
@@ -114,14 +132,6 @@
                     "MODIFIER_STATE_STUNNED"   "MODIFIER_STATE_VALUE_ENABLED"
                     "MODIFIER_STATE_DISARMED"   "MODIFIER_STATE_VALUE_ENABLED"
                 }
-                "OnDestroy"
-                {
-                    "RunScript"
-                    {
-                        "ScriptFile"    "heroes/sage_ronin/ronin_dash.lua"
-                        "Function"      "OnDestroy"
-                    }
-                }
             }
             "modifier_ronin_dash_count"
             {
@@ -169,7 +179,7 @@
                         "Function"      "RingEffects"
                     }
                 }
-                "OnDestroy"
+                "OnDeath"
                 {
                     "RunScript"
                     {
@@ -194,12 +204,15 @@
         "AbilityCooldown"           "5.5"
         "AbilityCastPoint"          "0"
         "HasScepterUpgrade"         "1"
+        //"AnimationPlaybackRate"     "1"
+        //"AbilityCastAnimation"      "ACT_DOTA_CAST_ABILITY_1"
         "AbilityManaCost"           "20"
 
         "precache"
         {
             "particle" "particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal.vpcf"
             "soundfile" "soundevents/game_sounds_heroes/game_sounds_sage_ronin.vsndevts"
+            "particle" "particles/sage_ronin_puncture.vpcf"
         }
 
         "AbilitySpecial"
@@ -223,7 +236,7 @@
             "04"
             {
                 "var_type"              "FIELD_FLOAT"
-                "melee_distance"        "250"
+                "melee_distance"        "330"
             }
             "05"
             {
@@ -244,7 +257,7 @@
             "08"
             {
                 "var_type"              "FIELD_FLOAT"
-                "cd_reduct"             "1.4"
+                "cd_reduct"             "1.6"
             } 
             "09"
             {
@@ -254,7 +267,7 @@
             "10"
             {
                 "var_type"              "FIELD_FLOAT"
-                "cd_reduct_scepter"     "1.8"
+                "cd_reduct_scepter"     "1.9"
             } 
         }
     }
@@ -277,7 +290,7 @@
         {
             "particle" "particles\econ\items\invoker\invoker_ti6\invoker_tornado_ti6.vpcf"
             "particle" "particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal.vpcf"
-            "particle"  "particles/units/heroes/hero_windrunner/windrunner_windrun.vpcf"
+            "particle"  "particles/sage_ronin_puncture_tornado_buff.vpcf"
             "soundfile" "soundevents/game_sounds_heroes/game_sounds_sage_ronin.vsndevts"
         }
 
@@ -357,7 +370,7 @@
         "precache"
         {
             "particle"  "particles\units\heroes\hero_elder_titan\elder_titan_echo_stomp.vpcf"
-            "particle"  "particles/units/heroes/hero_ember_spirit/ember_spirit_sleightoffist_trail.vpcf"
+            "particle"  "particles/sage_ronin_last_whisper.vpcf"
         }
 
         "AbilitySpecial"
@@ -516,6 +529,10 @@
 
         "precache"
         {
+            "particle" "particles/yasuo_main_effect.vpcf"
+            "particle" "particles/yasuo_blade_ambient.vpcf"
+            "particle" "particles/yasuo_blade_ambient_glow_full.vpcf"
+            "particle" "particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_ti8_sword_attack_a.vpcf"
             "particle" "particles/econ/items/invoker/invoker_ti6/invoker_tornado_ti6.vpcf"
             "particle" "particles/econ/items/juggernaut/jugg_sword_script/jugg_weapon_glow_variation_script.vpcf"
             "soundfile" "soundevents/game_sounds_heroes/game_sounds_brewmaster.vsndevts" 
@@ -686,6 +703,60 @@
                 {
                     "MODIFIER_PROPERTY_DAMAGEOUTGOING_PERCENTAGE" "2"
                 }
+            }
+        }
+    }
+    "ronin_wind_wall"
+    {
+        "BaseClass"                 "ability_lua"
+        "ScriptFile"                "heroes/sage_ronin/ronin_wind_wall.lua"
+        "AbilityTextureName"        "ronin_wind_wall"
+
+        "AbilityBehavior"           "DOTA_ABILITY_BEHAVIOR_POINT"
+        "AbilityType"               "DOTA_ABILITY_TYPE_BASIC"
+        "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        "SpellImmunityType"         "SPELL_IMMUNITY_ENEMIES_YES"
+        "AbilityCooldown"           "20"
+        "AbilityManaCost"           "80 100 120 140"
+        "AbilityCastAnimation"      "ACT_DOTA_CAST_GHOST_SHIP"
+
+
+        "precache"
+        {
+            "particle" "particles/sage_ronin_wind_wall_cast.vpcf"
+            "particle" "particles/ronin_wind_wall.vpcf"
+            "particle" "particles/econ/items/juggernaut/jugg_arcana/jugg_arcana_haste.vpcf"
+            "soundfile" "soundevents/game_sounds_heroes/game_sounds_sage_ronin.vsndevts"
+        }
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "cooldown"              "20"
+                "LinkedSpecialBonus"    "special_bonus_unique_sage_ronin_2"
+            }
+            "02"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "wall_length"           "250 300 350 400"
+            }
+            "03"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "wall_length_ttp"       "500 600 700 800"
+            }
+            "04"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "duration"              "5 5.5 6 6.5"
+            }
+            "05"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "bonus_per_kill"        "3"
             }
         }
     }

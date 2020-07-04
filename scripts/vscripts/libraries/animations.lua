@@ -72,6 +72,7 @@ local _ANIMATION_TRANSLATE_TO_CODE = {
   forcestaff_friendly = 15,
   chase = 16,
   jog = 17,
+  favor = 18,
 }
 
 function StartAnimation(unit, table)

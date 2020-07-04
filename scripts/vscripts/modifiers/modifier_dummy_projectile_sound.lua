@@ -5,8 +5,6 @@ function modifier_dummy_projectile_sound:OnCreated(kv)
     self.interval = kv.frames
     self.distance = kv.distance
     self.tornado_velocity_per_frame = unit.velocity_per_frame
-    print("VELOCITY",unit.tornado_velocity_per_frame)
-    self:StartIntervalThink(0.05) 
 end
 
 function modifier_dummy_projectile_sound:CheckState()
@@ -28,7 +26,6 @@ end
 function modifier_dummy_projectile_sound:OnIntervalThink()
     local unit = self:GetParent()
     local ability = self:GetAbility()
-    print("TORNADOVELOCITYss", unit.velocity_per_frame)
     unit:SetAbsOrigin(unit:GetAbsOrigin() + unit.velocity_per_frame)
 end
 

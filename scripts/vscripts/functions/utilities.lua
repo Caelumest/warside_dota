@@ -1,4 +1,13 @@
 LinkLuaModifier("modifier_dummy_projectile_sound", "modifiers/modifier_dummy_projectile_sound.lua", LUA_MODIFIER_MOTION_NONE)
+function _G.softRequire(file)
+  _G.dummyEnt = dummyEnt or Entities:CreateByClassname("info_target")
+  local happy,msg = pcall(require,file)
+  if not happy then
+    dummyEnt:SetThink(function()
+      error(msg)
+    end)
+  end
+end
 
 function CDOTA_BaseNPC:GetTalentValue(talentName)
 	local talent = self:FindAbilityByName(talentName)
@@ -23,3 +32,22 @@ function round(num, numDecimalPlaces)
   return math.floor(num * mult + 0.5) / mult
 end
 
+function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. [[
+          ]]
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
+
+function CDOTA_BaseNPC:SetAggressive()
+  AddAnimationTranslate(self, "aggressive")
+  self.isAggressive = true
+  self.aggressiveTime = GameRules:GetGameTime() + RandomFloat(5.0, 9.0)
+end

@@ -482,6 +482,20 @@ function modifier_dynamic_attraction_knockback:OnIntervalThink()
 	end
 end
 
+function modifier_dynamic_attraction_knockback:OnDeath()
+	local ability = self:GetAbility()
+	local target1 = ability.target1
+	local target2 = ability.target2
+	ParticleManager:DestroyParticle(ability.particle, false)
+	target1:RemoveModifierByName("modifier_dynamic_attraction_knockback")
+	target2:RemoveModifierByName("modifier_dynamic_attraction_knockback")
+	target1:RemoveModifierByName("modifier_dynamic_attraction_target")
+	target2:RemoveModifierByName("modifier_dynamic_attraction_target")
+	ability.target1 = nil
+	ability.target2 = nil
+	ability.particle = nil
+end
+
 modifier_dynamic_attraction_stacks = class({})
 
 function modifier_dynamic_attraction_stacks:IsHidden() return false end

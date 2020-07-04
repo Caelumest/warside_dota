@@ -60,19 +60,141 @@ function CheckDistance(keys)
 	end
 end
 
+
 function CheckIfInjured(keys)
 	local caster = keys.caster
 	local ability = keys.ability
-
-	if caster:GetHealthPercent() <= 35 and not caster.isInjured then
-        AddAnimationTranslate(caster, "injured")
-        caster.isInjured = true
-    elseif caster.isInjured and caster:GetHealthPercent() > 35 then
+	if not caster.particleSword then
+		print("CREATED SAPORRA")
+		caster.particleSword = ParticleManager:CreateParticle("particles/yasuo_blade_ambient_glow_full.vpcf", PATTACH_POINT_FOLLOW, caster)
+		ParticleManager:SetParticleControlEnt(caster.particleSword, 0, caster, PATTACH_POINT_FOLLOW, "blade_attachment", caster:GetAbsOrigin(), true)
+		local particle2 = ParticleManager:CreateParticle("particles/yasuo_blade_ambient.vpcf", PATTACH_POINT_FOLLOW, caster)
+		ParticleManager:SetParticleControlEnt(particle2, 0, caster, PATTACH_POINT_FOLLOW, "blade_attachment", caster:GetAbsOrigin(), true)
+		local particle3 = ParticleManager:CreateParticle("particles/yasuo_main_effect.vpcf", PATTACH_POINT_FOLLOW, caster)
+		ParticleManager:SetParticleControlEnt(particle3, 0, caster, PATTACH_POINT_FOLLOW, nil, caster:GetAbsOrigin(), true)
+	end
+	if caster:GetIdealSpeed() >= 400 and not caster.isFast then
+		if caster:HasModifier("modifier_rune_haste") then
+			RemoveAnimationTranslate(caster)
+	        AddAnimationTranslate(caster, "run_fast")
+		else
+			RemoveAnimationTranslate(caster)
+	        AddAnimationTranslate(caster, "run")
+		end
+        caster.isFast = true
+    elseif caster.isFast and caster:GetIdealSpeed() < 400 then
     	RemoveAnimationTranslate(caster)
-		AddAnimationTranslate(caster, "walk")
-		AddAnimationTranslate(caster, "odachi")
-		caster.isInjured = nil
+		AddAnimationTranslate(caster, "walk")	
+		caster.isFast = nil
     end
+
+	if caster:IsMoving() then
+		--caster.isIdle = false
+		if caster.cancelPuncture then
+			caster.cancelPuncture = false
+		end
+		if caster.cancelPuncture ~= nil and caster.cancelPuncture == false and caster.punctureCancelTime <= GameRules:GetGameTime() then
+
+			caster:RemoveGesture(ACT_DOTA_CAST_ABILITY_1)
+			caster:RemoveGesture(ACT_DOTA_CAST_ABILITY_5)
+			caster.isIdle = false
+		end
+	else
+		caster:RemoveGesture(ACT_IDLETORUN)
+		caster:RemoveGesture(ACT_DEPLOY_IDLE)
+		caster:RemoveGesture(ACT_GESTURE_MELEE_ATTACK1)
+		caster:RemoveGesture(ACT_GESTURE_MELEE_ATTACK2)
+		caster:RemoveGesture(ACT_MP_ATTACK_STAND_PRIMARY)
+	end
+
+	if caster.cancelPuncture ~= nil and caster.cancelPuncture == false and caster.punctureCancelTime <= GameRules:GetGameTime() and caster.isIdle == false then
+		RemoveActions(caster)
+		if caster.isAggressive then
+			if caster.isFast then
+				StartAnimation(caster, {duration=2.9, activity=ACT_GESTURE_MELEE_ATTACK2, rate=1})
+			else
+				StartAnimation(caster, {duration=2.7, activity=ACT_GESTURE_MELEE_ATTACK1, rate=1})
+			end
+		end
+		caster.isIdle = false
+
+		caster.cancelPuncture = nil
+	end
+
+	if caster.isAggressive and caster.aggressiveTime <= GameRules:GetGameTime() then
+		RemoveAnimationTranslate(caster)
+		caster.isAggressive = false
+
+		if caster:GetIdealSpeed() >= 400 then
+			if caster:HasModifier("modifier_rune_haste") then
+				RemoveAnimationTranslate(caster)
+		        AddAnimationTranslate(caster, "run_fast")
+			else
+				RemoveAnimationTranslate(caster)
+		        AddAnimationTranslate(caster, "run")
+			end
+	        caster.isFast = true
+	    elseif caster:GetIdealSpeed() < 400 then
+	    	RemoveAnimationTranslate(caster)
+			AddAnimationTranslate(caster, "walk")	
+			caster.isFast = nil
+	    end
+	    if not caster.isIdle then
+			StartAnimation(caster, {duration=1.7, activity=ACT_MP_ATTACK_STAND_PRIMARY, rate=1})
+		end
+
+	end
+
+    if caster.isIdle ~= nil and caster.lastClickedPos ~= nil and caster.isIdle == false and (caster.lastClickedPos - caster:GetAbsOrigin()):Length2D() < 10 then
+    	if caster.isAggressive then
+    		RemoveAnimationTranslate(caster)
+			caster.isAggressive = false
+
+			if caster:GetIdealSpeed() >= 400 then
+				if caster:HasModifier("modifier_rune_haste") then
+					RemoveAnimationTranslate(caster)
+			        AddAnimationTranslate(caster, "run_fast")
+				else
+					RemoveAnimationTranslate(caster)
+			        AddAnimationTranslate(caster, "run")
+				end
+		        caster.isFast = true
+		    elseif caster:GetIdealSpeed() < 400 then
+		    	RemoveAnimationTranslate(caster)
+				AddAnimationTranslate(caster, "walk")	
+				caster.isFast = nil
+		    end
+		    if not caster:IsMoving() then
+				StartAnimation(caster, {duration=5.5, activity=ACT_IDLE_ANGRY_MELEE, rate=1})
+			end
+		else
+			caster:RemoveGesture(ACT_GESTURE_MELEE_ATTACK1)
+			caster:RemoveGesture(ACT_GESTURE_MELEE_ATTACK2)
+			StartAnimation(caster, {duration=0.75, activity=ACT_RUNTOIDLE, rate=1})
+		end
+    	caster.isIdle = true
+    	caster.cancelPuncture = nil
+    end
+end
+
+function OnAttackStarted(keys)
+	local caster = keys.caster
+	caster:SetAggressive()
+	RemoveActions(caster)
+end
+
+function RemoveActions(caster)
+	caster:RemoveGesture(ACT_IDLETORUN)
+	caster:RemoveGesture(ACT_DEPLOY_IDLE)
+	caster:RemoveGesture(ACT_IDLE_ANGRY_MELEE)
+	caster:RemoveGesture(ACT_GESTURE_MELEE_ATTACK1)
+	caster:RemoveGesture(ACT_GESTURE_MELEE_ATTACK2)
+	if caster.punctureCancelTime and caster.punctureCancelTime <= GameRules:GetGameTime() then
+		caster:RemoveGesture(ACT_DOTA_CAST_ABILITY_1)
+	end
+	caster:RemoveGesture(ACT_DOTA_CAST_ABILITY_2)
+	caster:RemoveGesture(ACT_MP_ATTACK_STAND_PRIMARY)
+	caster:RemoveGesture(ACT_MP_ATTACK_STAND_SECONDARY)
 end
 
 function SetActive(keys)
@@ -83,6 +205,7 @@ function SetActive(keys)
 		ability:SetActivated(false)
 	end
 end
+
 
 function OnAttackLanded(keys)
 	local caster = keys.caster

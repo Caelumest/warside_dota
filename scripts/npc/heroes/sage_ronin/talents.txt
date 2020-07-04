@@ -17,11 +17,11 @@
             "01"
             {
                 "var_type"                  "FIELD_FLOAT"
-                "value"                     "40"
+                "value"                     "30"
             }
         }
     }
-    //-500 range needed to activate flux
+    //-10s wind wall cd
     "special_bonus_unique_sage_ronin_2"
     {
         // General
@@ -38,7 +38,7 @@
             "01"
             {
                 "var_type"                  "FIELD_FLOAT"
-                "value"                     "-900"
+                "value"                     "-10"
             }
         }
     }

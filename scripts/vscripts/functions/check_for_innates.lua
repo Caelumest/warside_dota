@@ -2,27 +2,22 @@ LinkLuaModifier("modifier_krigler_effects", "heroes/new_hero/modifier_krigler_ef
 LinkLuaModifier("modifier_sage_ronin_translate_attack", "heroes/sage_ronin/modifier_sage_ronin_translate_attack.lua", LUA_MODIFIER_MOTION_NONE)
 LinkLuaModifier("modifier_sage_ronin_responses", "heroes/sage_ronin/modifier_sage_ronin_responses.lua", LUA_MODIFIER_MOTION_NONE)
 LinkLuaModifier("modifier_soul_tamer", "heroes/soul_tamer/modifier_soul_tamer.lua", LUA_MODIFIER_MOTION_NONE)
+LinkLuaModifier("modifier_print_all_modifiers", "modifiers/modifier_print_all_modifiers.lua", LUA_MODIFIER_MOTION_NONE)
+
 function CheckForInnates(spawnedUnit)
+    --[[if ((spawnedUnit:GetUnitName() == "npc_dota_creep_badguys_melee" or 
+spawnedUnit:GetUnitName() == "npc_dota_creep_badguys_ranged" or
+spawnedUnit:GetUnitName() == "npc_dota_creep_goodguys_melee" or
+spawnedUnit:GetUnitName() == "npc_dota_creep_goodguys_ranged") and not spawnedUnit.alreadySpawned) then
+    spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_print_all_modifiers", {})
+    spawnedUnit.alreadySpawned = true
+  end]]
     if(spawnedUnit:GetUnitName() == "npc_dota_hero_sage_ronin") then
       spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_sage_ronin_translate_attack", {})
       spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_sage_ronin_responses", {})
       spawnedUnit:FindAbilityByName("ronin_precaches"):SetLevel(1) 
       if not spawnedUnit.alreadySpawned then
   	    AddAnimationTranslate(spawnedUnit, "walk")
-  	    AddAnimationTranslate(spawnedUnit, "odachi")
-  	    spawnedUnit.weapon = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/items/juggernaut/fire_of_the_exiled_ronin/fire_of_the_exiled_ronin.vmdl"})
-        spawnedUnit.weapon:FollowEntity(spawnedUnit, true)
-        spawnedUnit.weapon:SetRenderColor(200, 200, 200)
-        spawnedUnit.head = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/items/dragon_knight/oblivion_blazer_head/oblivion_blazer_head.vmdl"})
-        spawnedUnit.head:FollowEntity(spawnedUnit, true)
-        spawnedUnit.head:SetRenderColor(100, 100, 100)
-        spawnedUnit.pants = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/items/juggernaut/dc_legsupdate5/dc_legsupdate5.vmdl"})
-        spawnedUnit.pants:FollowEntity(spawnedUnit, true)
-        spawnedUnit.pants:SetRenderColor(100, 100, 100)
-        spawnedUnit.shoulders = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/items/juggernaut/thousand_faces_vest/thousand_faces_vest.vmdl"})
-        spawnedUnit.shoulders:FollowEntity(spawnedUnit, true)
-        spawnedUnit.shoulders:SetRenderColor(100, 100, 100)
-  	    spawnedUnit:SetRenderColor(50, 50, 50)
   	    spawnedUnit.alreadySpawned = true
         if not spawnedUnit:IsIllusion() then
     	    Timers:CreateTimer(6, function ()  

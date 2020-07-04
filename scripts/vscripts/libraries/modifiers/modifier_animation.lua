@@ -18,6 +18,7 @@ local _CODE_TO_ANIMATION_TRANSLATE = {
   [15] = "forcestaff_friendly",
   [16] = "forcestaff_friendly",
   [17] = "jog",
+  [18] = "favor",
 }
 
 function modifier_animation:OnCreated(keys) 

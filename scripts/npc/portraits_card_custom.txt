@@ -75,6 +75,42 @@
 			}
 		}
 	}
+	"npc_dota_hero_sage_ronin"
+	{
+		"PortraitLightPosition"		"61.33 -27.93 246.25"
+		"PortraitLightAngles"		"89.25 172.13 0.00"
+		"PortraitLightFOV"		"61"
+		"PortraitLightDistance"		"202"
+		"PortraitLightColor"		"246 254 246"
+		"PortraitShadowColor"		"48 48 48"
+		"PortraitShadowScale"		"5.000000"
+		"PortraitAmbientColor"		"56 56 56"
+		"PortraitAmbientScale"		"5.000000"
+		"PortraitSpecularColor"		"251 74 84"
+		"PortraitSpecularDirection"		"0.000000 0.000000 -1.000000"
+		"PortraitSpecularPower"		"16.000000"
+		"PortraitBackgroundColor1"		"1.000000 1.000000 1.000000"
+		"PortraitBackgroundColor2"		"1.000000 1.000000 1.000000"
+		"PortraitBackgroundColor3"		"1.000000 1.000000 1.000000"
+		"PortraitBackgroundColor4"		"1.000000 1.000000 1.000000"
+		"PortraitBackgroundTexture"		"materials/portraits_card/portrait_backgrounds/venomancer.vmat"
+		"PortraitAnimationActivity"		"ACT_VICTORY_DANCE"
+		"PortraitAnimationCycle"		"0.000000"
+		"PortraitAnimationRate"		"1.000000"
+		"PortraitHideHero"		"0"
+		"PortraitLightScale"		"1.400000"
+		"PortraitGroundShadowScale"		"1.500000"
+		"PortraitAmbientDirection"		"-8.830 -7.890 -8.350"
+		"cameras"
+		{
+			"default"
+			{
+				"PortraitPosition"		"972.45 -155.42 565.49"
+				"PortraitAngles"		"8.46 161.60 0.00"
+				"PortraitFOV"		"7"
+			}
+		}
+	}
 "npc_dota_hero_soul_tamer"
 	{
 		"cameras"

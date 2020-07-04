@@ -49,25 +49,24 @@ function ronin_puncture_tornado:OnSpellStart()
 	caster:RemoveModifierByName("modifier_ronin_hit_count")
 	caster:RemoveModifierByName("modifier_ronin_puncture_tornado")
 	--EmitSoundOn("Hero_Ronin.Puncture_Tornado_Cast", caster);
+	AddAnimationTranslate(caster, "aggressive")
+	caster.isAggressive = true
+	caster.aggressiveTime = GameRules:GetGameTime() + RandomFloat(5.0, 9.0)
 	if not caster:HasModifier("modifier_ronin_dash") then
 		caster:AddNewModifier(caster, ability, "modifier_puncture_states", {duration = 0.2})
 		EmitSoundOn("sage_ronin_puncture_third_hit", caster)
 		--caster:StartGestureWithPlaybackRate(ACT_DOTA_ATTACK_EVENT, 2)
-		RemoveAnimationTranslate(caster)
-		StartAnimation(caster, {duration=0.3, activity=ACT_DOTA_ATTACK_EVENT, rate=1.5, translate="ti8"})
-		--EndAnimation(caster)
-		AddAnimationTranslate(caster, "walk")
-		AddAnimationTranslate(caster, "odachi")
+		StartAnimation(caster, {duration=0.7, activity=ACT_DOTA_CAST_ABILITY_5, rate=1.2})
 		caster:SetForwardVector((Vector(target.x, target.y, caster:GetAbsOrigin().z) - caster:GetAbsOrigin()):Normalized())
-		Timers:CreateTimer(0.15, function ()  
+		Timers:CreateTimer(0.7, function ()  
 			if caster:IsAlive() then
 				self.projID = ProjectileManager:CreateLinearProjectile( {
 			        Ability             = self,
 			        EffectName          = ability.effectName,
 			        vSpawnOrigin        = caster:GetAbsOrigin(),
 			        fDistance           = ability.projDistance,
-			        fStartRadius        = 70,
-			        fEndRadius          = 70,
+			        fStartRadius        = 90,
+			        fEndRadius          = 90,
 			        Source              = caster,
 			        bHasFrontalCone     = false,
 			        bReplaceExisting    = false,
@@ -87,7 +86,6 @@ function ronin_puncture_tornado:OnSpellStart()
 				local velocity = caster:GetForwardVector() * ability.projVelocity
 				local point_difference_normalized = (target - caster_point):Normalized()
 				local tornado_velocity_per_frame = velocity * 0.05
-				print("TORNADOVELOCITY", tornado_velocity_per_frame)
 				local tornado_dummy_unit = CreateUnitByName("npc_dota_creature_spirit_vessel", caster:GetAbsOrigin(), false, caster, caster, caster:GetTeam())
 				tornado_dummy_unit.velocity_per_frame = velocity * 0.05
 				tornado_dummy_unit:AddNewModifier(caster, ability, "modifier_dummy_projectile_sound", {duration = tornado_duration, distance = ability.projDistance, velocity_per_frame = tornado_velocity_per_frame, frames = 0.05})
@@ -118,8 +116,10 @@ function ronin_puncture_tornado:OnProjectileHit(target)
 				should_stun = 1,
 				duration = 1,
 			}
-		target:RemoveModifierByName("modifier_knockback")
-		target:AddNewModifier(caster, ability, "modifier_knockback", knockbackTable) 
+		if not target:IsMagicImmune() then
+			target:RemoveModifierByName("modifier_knockback")
+			target:AddNewModifier(caster, ability, "modifier_knockback", knockbackTable) 
+		end
 	end
 end
 

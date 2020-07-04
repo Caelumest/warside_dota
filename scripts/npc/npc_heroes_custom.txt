@@ -154,8 +154,8 @@
 	"npc_dota_hero_krigler"
   {
     "BaseClass"                 "npc_dota_hero"
-    "HeroID"                    "228"
-    "Model"                    	"models/heroes/krigler/juggernaut.vmdl"
+    "HeroID"                    "158"
+    "Model"                    	"models/heroes/krigler/juggernaut_arcana.vmdl"
     "SoundSet"                  "Hero_Juggernaut"
     "IsCustom"					"1"
     "IsDisabled"				"0"
@@ -441,7 +441,7 @@
 	{
 		"BaseClass"					"npc_dota_hero"
 		"HeroID"					"132"
-		"Model"						"models/heroes/sage_ronin/juggernaut.vmdl"
+		"Model"						"models/heroes/yasuo.vmdl"
 		"SoundSet"                  "Hero_Juggernaut"
 		"IsDisabled"				"0"
 		"Enabled"					"1"
@@ -451,12 +451,12 @@
 		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"
 		
 		"MovementTurnRate"			"0.9"
-		"ModelScale"				"1"
+		"ModelScale"				"0.77"
 		"IsCustom"					"1"
 		"HeroSelectSoundEffect"		"Hero_Juggernaut.Pick"
 
 		"Ability1"					"ronin_puncture"
-		"Ability2"					"ronin_flux"
+		"Ability2"					"ronin_wind_wall"
 		"Ability3"					"ronin_dash"
 		"Ability4"					"ronin_puncture_tornado"
 		"Ability5"					"generic_hidden"
@@ -490,17 +490,17 @@
 		"Role"						"Carry,Disabler,Jungler,Initiator,Durable,Escape,Nuker,Support"
 		"Rolelevels"				"2,2,0,2,1,1,2,2"
 		"Team"						"Bad"
-		"MovementSpeed"				"285"
+		"MovementSpeed"				"290"
 
 		"HeroSelectSoundEffect"		"Hero_ArcWarden.Pick"
 
 		"AttributePrimary"			"DOTA_ATTRIBUTE_AGILITY"
 		"AttributeBaseStrength"		"20"
-		"AttributeStrengthGain"		"2"
-		"AttributeBaseAgility"		"23"
-		"AttributeAgilityGain"		"2.7"
+		"AttributeStrengthGain"		"2.2"
+		"AttributeBaseAgility"		"23" //From 2/2.7/1.5 to 2.2/2.9/1.8
+		"AttributeAgilityGain"		"2.9"
 		"AttributeBaseIntelligence"	"17"
-		"AttributeIntelligenceGain"	"1.5"
+		"AttributeIntelligenceGain"	"1.8"
 
 		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
 		"CombatClassAttack"			"DOTA_COMBAT_CLASS_ATTACK_HERO"
@@ -515,7 +515,7 @@
 	"npc_dota_hero_gravitum"
 	{
 		"BaseClass"					"npc_dota_hero"         // Hero to override
-		"HeroID"                    "239"
+		"HeroID"                    "134"
 		"IsCustom"                  "1"
 		"DisableWearables"          "1"
 
@@ -535,7 +535,7 @@
 		"VoiceFile"                 "soundevents/voscripts/game_sounds_vo_jeremy_khan.vsndevts"
 
 		// Attribute Stats
-		"AttributePrimary"          "DOTA_ATTRIBUTE_INTELLECT"
+		//"AttributePrimary"          "DOTA_ATTRIBUTE_INTELLECT"
 		"AttributeBaseStrength"     "22"
 		"AttributeStrengthGain"     "2.000000"
 		"AttributeBaseIntelligence" "15"
@@ -558,7 +558,11 @@
 		"ProjectileSpeed"           "1250"
 		"MovementSpeed"             "295"
 		"MovementTurnRate"          "0.600000"
-		
+		"MinimapIcon"				"minimap_rubick"
+		"spawn_wearable_item_defs" 	"1"
+		"item_def0" 				"12451"
+		"item_def1"					"12900"
+		"item_def2"					"9521"
 		// Abilities
 		"Ability1"					"gravitum_dynamic_attraction"//1
 		"Ability2"					"gravitum_timeless_gap"
