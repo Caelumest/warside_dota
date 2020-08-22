@@ -6,6 +6,19 @@ function SetPosition(keys)
 	ability.willDamage = true
 	ability.target = target
     if not target:HasModifier("modifier_ronin_dash_target") then
+        local puncture = caster:FindAbilityByName("ronin_puncture")
+        if puncture ~= nil then
+            puncture.canTornado = false
+            local punctureTornado = caster:FindAbilityByName("ronin_puncture_tornado")
+            local remainingCd = punctureTornado:GetCooldownTimeRemaining()
+            if remainingCd <= 0.4 then
+                punctureTornado:EndCooldown()
+            end
+            remainingCd = puncture:GetCooldownTimeRemaining()
+            if remainingCd <= 0.4 then
+                puncture:EndCooldown()
+            end
+        end
     	caster:SetForwardVector((Vector(target:GetAbsOrigin().x, target:GetAbsOrigin().y, caster:GetAbsOrigin().z) - caster:GetAbsOrigin()):Normalized())
     	ability:ApplyDataDrivenModifier(caster, caster, "modifier_ronin_dash", {duration = 0.4})
         EmitSoundOn("Hero_Ronin.Dash_Cast", caster);
@@ -32,6 +45,13 @@ function CheckCurrentMana(keys)
     ability.currentMana = caster:GetMana()
 end
 
+function OnDestroy(keys)
+    local caster = keys.caster
+    local ability = keys.ability
+    local puncture = caster:FindAbilityByName("ronin_puncture")
+    puncture.canTornado = true
+end
+
 function MoveThrough(keys)
 	local caster = keys.caster
     local ability = keys.ability
@@ -54,7 +74,7 @@ function MoveThrough(keys)
     if caster:HasModifier("modifier_ronin_dash") then
         caster:SetAbsOrigin(caster:GetAbsOrigin() + caster:GetForwardVector() * ability.speed)
         if caster:GetRangeToUnit(ability.target) < 50 and ability.willDamage then
-        	ApplyDamage({victim = ability.target, attacker = caster, damage = ability:GetSpecialValueFor("damage") + (ability:GetSpecialValueFor("damage") * (ability.stacks+1) / 2), damage_type = DAMAGE_TYPE_MAGICAL})
+        	ApplyDamage({victim = ability.target, attacker = caster, damage = ability:GetSpecialValueFor("damage") + (ability:GetSpecialValueFor("damage") * (ability.stacks) / 2), damage_type = DAMAGE_TYPE_MAGICAL})
             
             EmitSoundOn("Hero_Ronin.Dash_Hit", ability.target);
 

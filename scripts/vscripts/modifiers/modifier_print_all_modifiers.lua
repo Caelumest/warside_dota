@@ -14,5 +14,12 @@ end
 
 function modifier_print_all_modifiers:OnIntervalThink()
 	local target = self:GetParent()
-	print(dump(target:FindAllModifiers()))
+	local modifiers = target:FindAllModifiers()
+	--print("-----------------"..target:GetUnitName().."---------------")
+	for k,v in pairs(modifiers) do
+		if v:GetName() ~= self:GetName() then
+			print("THINK",v:GetName())
+		end
+	end
+	--print("-----------------------------------------------------------")
 end

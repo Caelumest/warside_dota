@@ -11,7 +11,7 @@ function CheckIfInAir(keys)
 	local ability = keys.ability
     local find_radius = ability:GetSpecialValueFor("find_radius")
 	local units = FindUnitsInRadius( caster:GetTeam(), caster:GetOrigin(), nil, find_radius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE + DOTA_UNIT_TARGET_FLAG_NO_INVIS, FIND_FARTHEST, false )
-    count = 0
+    local count = 0
     for _,target in pairs( units ) do
         count = count + 1
         local groundpos = GetGroundPosition(target:GetAbsOrigin(), target)
@@ -21,7 +21,7 @@ function CheckIfInAir(keys)
             ability:ApplyDataDrivenModifier(caster, caster, "modifier_air_slash_can_slash", {duration = modif})
         elseif target:GetAbsOrigin().z > (groundpos.z + 10) and not target:IsInvulnerable() then
             ability.target = target
-            ability:ApplyDataDrivenModifier(caster, caster, "modifier_air_slash_can_slash", {duration = 0.01})
+            ability:ApplyDataDrivenModifier(caster, caster, "modifier_air_slash_can_slash", {duration = 0.1})
         end
     end
     if caster:HasModifier("modifier_air_slash_can_slash") and count > 0 then
@@ -124,7 +124,6 @@ function SetPositions(keys)
     if target ~= caster then
         target.roninAirPos = target:GetAbsOrigin().z + 10
         target:InterruptMotionControllers(false)
-        print("AIRPOS", target.roninAirPos)
         if target.roninAirPos > (GetGroundPosition(Vector(target:GetAbsOrigin().x, target:GetAbsOrigin().y ,target.roninAirPos), target).z + 300) then
             target.roninAirPos = GetGroundPosition(Vector(target:GetAbsOrigin().x, target:GetAbsOrigin().y ,target.roninAirPos), target).z + 150
         end

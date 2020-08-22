@@ -51,3 +51,23 @@ function CDOTA_BaseNPC:SetAggressive()
   self.isAggressive = true
   self.aggressiveTime = GameRules:GetGameTime() + RandomFloat(5.0, 9.0)
 end
+
+function AddVelocityTranslate(caster)
+    if caster:GetIdealSpeed() >= 400 then
+      if caster:HasModifier("modifier_rune_haste") then
+        RemoveAnimationTranslate(caster,"run")
+        RemoveAnimationTranslate(caster,"walk")
+        AddAnimationTranslate(caster, "run_fast")
+      else
+        RemoveAnimationTranslate(caster,"run_fast")
+        RemoveAnimationTranslate(caster,"walk")
+        AddAnimationTranslate(caster, "run")
+      end
+      caster.isFast = true
+    elseif caster:GetIdealSpeed() < 400 then
+      RemoveAnimationTranslate(caster,"run_fast")
+      RemoveAnimationTranslate(caster,"run")
+      AddAnimationTranslate(caster,"walk") 
+      caster.isFast = nil
+    end
+end

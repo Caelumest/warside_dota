@@ -51,7 +51,6 @@ function ronin_puncture_tornado:OnSpellStart()
 	if not caster:HasModifier("modifier_ronin_dash") then
 		caster:AddNewModifier(caster, ability, "modifier_puncture_states", {duration = 0.2})
 		EmitSoundOn("sage_ronin_puncture_third_hit", caster)
-		RemoveAnimationTranslate(caster)
 		StartAnimation(caster, {duration=0.5, activity=ACT_DOTA_CAST_ABILITY_5, rate=1.5})
 		if caster.cancelPuncture or caster.puncture == false then caster.cancelPuncture = nil end
 		caster.cancelPuncture = true
@@ -113,7 +112,7 @@ function ronin_puncture_tornado:OnProjectileHit(target)
 				center_z = target:GetAbsOrigin().z,
 				knockback_duration = ability:GetSpecialValueFor("tornado_stun_duration"),
 				knockback_distance = 0,
-				knockback_height = 300,
+				knockback_height = 250,
 				should_stun = 1,
 				duration = 1,
 			}

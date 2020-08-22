@@ -149,6 +149,12 @@ function AddAnimationTranslate(unit, translate, duration)
     hModifier = unit:AddNewModifier(unit, nil, "modifier_animation_translate", {Duration=duration, translate=translate})
     hModifier.translate = translate
   else
+    local modifs = unit:FindAllModifiersByName("modifier_animation_translate")
+    for k,v in pairs(modifs) do
+      if v.translate == translate then
+        return hModifier
+      end
+    end
     hModifier = unit:AddNewModifier(unit, nil, "modifier_animation_translate", {translate=translate})
     hModifier.translate = translate
   end
@@ -156,9 +162,18 @@ function AddAnimationTranslate(unit, translate, duration)
   return hModifier
 end
 
-function RemoveAnimationTranslate(unit)
-  while unit:HasModifier("modifier_animation_translate") do
-    unit:RemoveModifierByName("modifier_animation_translate")
+function RemoveAnimationTranslate(unit, sTranslate)
+  if not sTranslate then
+    while unit:HasModifier("modifier_animation_translate") do
+      unit:RemoveModifierByName("modifier_animation_translate")
+    end
+  else
+    local modifs = unit:FindAllModifiersByName("modifier_animation_translate")
+    for k,v in pairs(modifs) do
+      if v.translate == sTranslate then
+        v:Destroy()
+      end
+    end
   end
 end
 

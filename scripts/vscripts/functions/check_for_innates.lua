@@ -13,14 +13,15 @@ spawnedUnit:GetUnitName() == "npc_dota_creep_goodguys_ranged") and not spawnedUn
     spawnedUnit.alreadySpawned = true
   end]]
     if(spawnedUnit:GetUnitName() == "npc_dota_hero_sage_ronin") then
-      spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_sage_ronin_translate_attack", {})
-      spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_sage_ronin_responses", {})
-      spawnedUnit:FindAbilityByName("ronin_precaches"):SetLevel(1) 
       if not spawnedUnit.alreadySpawned then
+        spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_sage_ronin_translate_attack", {})
+        spawnedUnit:FindAbilityByName("ronin_precaches"):SetLevel(1) 
   	    AddAnimationTranslate(spawnedUnit, "walk")
+        spawnedUnit.isFast = false
   	    spawnedUnit.alreadySpawned = true
         if not spawnedUnit:IsIllusion() then
     	    Timers:CreateTimer(6, function ()  
+            spawnedUnit:AddNewModifier(spawnedUnit, nil, "modifier_sage_ronin_responses", {})
     	      SageRoninResponses:Start(spawnedUnit)
     	      SageRoninResponses:RegisterUnit(spawnedUnit:GetUnitName(), "scripts/responses/"..spawnedUnit:GetUnitName().."_responses.txt")
     	    end)

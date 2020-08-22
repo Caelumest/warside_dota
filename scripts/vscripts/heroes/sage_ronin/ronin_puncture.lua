@@ -208,7 +208,7 @@ function modifier_ronin_puncture:OnCreated()
 	local caster = self:GetParent()
 	local ability = self:GetAbility()
 	ability.cooldown = ability:GetSpecialValueFor("cooldown")
-	self.interval = 0.01
+	self.interval = 0.05
 	self:StartIntervalThink(self.interval)
 end
 
@@ -221,10 +221,13 @@ function modifier_ronin_puncture:OnIntervalThink()
 	local caster = self:GetParent()
 	local ability = self:GetAbility()
 	local stacks = caster:GetModifierStackCount("modifier_ronin_hit_count", caster)
-	ability.cooldown = ability:GetSpecialValueFor("cooldown") - ((caster:GetIncreasedAttackSpeed()) * 2)
+
 	if caster:HasScepter() then
 		ability.cooldown = ability:GetSpecialValueFor("cooldown") - ((caster:GetIncreasedAttackSpeed()) * 2.4)
+	else
+		ability.cooldown = ability:GetSpecialValueFor("cooldown") - ((caster:GetIncreasedAttackSpeed()) * 2)
 	end
+
 	if caster:HasModifier("modifier_ronin_dash") then
 		ability.behavior = DOTA_ABILITY_BEHAVIOR_NO_TARGET + DOTA_ABILITY_BEHAVIOR_IMMEDIATE + DOTA_ABILITY_BEHAVIOR_IGNORE_PSEUDO_QUEUE
 	else
@@ -245,12 +248,10 @@ function modifier_ronin_puncture:OnIntervalThink()
 		end
 	end
 
-	if ability.spinInQueue == true and not caster:HasModifier("modifier_ronin_dash") then
-		if ability:GetCooldownTimeRemaining() > 0 then
-			ability:StartCooldown(ability:GetCooldown())
-		end
+	if ability.spinInQueue == true and ability.canTornado then
+		
 		caster:AddNewModifier(caster, ability, "modifier_puncture_states", {duration = 0.1})
-		StartAnimation(caster, {duration=0.2, activity=ACT_SPINAROUND, rate=0.5})
+		StartAnimation(caster, {duration=0.3, activity=ACT_SPINAROUND, rate=0.5})
 		if not ability.spinTornado then
 			ability.particleName = "particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal_core.vpcf"
 		else
@@ -261,17 +262,21 @@ function modifier_ronin_puncture:OnIntervalThink()
 			ability.spinTornadoParticle = ParticleManager:CreateParticle("particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal_cyclone_b.vpcf", PATTACH_ABSORIGIN_FOLLOW, caster)
     		ParticleManager:SetParticleControlEnt(ability.spinTornadoParticle, 0, caster, PATTACH_ABSORIGIN_FOLLOW, "follow_origin", caster:GetAbsOrigin(), true)
 		end
+
 		if ability.spinParticle then
 			ParticleManager:DestroyParticle(ability.spinParticle, false)
 			ParticleManager:DestroyParticle(ability.spinParticle2, false)
 		end
+
 		ability.spinParticle = ParticleManager:CreateParticle(ability.particleName, PATTACH_ABSORIGIN_FOLLOW, caster)
         ParticleManager:SetParticleControlEnt(ability.spinParticle, 0, caster, PATTACH_ABSORIGIN_FOLLOW, nil, caster:GetAbsOrigin(), true)
         ParticleManager:SetParticleControlEnt(ability.spinParticle, 2, caster, PATTACH_ABSORIGIN_FOLLOW, nil, caster:GetAbsOrigin(), true)
         ParticleManager:SetParticleControl(ability.spinParticle, 5, Vector(250, 0, 0))
+
         ability.spinParticle2 = ParticleManager:CreateParticle("particles/econ/items/juggernaut/jugg_ti8_sword/juggernaut_blade_fury_abyssal_cyclone.vpcf", PATTACH_ABSORIGIN_FOLLOW, caster)
         ParticleManager:SetParticleControlEnt(ability.spinParticle2, 0, caster, PATTACH_ABSORIGIN_FOLLOW, nil, caster:GetAbsOrigin(), true)
         ParticleManager:SetParticleControlEnt(ability.spinParticle2, 2, caster, PATTACH_ABSORIGIN_FOLLOW, nil, caster:GetAbsOrigin(), true)
+
         Timers:CreateTimer(0.4, function ()  
         	ParticleManager:DestroyParticle(ability.spinParticle, false) 
         	ParticleManager:DestroyParticle(ability.spinParticle2, false)
@@ -282,21 +287,7 @@ function modifier_ronin_puncture:OnIntervalThink()
 		
 		local units = FindUnitsInRadius( caster:GetTeam(), caster:GetOrigin(), nil, ability:GetSpecialValueFor("melee_distance"), DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO + DOTA_UNIT_TARGET_CREEP, 0, 0, false )
 	    for _,target in pairs( units ) do
-	    	--local flux_ability = caster:FindAbilityByName("ronin_flux")
-			--local buff_duration = flux_ability:GetLevelSpecialValueFor( "buff_duration", flux_ability:GetLevel() - 1 )
-			--local flux_stacks = caster:GetModifierStackCount("modifier_ronin_flux_stacks", ability)
-			--if flux_stacks == 100 and flux_ability:GetAutoCastState() and target then
-			--	EmitSoundOn("Brewmaster_Storm.DispelMagic", caster)
-			--	ParticleManager:DestroyParticle(flux_ability.particleSword, true)
-			--	ParticleManager:DestroyParticle(flux_ability.particleSword2, true)
-			--	ParticleManager:DestroyParticle(flux_ability.particleSword3, true)
-			--	ParticleManager:DestroyParticle(flux_ability.particleSword4, true)
-			--	ParticleManager:DestroyParticle(flux_ability.particleSword5, true)
-			--	flux_ability.particleSword = nil
-			--	caster:SetModifierStackCount("modifier_ronin_flux_stacks", flux_ability, 0)
-			--	flux_ability:ApplyDataDrivenModifier(caster, caster, "modifier_ronin_flux_buff", {duration = buff_duration})
-			--	flux_ability:SetActivated(false)
-			--end
+	    	
 	        caster:PerformAttack(target, true, true, true, true, false, false, true)
 	        if target and ability.spinTornado then
 	        	EmitSoundOn("Hero_Ronin.Dash_SpinTornado", caster);
@@ -307,7 +298,7 @@ function modifier_ronin_puncture:OnIntervalThink()
 						center_z = target:GetAbsOrigin().z,
 						knockback_duration = ability:GetSpecialValueFor("tornado_stun_duration"),
 						knockback_distance = 0,
-						knockback_height = 300,
+						knockback_height = 250,
 						should_stun = 1,
 						duration = 1,
 					}
@@ -316,6 +307,7 @@ function modifier_ronin_puncture:OnIntervalThink()
 					target:AddNewModifier(caster, ability, "modifier_knockback", knockbackTable)
 				end
 			end
+
 			if ability.hittedOne == nil and stacks < 1 and target and not ability.spinTornado then
 				EmitSoundOn("Hero_Ronin.Dash_Spin", caster);
 				caster:AddNewModifier(caster, ability, "modifier_ronin_hit_count", {duration = ability:GetSpecialValueFor("charge_duration")})
@@ -326,12 +318,13 @@ function modifier_ronin_puncture:OnIntervalThink()
 		    	caster:AddNewModifier(caster, ability.subability, "modifier_ronin_puncture_tornado", {duration = ability:GetSpecialValueFor("charge_duration") + caster:GetTalentValue("special_bonus_unique_sage_ronin_4")})
 		    	StartSubAbility(caster, ability.subability)
 		    end
+
 	    end
 	    ability.hittedOne = nil
 		ability.spinInQueue = nil
 		ability.spinTornado = nil
+		ability.canTornado = false
 	end
-
 end
 
 modifier_puncture_states = class({})

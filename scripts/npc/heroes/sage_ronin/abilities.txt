@@ -65,7 +65,7 @@
         "AbilityUnitTargetTeam"     "DOTA_UNIT_TARGET_TEAM_ENEMY"
         "AbilityUnitTargetType"     "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
         "SpellImmunityType"         "SPELL_IMMUNITY_ENEMIES_NO"
-        "AbilityCastRange"          "250"
+        "AbilityCastRange"          "275"
         "AbilityCastPoint"          "0"
         "AbilityCooldown"           "2 1.4 0.8 0.1"
         "AbilityManaCost"           "25"
@@ -131,6 +131,14 @@
                 {
                     "MODIFIER_STATE_STUNNED"   "MODIFIER_STATE_VALUE_ENABLED"
                     "MODIFIER_STATE_DISARMED"   "MODIFIER_STATE_VALUE_ENABLED"
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"    "heroes/sage_ronin/ronin_dash.lua"
+                        "Function"      "OnDestroy"
+                    }
                 }
             }
             "modifier_ronin_dash_count"
@@ -257,7 +265,7 @@
             "08"
             {
                 "var_type"              "FIELD_FLOAT"
-                "cd_reduct"             "1.6"
+                "cd_reduct"             "2.0"
             } 
             "09"
             {
@@ -267,7 +275,7 @@
             "10"
             {
                 "var_type"              "FIELD_FLOAT"
-                "cd_reduct_scepter"     "1.9"
+                "cd_reduct_scepter"     "2.4"
             } 
         }
     }

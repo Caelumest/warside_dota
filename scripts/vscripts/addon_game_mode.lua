@@ -347,68 +347,12 @@ function WarsideDotaGameMode:OrderFilter(order)
 	for key, unit_index in pairs(order.units) do
 		local unit = EntIndexToHScript(order.units["0"])
 
-		------------------YASUO ANIMATIONS-----------------
 		if unit:IsAlive() then
-			if order and (order.order_type == DOTA_UNIT_ORDER_MOVE_TO_POSITION or order.order_type == DOTA_UNIT_ORDER_MOVE_TO_TARGET or order.order_type == DOTA_UNIT_ORDER_ATTACK_TARGET or order.order_type == DOTA_UNIT_ORDER_PICKUP_ITEM or order.order_type == DOTA_UNIT_ORDER_PICKUP_RUNE or order.order_type == DOTA_UNIT_ORDER_ATTACK_MOVE or order.order_type == DOTA_UNIT_ORDER_CAST_POSITION) and unit:GetUnitName() == "npc_dota_hero_sage_ronin" then
-				local pos = Vector(order["position_x"], order["position_y"], order["position_z"])
-				unit:RemoveGesture(ACT_IDLE_ANGRY_MELEE)
-				unit.lastClickedPos = pos
-				if unit.isFast and unit:HasModifier("modifier_rune_haste") then
-					AddAnimationTranslate(unit, "run_fast")
-				elseif unit.isFast then 
-					AddAnimationTranslate(unit, "run")
-				else
-					AddAnimationTranslate(unit, "walk")
-				end
-				if (unit.isIdle == nil or unit.isIdle == true) and unit.cancelPuncture == nil then
-					if not unit.isFast then
-						print("ERA PRA IR")
-						StartAnimation(unit, {duration=1, activity=ACT_IDLETORUN, rate=1})
-					elseif unit.isFast and not unit:HasModifier("modifier_rune_haste") then
-						StartAnimation(unit, {duration=1, activity=ACT_DEPLOY_IDLE, rate=1})
-					end
-				end
-				unit.isIdle = false
-
-				unit:RemoveGesture(ACT_RUNTOIDLE)
-				if unit.cancelPuncture then
-					unit.cancelPuncture = false
-				end
-			end
-
-			
-			if (order.order_type == DOTA_UNIT_ORDER_HOLD_POSITION or order.order_type == DOTA_UNIT_ORDER_STOP) and unit:GetUnitName() == "npc_dota_hero_sage_ronin" and unit.isIdle == false then
-				unit:RemoveGesture(ACT_IDLETORUN)
-				unit:RemoveGesture(ACT_DEPLOY_IDLE)
-				unit:RemoveGesture(ACT_GESTURE_MELEE_ATTACK1)
-				unit:RemoveGesture(ACT_GESTURE_MELEE_ATTACK2)
-				if unit.isAggressive then
-					RemoveAnimationTranslate(unit)
-					unit.isAggressive = false
-
-					if unit:GetIdealSpeed() >= 400 then
-						if unit:HasModifier("modifier_rune_haste") then
-							RemoveAnimationTranslate(unit)
-					        AddAnimationTranslate(unit, "run_fast")
-						else
-							RemoveAnimationTranslate(unit)
-					        AddAnimationTranslate(unit, "run")
-						end
-				        unit.isFast = true
-				    elseif unit:GetIdealSpeed() < 400 then
-				    	RemoveAnimationTranslate(unit)
-						AddAnimationTranslate(unit, "walk")	
-						unit.isFast = nil
-				    end
-					StartAnimation(unit, {duration=5.5, activity=ACT_IDLE_ANGRY_MELEE, rate=1})
-				else
-					StartAnimation(unit, {duration=0.75, activity=ACT_RUNTOIDLE, rate=1})
-				end
-				unit.isIdle = true
-			end
-		end
-		------------------------------------------------------------------------------------
-
+            if order and (order.order_type == DOTA_UNIT_ORDER_MOVE_TO_POSITION or order.order_type == DOTA_UNIT_ORDER_MOVE_TO_TARGET or order.order_type == DOTA_UNIT_ORDER_ATTACK_TARGET or order.order_type == DOTA_UNIT_ORDER_PICKUP_ITEM or order.order_type == DOTA_UNIT_ORDER_PICKUP_RUNE or order.order_type == DOTA_UNIT_ORDER_ATTACK_MOVE or order.order_type == DOTA_UNIT_ORDER_CAST_POSITION) and unit:GetUnitName() == "npc_dota_hero_sage_ronin" then
+                local pos = Vector(order["position_x"], order["position_y"], order["position_z"])
+                unit.lastClickedPos = pos
+            end
+        end
 		--The Arena
 		if castOrders[order.order_type] or order.order_type == DOTA_UNIT_ORDER_CAST_NO_TARGET then
 			if target_unit ~= nil and _G.WIND_WALL_TEAM ~= nil and target_unit:GetUnitName() ~= "npc_dota_creature_spirit_vessel" and unit:GetTeamNumber() ~= target_unit:GetTeamNumber() then

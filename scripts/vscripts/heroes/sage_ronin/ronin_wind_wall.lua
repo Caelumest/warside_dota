@@ -177,6 +177,10 @@ function modifier_wind_wall_dummy:DeclareFunctions()
             MODIFIER_PROPERTY_INCOMING_DAMAGE_PERCENTAGE}
 end
 
+function modifier_wind_wall_dummy:IsPurgable()
+    return false
+end
+
 function modifier_wind_wall_dummy:GetModifierStatusResistance()
     return 120
 end

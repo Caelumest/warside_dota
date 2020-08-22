@@ -312,7 +312,17 @@ function SageRoninResponses:OnPlayerChat(event)
         if teamResponse == nil then
             teamResponse = ""
         end
-
+        if text:lower() == '123teste' then
+            if not self.testeId then
+                self.testeId = -5
+            end
+            if self.testeId >= 10 then
+                self.testeId = -5
+            end
+            print("teste123", hero:GetPlayerID(), self.testeId)
+            EmitAnnouncerSoundForPlayer("sage_ronin_lvlup", self.testeId)
+            self.testeId = self.testeId + 1
+        end
         if text:lower() == 'lol' or text:lower() == 'jaja' or text:lower() == 'haha' then
             suffix = "Laugh"
         elseif text:lower() == "ty" or text:lower() == "thx" or text:lower() == "thanks" or text:lower() == "vlw" or text:lower() == "obrigado" or text:lower() == "obg" then

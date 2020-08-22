@@ -157,7 +157,7 @@ function Timers:Think()
 end
 
 function Timers:HandleEventError(name, event, err)
-  print(err)
+  print("ERROR:",err)
 
   -- Ensure we have data
   name = tostring(name or 'unknown')
